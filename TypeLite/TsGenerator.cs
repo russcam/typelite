@@ -24,7 +24,7 @@ namespace TypeLite {
 				return new ReadOnlyDictionaryWrapper<Type, TsTypeFormatter>(_formatter._formatters);
 			}
 		}
-		
+
 		/// <summary>
 		/// Initializes a new instance of the TsGenerator class with the default formatters.
 		/// </summary>
@@ -75,11 +75,11 @@ namespace TypeLite {
 		public string Generate(TsModel model) {
 			var sb = new StringBuilder();
 
-            foreach (var reference in model.References) {
-                this.AppendReference(reference, sb);
-            }
+			foreach (var reference in model.References) {
+				this.AppendReference(reference, sb);
+			}
 
-            sb.AppendLine();
+			sb.AppendLine();
 
 			foreach (var module in model.Modules) {
 				this.AppendModule(module, sb);
@@ -92,20 +92,20 @@ namespace TypeLite {
 
 				this.AppendClassDefinition(classModel, sb);
 			}
-			
+
 			return sb.ToString();
 
 		}
 
-        /// <summary>
-        /// Generates reference to other d.ts file and appends it to the output.
-        /// </summary>
-        /// <param name="reference">The reference file to generate reference for.</param>
-        /// <param name="sb">The output</param>
-        private void AppendReference(string reference, StringBuilder sb) {
-            sb.AppendFormat("/// <reference path=\"{0}\" />", reference);
-            sb.AppendLine();
-        }
+		/// <summary>
+		/// Generates reference to other d.ts file and appends it to the output.
+		/// </summary>
+		/// <param name="reference">The reference file to generate reference for.</param>
+		/// <param name="sb">The output</param>
+		private void AppendReference(string reference, StringBuilder sb) {
+			sb.AppendFormat("/// <reference path=\"{0}\" />", reference);
+			sb.AppendLine();
+		}
 
 		private void AppendModule(TsModule module, StringBuilder sb) {
 			sb.AppendFormat("module {0} ", module.Name);

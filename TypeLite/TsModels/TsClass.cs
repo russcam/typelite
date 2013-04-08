@@ -11,30 +11,30 @@ namespace TypeLite.TsModels {
 	/// Represents a class in the code model.
 	/// </summary>
 	public class TsClass : TsType {
-        private TsModule _module;
+		private TsModule _module;
 
 		/// <summary>
 		/// Gets collection of properties of the class.
 		/// </summary>
 		public ICollection<TsProperty> Properties { get; private set; }
 
-        /// <summary>
-        /// Gets or sets module, that contains this class.
-        /// </summary>
-        public TsModule Module {
-            get {
-                return _module;
-            }
-            set {
-                if (_module != null) {
-                    _module.RemoveClass(this);
-                }
-                _module = value;
-                if (_module != null) {
-                    _module.AddClass(this);
-                }
-            }
-        }
+		/// <summary>
+		/// Gets or sets module, that contains this class.
+		/// </summary>
+		public TsModule Module {
+			get {
+				return _module;
+			}
+			set {
+				if (_module != null) {
+					_module.RemoveClass(this);
+				}
+				_module = value;
+				if (_module != null) {
+					_module.AddClass(this);
+				}
+			}
+		}
 
 		/// <summary>
 		/// Gets base type of the class
@@ -58,7 +58,8 @@ namespace TypeLite.TsModels {
 		/// Initializes a new instance of the TsClass class with the specific CLR type.
 		/// </summary>
 		/// <param name="clrType">The CLR type represented by this instance of the TsClass</param>
-		public TsClass(Type clrType) : base(clrType) {
+		public TsClass(Type clrType)
+			: base(clrType) {
 			this.Properties = clrType
 				.GetProperties()
 				.Where(pi => pi.DeclaringType == clrType)
@@ -73,7 +74,7 @@ namespace TypeLite.TsModels {
 
 			var attribute = clrType.GetCustomAttribute<TsClassAttribute>(false);
 			if (attribute != null) {
-				if (!string.IsNullOrEmpty(attribute.Name)){ 
+				if (!string.IsNullOrEmpty(attribute.Name)) {
 					this.Name = attribute.Name;
 				}
 

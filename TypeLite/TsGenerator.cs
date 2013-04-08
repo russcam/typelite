@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TypeLite.ReadOnlyDictionary;
 using TypeLite.TsModels;
 
 namespace TypeLite {
@@ -20,7 +21,7 @@ namespace TypeLite {
 		/// </summary>
 		public IReadOnlyDictionary<Type, TsTypeFormatter> Formaters {
 			get {
-				return new ReadOnlyDictionary<Type, TsTypeFormatter>(_formatter._formatters);
+				return new ReadOnlyDictionaryWrapper<Type, TsTypeFormatter>(_formatter._formatters);
 			}
 		}
 		

@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TypeLite</RootNamespace>
     <AssemblyName>TypeLite</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -42,9 +43,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\TypeExtensions.cs" />
+    <Compile Include="Extensions\PropertyInfoExtensions.cs" />
     <Compile Include="ITsModelVisitor.cs" />
     <Compile Include="ITsTypeFormatter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReadOnlyDictionary\IReadOnlyDictionary.cs" />
+    <Compile Include="ReadOnlyDictionary\ReadOnlyDictionaryWrapper.cs" />
     <Compile Include="TsClassAttribute.cs" />
     <Compile Include="TsIgnoreAttribute.cs" />
     <Compile Include="TsModels\IMemberIdentifier.cs" />

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TypeLite.Extensions;
 
 namespace TypeLite.TsModels {
 	/// <summary>
@@ -21,11 +22,12 @@ namespace TypeLite.TsModels {
 		public TsSystemType(Type clrType)
 			: base(clrType) {
 
-			switch (clrType.Name) {
+			switch (this.ClrType.Name) {
 				case "Boolean": this.Kind = SystemTypeKind.Bool; break;
 				case "String":
 				case "Char":
 					this.Kind = SystemTypeKind.String; break;
+				case "Byte":
 				case "Int16":
 				case "Int32":
 				case "Int64":

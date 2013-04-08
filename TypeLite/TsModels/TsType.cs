@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TypeLite.Extensions;
 
 namespace TypeLite.TsModels {
 	/// <summary>
@@ -20,6 +21,10 @@ namespace TypeLite.TsModels {
 		/// </summary>
 		/// <param name="clrType">The CLR type represented by this instance of the TsType.</param>
 		public TsType(Type clrType) {
+			if (clrType.IsNullable()) {
+				clrType = clrType.GetNullableValueType();
+			}
+
 			this.ClrType = clrType;
 		}
 
@@ -34,6 +39,10 @@ namespace TypeLite.TsModels {
 		/// <param name="type">The CLR type to get TsTypeFamily of</param>
 		/// <returns>TsTypeFamily of the CLR type</returns>
 		internal static TsTypeFamily GetTypeFamily(System.Type type) {
+			if (type.IsNullable()) {
+				return TsType.GetTypeFamily(type.GetNullableValueType());
+			}
+
 			var isString = (type == typeof(string));
 			var isEnumerable = typeof(IEnumerable).IsAssignableFrom(type);
 
@@ -44,7 +53,7 @@ namespace TypeLite.TsModels {
 				return TsTypeFamily.Collection;
 			}
 
-			if (type.IsClass) {
+			if ((type.IsClass && type.FullName != "System.Object") || type.IsValueType /* structures */) {
 				return TsTypeFamily.Class;
 			}
 

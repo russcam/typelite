@@ -22,14 +22,15 @@ namespace TypeLite.TsModels {
 		/// Initializes a new instance of the TsCollection class with the specific CLR type.
 		/// </summary>
 		/// <param name="clrType">The CLR collection represented by this instance of the TsCollection.</param>
-		public TsCollection(Type clrType) : base(clrType) {
-			var enumerableType = TsType.GetEnumerableType(clrType);
+		public TsCollection(Type clrType)
+			: base(clrType) {
+			var enumerableType = TsType.GetEnumerableType(this.ClrType);
 			if (enumerableType != null) {
 				this.ItemsType = new TsType(enumerableType);
-			} else if (typeof(IEnumerable).IsAssignableFrom(clrType)) {
+			} else if (typeof(IEnumerable).IsAssignableFrom(this.ClrType)) {
 				this.ItemsType = TsType.Any;
 			} else {
-				throw new ArgumentException(string.Format("The type '{0}' is not collection.", clrType.FullName));
+				throw new ArgumentException(string.Format("The type '{0}' is not collection.", this.ClrType.FullName));
 			}
 		}
 	}

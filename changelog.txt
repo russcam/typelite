@@ -1,0 +1,5 @@
+Version 0.8.x      (x. x. xxxx)
+===============================
+Fixed		#2: TsIgnore-attribute doesn't work with properties
+Added		Support for nullable value types
+Added		Support for .NET 4		 

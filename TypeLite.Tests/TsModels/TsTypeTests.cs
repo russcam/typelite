@@ -75,6 +75,35 @@ namespace TypeLite.Tests.TsModels {
 
 			Assert.Equal(TsTypeFamily.Collection, family);
 		}
+
+		[Fact]
+		public void WhenGetTypeFamilyForObject_TypeIsReturned() {
+			var family = TsType.GetTypeFamily(typeof(object));
+
+			Assert.Equal(TsTypeFamily.Type, family);
+		}
+
+		[Fact]
+		public void WhenGetTypeFamilyForStruct_ClassIsReturned() {
+			var family = TsType.GetTypeFamily(typeof(PointStruct));
+
+			Assert.Equal(TsTypeFamily.Class, family);
+		}
+
+		[Fact]
+		public void WhenGetTypeFamilyForNullableSystemType_SystemTypeIsReturned() {
+			var family = TsType.GetTypeFamily(typeof(int?));
+
+			Assert.Equal(TsTypeFamily.System, family);
+		}
+
+		[Fact]
+		public void WhenGetTypeFamilyForNullableStruct_ClassIsReturned() {
+			var family = TsType.GetTypeFamily(typeof(PointStruct?));
+
+			Assert.Equal(TsTypeFamily.Class, family);
+		}
+
 		#endregion
 	}
 }

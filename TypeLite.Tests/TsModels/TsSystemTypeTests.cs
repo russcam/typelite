@@ -7,7 +7,6 @@ using TypeLite.Tests.TestModels;
 using TypeLite.TsModels;
 using Xunit;
 
-
 namespace TypeLite.Tests.TsModels {
 	public class TsSystemTypeTests {
 
@@ -51,6 +50,13 @@ namespace TypeLite.Tests.TsModels {
 			var target = new TsSystemType(typeof(DateTime));
 
 			Assert.Equal(SystemTypeKind.Date, target.Kind);
+		}
+
+		[Fact]
+		public void WhenInitializedWithNullableType_KindIsSetAccordingToUnderlayingType() {
+			var target = new TsSystemType(typeof(int?));
+
+			Assert.Equal(SystemTypeKind.Number, target.Kind);
 		}
 
 		[Fact]

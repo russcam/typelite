@@ -25,7 +25,7 @@ namespace TypeLite {
 			_model = model;
 			_modules = new Dictionary<string, TsModule>();
 			_knownTypes = new Dictionary<Type, TsType>();
-		
+
 			foreach (var classModel in model.Classes) {
 				_knownTypes[classModel.ClrType] = classModel;
 			}
@@ -72,7 +72,7 @@ namespace TypeLite {
 
 			switch (typeFamily) {
 				case TsTypeFamily.System: type = new TsSystemType(toResolve.ClrType); break;
-				case TsTypeFamily.Collection: type = this.CreateCollectionType(toResolve) ; break;
+				case TsTypeFamily.Collection: type = this.CreateCollectionType(toResolve); break;
 				default: type = TsType.Any; break;
 			}
 

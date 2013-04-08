@@ -60,19 +60,19 @@ namespace TypeLite.TsModels {
 		/// <param name="clrType">The CLR type represented by this instance of the TsClass</param>
 		public TsClass(Type clrType)
 			: base(clrType) {
-			this.Properties = clrType
+			this.Properties = this.ClrType
 				.GetProperties()
-				.Where(pi => pi.DeclaringType == clrType)
+				.Where(pi => pi.DeclaringType == this.ClrType)
 				.Select(pi => new TsProperty(pi))
 				.ToList();
 			this.Name = clrType.Name;
-			this.Module = new TsModule(clrType.Namespace);
+			this.Module = new TsModule(this.ClrType.Namespace);
 
-			if (clrType.BaseType != null && clrType.BaseType != typeof(object)) {
-				this.BaseType = new TsType(clrType.BaseType);
+			if (this.ClrType.BaseType != null && this.ClrType.BaseType != typeof(object) && this.ClrType.BaseType != typeof(ValueType)) {
+				this.BaseType = new TsType(this.ClrType.BaseType);
 			}
 
-			var attribute = clrType.GetCustomAttribute<TsClassAttribute>(false);
+			var attribute = this.ClrType.GetCustomAttribute<TsClassAttribute>(false);
 			if (attribute != null) {
 				if (!string.IsNullOrEmpty(attribute.Name)) {
 					this.Name = attribute.Name;

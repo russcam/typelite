@@ -16,7 +16,7 @@
     </metadata>
     <files>
         <file src="Scripts\TypeLite.tt" target="content\net\Scripts\TypeLite.tt" />
-        <file src="bin\Release\TypeLite.dll" target="lib\net45\TypeLite.dll" />
-        <file src="bin\Release\TypeLite.pdb" target="lib\net45\TypeLite.pdb" />
+        <file src="bin\Release\TypeLite.dll" target="lib\net40\TypeLite.dll" />
+        <file src="bin\Release\TypeLite.pdb" target="lib\net40\TypeLite.pdb" />
     </files>
 </package>

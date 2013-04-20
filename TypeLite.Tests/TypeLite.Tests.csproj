@@ -55,6 +55,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegressionTests\DateTimeTests.cs" />
     <Compile Include="RegressionTests\DbGeometryIgnoreTests.cs" />
+    <Compile Include="RegressionTests\Generics0_8Tests.cs" />
     <Compile Include="RegressionTests\NullablesTests.cs" />
     <Compile Include="TestModels\Address.cs" />
     <Compile Include="TestModels\CustomClassName.cs" />

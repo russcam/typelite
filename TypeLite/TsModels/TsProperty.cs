@@ -37,9 +37,19 @@ namespace TypeLite.TsModels {
 		/// <param name="clrProperty">The CLR preperty represented by this instance of the TsProperty.</param>
 		public TsProperty(PropertyInfo clrProperty) {
 			this.ClrProperty = clrProperty;
-
-			this.PropertyType = new TsType(clrProperty.PropertyType);
 			this.Name = clrProperty.Name;
+
+			if (clrProperty.ReflectedType.IsGenericType) {
+				var definitionType = clrProperty.ReflectedType.GetGenericTypeDefinition();
+				var definitionTypeProperty = definitionType.GetProperty(clrProperty.Name);
+				if (definitionTypeProperty.PropertyType.IsGenericParameter) {
+					this.PropertyType = TsType.Any;
+				} else {
+					this.PropertyType = new TsType(clrProperty.PropertyType);
+				}
+			} else {
+				this.PropertyType = new TsType(clrProperty.PropertyType);
+			}
 
 			var attribute = clrProperty.GetCustomAttribute<TsPropertyAttribute>(false);
 			if (attribute != null) {

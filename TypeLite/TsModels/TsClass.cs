@@ -65,7 +65,13 @@ namespace TypeLite.TsModels {
 				.Where(pi => pi.DeclaringType == this.ClrType)
 				.Select(pi => new TsProperty(pi))
 				.ToList();
-			this.Name = clrType.Name;
+
+			if (clrType.IsGenericType) {
+				this.Name = clrType.Name.Remove(clrType.Name.IndexOf('`'));
+			} else {
+				this.Name = clrType.Name;
+			}
+
 			this.Module = new TsModule(this.ClrType.Namespace);
 
 			if (this.ClrType.BaseType != null && this.ClrType.BaseType != typeof(object) && this.ClrType.BaseType != typeof(ValueType)) {

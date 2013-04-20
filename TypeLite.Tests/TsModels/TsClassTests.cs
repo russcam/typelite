@@ -62,7 +62,7 @@ namespace TypeLite.Tests.TsModels {
 			var target = new TsClass(typeof(CustomClassName));
 
 			Assert.Equal("MyClass", target.Name);
-        }
+		}
 
 		[Fact]
 		public void WhenInitialized_ModuleIsSetToNamespaceModule() {
@@ -79,30 +79,30 @@ namespace TypeLite.Tests.TsModels {
 			Assert.Equal("MyModule", target.Module.Name);
 		}
 
-        #region Module property tests
+		#region Module property tests
 
-        [Fact]
-        public void WhenModuleIsSet_ClassIsAddedToModule() {
-            var module = new TsModule("Tests");
-            var target = new TsClass(typeof(Address));
+		[Fact]
+		public void WhenModuleIsSet_ClassIsAddedToModule() {
+			var module = new TsModule("Tests");
+			var target = new TsClass(typeof(Address));
 
-            target.Module = module;
+			target.Module = module;
 
-            Assert.Contains(target, module.Classes);
-        }
+			Assert.Contains(target, module.Classes);
+		}
 
-        [Fact]
-        public void WhenModuleIsSetToOtherModule_ClassIsRemovedFromOriginalModule() {
-            var originalModule = new TsModule("Tests.Original");            
-            var module = new TsModule("Tests");
-            var target = new TsClass(typeof(Address));
+		[Fact]
+		public void WhenModuleIsSetToOtherModule_ClassIsRemovedFromOriginalModule() {
+			var originalModule = new TsModule("Tests.Original");
+			var module = new TsModule("Tests");
+			var target = new TsClass(typeof(Address));
 
-            target.Module = originalModule;
-            target.Module = module;
+			target.Module = originalModule;
+			target.Module = module;
 
-            Assert.DoesNotContain(target, originalModule.Classes);
-        }
+			Assert.DoesNotContain(target, originalModule.Classes);
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

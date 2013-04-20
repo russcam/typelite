@@ -8,15 +8,20 @@ interface Customer {
   Name: string;
   Email: string;
   VIP: bool;
-  Orders: Order[];
+  Orders: Eshop.Order[];
 }
 interface Order {
-  Products: Product[];
+  Products: Eshop.Product[];
   TotalPrice: number;
   Created: Date;
 }
 interface Product {
   Name: string;
   Price: number;
+  ID: System.Guid;
+}
+}
+module System {
+interface Guid {
 }
 }

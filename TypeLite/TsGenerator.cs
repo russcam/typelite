@@ -141,13 +141,38 @@ namespace TypeLite {
 					continue;
 				}
 
-				sb.AppendFormat("  {0}: {1};", _memberFormatter(property), _formatter.FormatType(property.PropertyType));
+				sb.AppendFormat("  {0}: {1};", _memberFormatter(property), this.GetFullyQualifiedTypeName(property.PropertyType));
 				sb.AppendLine();
 			}
 
 			sb.AppendLine("}");
 
 			_generatedClasses.Add(classModel);
+		}
+
+		/// <summary>
+		/// Gets fully qualified name of the type
+		/// </summary>
+		/// <param name="type">The type to get name of</param>
+		/// <returns>Fully qualified name of the type</returns>
+		private string GetFullyQualifiedTypeName(TsType type) {
+			var moduleName = string.Empty;
+
+			if (type as TsClass != null) {
+				var classType = (TsClass)type;
+				moduleName = classType.Module != null ? classType.Module.Name : string.Empty;
+			} else if (type as TsCollection != null) {
+				var collectionType = (TsCollection)type;
+				if (collectionType.ItemsType as TsClass != null) {
+					moduleName = ((TsClass)collectionType.ItemsType).Module != null ? ((TsClass)collectionType.ItemsType).Module.Name : string.Empty;
+				}
+			}
+
+			if (!string.IsNullOrEmpty(moduleName)) {
+				return moduleName + "." + _formatter.FormatType(type);
+			}
+
+			return _formatter.FormatType(type);
 		}
 	}
 }

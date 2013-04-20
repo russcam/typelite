@@ -18,8 +18,8 @@ namespace TypeLite.Tests.RegressionTests {
 			var model = builder.Build();
 			var result = generator.Generate(model);
 
-			Assert.Contains("NullableStructure: Structure1;", result);
-			Assert.Contains("NullableStructureCollection: Structure2[];", result);
+			Assert.Contains("NullableStructure: TypeLite.Tests.RegressionTests.Structure1;", result);
+			Assert.Contains("NullableStructureCollection: TypeLite.Tests.RegressionTests.Structure2[];", result);
 			Assert.Contains("NullableInt: number;", result);
 		}
 

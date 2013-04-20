@@ -51,6 +51,18 @@ namespace TypeLite.Tests {
 			Assert.False(script.Contains("Street"));
 		}
 
+		[Fact]
+		public void WhenClassIsReferenced_FullyQualifiedNameIsUsed() {
+			var builder = new TsModelBuilder();
+			builder.Add<Person>();
+			var model = builder.Build();
+			var target = new TsGenerator();
+			var script = target.Generate(model);
+
+			Assert.Contains("PrimaryAddress: TypeLite.Tests.TestModels.Address", script);
+			Assert.Contains("Addresses: TypeLite.Tests.TestModels.Address[]", script);
+		}
+
 		#endregion
 	}
 }

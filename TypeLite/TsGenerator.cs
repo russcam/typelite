@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TypeLite.Extensions;
 using TypeLite.ReadOnlyDictionary;
 using TypeLite.TsModels;
 
@@ -33,7 +34,7 @@ namespace TypeLite {
 
 			_formatter = new TsTypeFormatterCollection();
 			_formatter.RegisterTypeFormatter<TsClass>((type, formatter) => ((TsClass)type).Name);
-			_formatter.RegisterTypeFormatter<TsSystemType>((type, formatter) => ((TsSystemType)type).Kind.ToString().ToLower());
+			_formatter.RegisterTypeFormatter<TsSystemType>((type, formatter) => ((TsSystemType)type).Kind.ToTypeScriptString());
 			_formatter.RegisterTypeFormatter<TsCollection>((type, formatter) => formatter.FormatType(((TsCollection)type).ItemsType) + "[]");
 
 			_memberFormatter = (identifier) => identifier.Name;

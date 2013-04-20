@@ -131,7 +131,7 @@ namespace TypeLite {
 		private void AppendClassDefinition(TsClass classModel, StringBuilder sb) {
 			sb.AppendFormat("interface {0} ", _formatter.FormatType(classModel));
 			if (classModel.BaseType != null) {
-				sb.AppendFormat("extends {0} ", _formatter.FormatType(classModel.BaseType));
+				sb.AppendFormat("extends {0} ", this.GetFullyQualifiedTypeName(classModel.BaseType));
 			}
 
 			sb.AppendLine("{");

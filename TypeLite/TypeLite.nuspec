@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>TypeLite</id>
-        <version></version>
+        <version>0.8.2</version>
         <title>TypeLITE</title>
         <authors>Lukas Kabrt and contributors</authors>
         <owners />
@@ -16,7 +16,7 @@
     </metadata>
     <files>
         <file src="Scripts\TypeLite.tt" target="content\net\Scripts\TypeLite.tt" />
-        <file src="bin\Release\TypeLite.dll" target="lib\net45\TypeLite.dll" />
-        <file src="bin\Release\TypeLite.pdb" target="lib\net45\TypeLite.pdb" />
+        <file src="bin\Release\TypeLite.dll" target="lib\net40\TypeLite.dll" />
+        <file src="bin\Release\TypeLite.pdb" target="lib\net40\TypeLite.pdb" />
     </files>
 </package>

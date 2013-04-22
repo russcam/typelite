@@ -1,4 +1,10 @@
-Version 0.8.x      (x. x. xxxx)
+Version 0.8.3      (x. 4. 2013)
+===============================
+Fixed		#4: DateTime type conversion results in invalid type definition
+Fixed		#5: Generic classes result in invalid interface definitions
+Fixed		#6: Properties with System.Guid type result in invalid typescript code	 
+
+Version 0.8.2      (8. 4. 2013)
 ===============================
 Fixed		#2: TsIgnore-attribute doesn't work with properties
 Added		Support for nullable value types

@@ -3,7 +3,7 @@
  
 
 
-module Eshop {
+declare module Eshop {
 interface Customer {
   Name: string;
   Email: string;
@@ -21,7 +21,7 @@ interface Product {
   ID: System.Guid;
 }
 }
-module System {
+declare module System {
 interface Guid {
 }
 }

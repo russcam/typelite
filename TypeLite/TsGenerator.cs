@@ -109,7 +109,7 @@ namespace TypeLite {
 		}
 
 		private void AppendModule(TsModule module, StringBuilder sb) {
-			sb.AppendFormat("module {0} ", module.Name);
+			sb.AppendFormat("declare module {0} ", module.Name);
 			sb.AppendLine("{");
 
 			foreach (var classModel in module.Classes) {

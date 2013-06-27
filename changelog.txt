@@ -1,5 +1,10 @@
+Version 0.9.0beta  (27. 6. 2013)
+================================
+Fixed		#11: Typescript 0.9 requires declare keyword in the module definition
+
+
 Version 0.8.3      (22. 4. 2013)
-===============================
+================================
 Fixed		#4: DateTime type conversion results in invalid type definition
 Fixed		#5: Generic classes result in invalid interface definitions
 Fixed		#6: Properties with System.Guid type result in invalid typescript code	 

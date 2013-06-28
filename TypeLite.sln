@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{6F2E8A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeLite.Demo", "TypeLite.Demo\TypeLite.Demo.csproj", "{79D046FE-CE35-47FC-9DA6-C0E7AA2061F9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeLite.Net4", "TypeLite.Net4\TypeLite.Net4.csproj", "{0AD860B2-2AAA-47CC-ACBA-F2D97BE19D66}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,10 @@ Global
 		{79D046FE-CE35-47FC-9DA6-C0E7AA2061F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79D046FE-CE35-47FC-9DA6-C0E7AA2061F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79D046FE-CE35-47FC-9DA6-C0E7AA2061F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0AD860B2-2AAA-47CC-ACBA-F2D97BE19D66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0AD860B2-2AAA-47CC-ACBA-F2D97BE19D66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0AD860B2-2AAA-47CC-ACBA-F2D97BE19D66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0AD860B2-2AAA-47CC-ACBA-F2D97BE19D66}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

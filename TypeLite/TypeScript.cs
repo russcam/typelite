@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using TypeLite.TsModels;
 
 namespace TypeLite {
@@ -27,6 +26,15 @@ namespace TypeLite {
 	public class TypeScriptFluent {
 		private TsModelBuilder _modelBuilder;
 		private TsGenerator _scriptGenerator;
+
+		/// <summary>
+		/// Gets the ModelBuilder being configured with fluent configuration.
+		/// </summary>
+		public TsModelBuilder ModelBuilder {
+			get {
+				return _modelBuilder;
+			}
+		}
 
 		/// <summary>
 		/// Initializes a new instance of the TypeScriptFluent class
@@ -63,18 +71,6 @@ namespace TypeLite {
 		/// <returns>Instance of the TypeScriptFluent that enables fluent configuration.</returns>
 		public TypeScriptFluent For(Assembly assembly) {
 			_modelBuilder.Add(assembly);
-			return this;
-		}
-
-		/// <summary>
-		/// Adds all classes annotated with the TsClassAttribute from all curently loaded assemblies.
-		/// </summary>
-		/// <returns>Instance of the TypeScriptFluent that enables fluent configuration.</returns>
-		public TypeScriptFluent ForLoadedAssemblies() {
-			foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies()) {
-				_modelBuilder.Add(assembly);
-			}
-
 			return this;
 		}
 

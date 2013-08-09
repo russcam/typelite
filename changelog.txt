@@ -1,4 +1,4 @@
-Version 0.9.1beta      (9. 8. 2013)
+Version 0.9.0beta  (27. 6. 2013)
 ================================
 Fixed		#13: TypeScript 0.9.1 uses boolean keyword instead of bool
 

@@ -15,7 +15,12 @@ namespace TypeLite.Extensions {
 		/// <param name="type">The value to convert</param>
 		/// <returns>system type identifier for TypeScript</returns>
 		public static string ToTypeScriptString(this SystemTypeKind type) {
-			return type == SystemTypeKind.Date ? type.ToString() : type.ToString().ToLower();
+			switch (type) {
+				case SystemTypeKind.Date: return "Date";
+				case SystemTypeKind.Bool: return "boolean";
+			}
+
+			return type.ToString().ToLower();
 		}
 	}
 }

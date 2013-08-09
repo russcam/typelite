@@ -7,7 +7,7 @@ declare module Eshop {
 interface Customer {
   Name: string;
   Email: string;
-  VIP: bool;
+  VIP: boolean;
   Orders: Eshop.Order[];
 }
 interface Order {

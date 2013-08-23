@@ -11,8 +11,10 @@ namespace TypeLite.Demo.Models {
 		public string Name { get; set; }
 		public string Email { get; set; }
 
-		[TsProperty(Name="VIP")]
+		[TsProperty(Name = "VIP")]
 		public bool IsVIP { get; set; }
+
+		public CustomerKind Kind { get; set; }
 
 		public IEnumerable<Order> Orders { get; set; }
 	}

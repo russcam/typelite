@@ -8,6 +8,7 @@ interface Customer {
   Name: string;
   Email: string;
   VIP: boolean;
+  Kind: any;
   Orders: Eshop.Order[];
 }
 interface Order {

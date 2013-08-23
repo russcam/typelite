@@ -115,7 +115,7 @@ namespace TypeLite.Tests {
 
 			var model = target.Build();
 
-			var module = model.Modules.Single();
+			var module = model.Modules.Where(m => m.Name == "TypeLite.Tests.TestModels").Single();
 			var personClass = model.Classes.Where(o => o.ClrType == typeof(Person)).Single();
 
 			Assert.Same(personClass.Module, module);

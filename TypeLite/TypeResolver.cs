@@ -72,6 +72,7 @@ namespace TypeLite {
 			switch (typeFamily) {
 				case TsTypeFamily.System: type = new TsSystemType(toResolve.ClrType); break;
 				case TsTypeFamily.Collection: type = this.CreateCollectionType(toResolve); break;
+				case TsTypeFamily.Enum: type = new TsEnum(toResolve.ClrType); break;
 				default: type = TsType.Any; break;
 			}
 

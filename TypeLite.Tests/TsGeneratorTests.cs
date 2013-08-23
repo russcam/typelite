@@ -30,7 +30,7 @@ namespace TypeLite.Tests {
 			var builder = new TsModelBuilder();
 			builder.Add<Address>();
 			var model = builder.Build();
-			model.Classes.Single().IsIgnored = true;
+			model.Classes.Where(o => o.Name == "Address").Single().IsIgnored = true;
 
 			var target = new TsGenerator();
 			var script = target.Generate(model);
@@ -43,7 +43,7 @@ namespace TypeLite.Tests {
 			var builder = new TsModelBuilder();
 			builder.Add<Address>();
 			var model = builder.Build();
-			model.Classes.Single().Properties.Where(p => p.Name == "Street").Single().IsIgnored = true;
+			model.Classes.Where(o => o.Name == "Address").Single().Properties.Where(p => p.Name == "Street").Single().IsIgnored = true;
 
 			var target = new TsGenerator();
 			var script = target.Generate(model);

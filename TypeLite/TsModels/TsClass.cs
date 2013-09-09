@@ -59,7 +59,8 @@ namespace TypeLite.TsModels {
 		/// <param name="clrType">The CLR type represented by this instance of the TsClass</param>
 		public TsClass(Type clrType)
 			: base(clrType) {
-			this.Properties = this.ClrType
+			
+            this.Properties = this.ClrType
 				.GetProperties()
 				.Where(pi => pi.DeclaringType == this.ClrType)
 				.Select(pi => new TsProperty(pi))

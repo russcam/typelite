@@ -16,12 +16,14 @@ namespace TypeLite {
 		/// Gets or sets collection of classes in the model being built.
 		/// </summary>
 		internal Dictionary<Type, TsClass> Classes { get; set; }
+        internal Dictionary<Type, TsEnum> Enums { get; set; }
 
 		/// <summary>
 		/// Initializes a new instance of the TsModelBuilder class.
 		/// </summary>
 		public TsModelBuilder() {
 			this.Classes = new Dictionary<Type, TsClass>();
+		    this.Enums = new Dictionary<Type, TsEnum>();
 		}
 
 		/// <summary>
@@ -74,9 +76,27 @@ namespace TypeLite {
 				}
 				if (includeReferences) {
 					this.AddReferences(added);
+
+                    foreach (var e in added.Properties.Where(p => p.PropertyType.ClrType.IsEnum))
+                        AddEnum(e.PropertyType as TsEnum);
 				}
 			}
 		}
+
+        /// <summary>
+        /// Adds all of the enums referenced in the class
+        /// to the output
+        /// ignore
+        /// </summary>
+        /// <param name="tsenum"></param>
+        private void AddEnum(TsEnum tsenum)
+        {
+
+            if (!this.Enums.ContainsKey(tsenum.ClrType))
+            {
+                this.Enums[tsenum.ClrType] = tsenum;
+            }
+        }
 
 		/// <summary>
 		/// Adds all classes annotated with the TsClassAttribute from an assembly to the model.
@@ -93,7 +113,7 @@ namespace TypeLite {
 		/// </summary>
 		/// <returns>The script model with the classes.</returns>
 		public TsModel Build() {
-			var model = new TsModel(this.Classes.Values);
+			var model = new TsModel(this.Classes.Values, this.Enums.Values);
 			model.RunVisitor(new TypeResolver(model));
 			return model;
 		}
@@ -112,7 +132,7 @@ namespace TypeLite {
 					}
 				} else if (propertyTypeFamily == TsTypeFamily.Class) {
 					this.Add(property.PropertyType.ClrType);
-				}
+				} 
 			}
 		}
 	}

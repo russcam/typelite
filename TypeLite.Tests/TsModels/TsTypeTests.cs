@@ -104,6 +104,14 @@ namespace TypeLite.Tests.TsModels {
 			Assert.Equal(TsTypeFamily.Class, family);
 		}
 
+        [Fact]
+        public void WhenGetTypeFamilyForEnum_EnumIsReturned()
+        {
+            var family = TsType.GetTypeFamily(typeof(ItemType));
+            
+            Assert.Equal(TsTypeFamily.Enum, family);
+        }
+
 		#endregion
 	}
 }

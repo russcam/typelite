@@ -61,6 +61,7 @@
     <Compile Include="TestModels\CustomClassName.cs" />
     <Compile Include="TestModels\CustomTypeCollectionReference.cs" />
     <Compile Include="TestModels\Employee.cs" />
+    <Compile Include="TestModels\Item.cs" />
     <Compile Include="TestModels\Person.cs" />
     <Compile Include="TestModels\PointStruct.cs" />
     <Compile Include="TestModels\Product.cs" />

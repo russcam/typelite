@@ -72,6 +72,7 @@ namespace TypeLite {
 			switch (typeFamily) {
 				case TsTypeFamily.System: type = new TsSystemType(toResolve.ClrType); break;
 				case TsTypeFamily.Collection: type = this.CreateCollectionType(toResolve); break;
+                case TsTypeFamily.Enum:type = this.CreateEnumType(toResolve); break;
 				default: type = TsType.Any; break;
 			}
 
@@ -89,6 +90,18 @@ namespace TypeLite {
 			resolved.ItemsType = this.ResolveType(resolved.ItemsType);
 			return resolved;
 		}
+
+
+        /// <summary>
+        /// Creates a TsEnum from TsType
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        private TsEnum CreateEnumType(TsType type)
+        {
+            var resolved = new TsEnum(type.ClrType);
+            return resolved;
+        }
 
 		/// <summary>
 		/// Resolves module instance from the module name.

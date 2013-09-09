@@ -54,6 +54,8 @@
     <Compile Include="TsModels\IMemberIdentifier.cs" />
     <Compile Include="TsModels\SystemTypeKind.cs" />
     <Compile Include="TsMemberIdentifierFormatter.cs" />
+    <Compile Include="TsModels\TsEnum.cs" />
+    <Compile Include="TsModels\TsEnumValue.cs" />
     <Compile Include="TsModels\TsModule.cs" />
     <Compile Include="TsPropertyAttribute.cs" />
     <Compile Include="TypeScript.cs" />

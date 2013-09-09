@@ -103,6 +103,35 @@ namespace TypeLite.Tests.TsModels {
 			Assert.DoesNotContain(target, originalModule.Classes);
 		}
 
+        [Fact]
+        public void WhenInitializedWithClassWithEnum_PropertiesCreated()
+        {
+            var target = new TsClass(typeof(Item));
+            
+            Assert.Single(target.Properties.Where(o => o.ClrProperty == typeof(Item).GetProperty("Type")));
+            Assert.Single(target.Properties.Where(o => o.ClrProperty == typeof(Item).GetProperty("Id")));
+            Assert.Single(target.Properties.Where(o => o.ClrProperty == typeof(Item).GetProperty("Name")));
+            
+            Assert.Null(target.BaseType);
+        }
+
+        [Fact]
+        public void WhenInitializedWithClassWithEnum_EnumPropertyCreated()
+        {
+            var target = new TsClass(typeof(Item));
+
+            Assert.Single(target.Properties.Where(o => o.ClrProperty == typeof(Item).GetProperty("Type")));
+            var property = target.Properties.Single(o => o.ClrProperty == typeof (Item).GetProperty("Type"));
+            Assert.True(property.PropertyType.GetType() == typeof(TsEnum));
+            var enumtype = property.PropertyType as TsEnum;
+            Assert.NotNull(enumtype);
+            Assert.True(enumtype.Values.Any());
+            Assert.True(enumtype.Values.Any(a => a.Name == "Book" && a.Value == (ulong) ItemType.Book));
+            Assert.True(enumtype.Values.Any(a => a.Name == "Music" && a.Value == (ulong) ItemType.Music));
+            Assert.True(enumtype.Values.Any(a => a.Name == "Clothing" && a.Value == (ulong) ItemType.Clothing));
+            Assert.Null(target.BaseType);
+        }
+
 		#endregion
 	}
 }

@@ -50,6 +50,7 @@
     <Compile Include="ReadOnlyDictionary\IReadOnlyDictionary.cs" />
     <Compile Include="ReadOnlyDictionary\ReadOnlyDictionaryWrapper.cs" />
     <Compile Include="TsClassAttribute.cs" />
+    <Compile Include="TsEnumAttribute.cs" />
     <Compile Include="TsIgnoreAttribute.cs" />
     <Compile Include="TsModels\IMemberIdentifier.cs" />
     <Compile Include="TsModels\SystemTypeKind.cs" />

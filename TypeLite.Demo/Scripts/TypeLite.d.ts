@@ -4,11 +4,16 @@
 
 
 declare module Eshop {
+enum CustomerKind {
+  Corporate = 1,
+  Individual = 2
+}
 interface Customer {
   Name: string;
   Email: string;
   VIP: boolean;
-  Kind: any;
+  Kind: Eshop.CustomerKind;
+  TEST: Eshop.CustomerKind;
   Orders: Eshop.Order[];
 }
 interface Order {

@@ -60,6 +60,8 @@ namespace TypeLite.TsModels {
 				return TsTypeFamily.Class;
 			}
 
+            
+
 			return TsTypeFamily.Type;
 		}
 

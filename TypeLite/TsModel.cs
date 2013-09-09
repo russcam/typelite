@@ -14,6 +14,13 @@ namespace TypeLite {
         /// </summary>
         public ISet<TsClass> Classes { get; private set; }
 
+
+        /// <summary>
+        /// Gets a collection of enums in the model
+        /// </summary>
+        public ISet<TsEnum> Enums { get; private set; } 
+
+
         /// <summary>
         /// Gets a collection of references to other d.ts files.
         /// </summary>
@@ -39,6 +46,20 @@ namespace TypeLite {
             this.Classes = new HashSet<TsClass>(classes);
             this.References = new HashSet<string>();
 			this.Modules = new HashSet<TsModule>();
+            this.Enums = new HashSet<TsEnum>();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the TsModel class with collection of classes and enums
+        /// </summary>
+        /// <param name="classes">The collection of classes to add to the model.</param>
+        /// <param name="enums">The collection of enums to add to the model.</param>
+        public TsModel(IEnumerable<TsClass> classes, IEnumerable<TsEnum> enums )
+        {
+            this.Classes = new HashSet<TsClass>(classes);
+            this.References = new HashSet<string>();
+            this.Modules = new HashSet<TsModule>();
+            this.Enums = new HashSet<TsEnum>(enums);
         }
 
         /// <summary>

@@ -30,7 +30,7 @@ namespace TypeLite.Tests {
 			var builder = new TsModelBuilder();
 			builder.Add<Address>();
 			var model = builder.Build();
-			model.Classes.Single().IsIgnored = true;
+			model.Classes.Where(o => o.Name == "Address").Single().IsIgnored = true;
 
 			var target = new TsGenerator();
 			var script = target.Generate(model);
@@ -43,7 +43,7 @@ namespace TypeLite.Tests {
 			var builder = new TsModelBuilder();
 			builder.Add<Address>();
 			var model = builder.Build();
-			model.Classes.Single().Properties.Where(p => p.Name == "Street").Single().IsIgnored = true;
+			model.Classes.Where(o => o.Name == "Address").Single().Properties.Where(p => p.Name == "Street").Single().IsIgnored = true;
 
 			var target = new TsGenerator();
 			var script = target.Generate(model);
@@ -62,6 +62,19 @@ namespace TypeLite.Tests {
 			Assert.Contains("PrimaryAddress: TypeLite.Tests.TestModels.Address", script);
 			Assert.Contains("Addresses: TypeLite.Tests.TestModels.Address[]", script);
 		}
+
+        [Fact]
+        public void WhenClassWithEnumReferenced_FullyQualifiedNameIsUsed()
+        {
+            var builder = new TsModelBuilder();
+            builder.Add<Item>();
+            var model = builder.Build();
+            var target = new TsGenerator();
+            var script = target.Generate(model);
+
+            Assert.Contains("Type: TypeLite.Tests.TestModels.ItemType", script);
+            
+        }
 
 		#endregion
 	}

@@ -38,6 +38,8 @@ namespace TypeLite.TsModels {
 			this.ClrProperty = clrProperty;
 			this.Name = clrProperty.Name;
 
+
+
 			if (clrProperty.ReflectedType.IsGenericType) {
 				var definitionType = clrProperty.ReflectedType.GetGenericTypeDefinition();
 				var definitionTypeProperty = definitionType.GetProperty(clrProperty.Name);
@@ -46,8 +48,11 @@ namespace TypeLite.TsModels {
 				} else {
 					this.PropertyType = new TsType(clrProperty.PropertyType);
 				}
-			} else {
-				this.PropertyType = new TsType(clrProperty.PropertyType);
+			}
+            else {
+                //added support for enums, if type is enum create it as ts enum;
+                this.PropertyType = clrProperty.PropertyType.IsEnum ? new TsEnum(clrProperty.PropertyType) : new TsType(clrProperty.PropertyType);
+				
 			}
 
 			var attribute = clrProperty.GetCustomAttribute<TsPropertyAttribute>(false);

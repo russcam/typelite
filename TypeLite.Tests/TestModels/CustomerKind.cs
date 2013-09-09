@@ -5,9 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace TypeLite.Tests.TestModels {
-	public class Address {
-		public string Street { get; set; }
-		public string Town { get; set; }
-		public ContactType AddressType { get; set; }
+	public enum CustomerKind {
+		Corporate = 1,
+		Individual = 2
 	}
 }

@@ -27,6 +27,11 @@ namespace TypeLite.TsModels {
 		Class,
 
 		/// <summary>
+		/// Enum
+		/// </summary>
+		Enum,
+
+		/// <summary>
 		/// Other type
 		/// </summary>
 		Type

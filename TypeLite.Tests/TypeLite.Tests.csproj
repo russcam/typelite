@@ -58,9 +58,12 @@
     <Compile Include="RegressionTests\Generics0_8Tests.cs" />
     <Compile Include="RegressionTests\NullablesTests.cs" />
     <Compile Include="TestModels\Address.cs" />
+    <Compile Include="TestModels\ContactType.cs" />
     <Compile Include="TestModels\CustomClassName.cs" />
+    <Compile Include="TestModels\CustomerKind.cs" />
     <Compile Include="TestModels\CustomTypeCollectionReference.cs" />
     <Compile Include="TestModels\Employee.cs" />
+    <Compile Include="TestModels\Item.cs" />
     <Compile Include="TestModels\Person.cs" />
     <Compile Include="TestModels\PointStruct.cs" />
     <Compile Include="TestModels\Product.cs" />
@@ -68,6 +71,7 @@
     <Compile Include="TsModelBuilderTests.cs" />
     <Compile Include="TsModels\TsClassTests.cs" />
     <Compile Include="TsModels\TsCollectionTests.cs" />
+    <Compile Include="TsModels\TsEnumTests.cs" />
     <Compile Include="TsModels\TsModuleTests.cs" />
     <Compile Include="TsModels\TsPropertyTests.cs" />
     <Compile Include="TsModels\TsSystemTypeTests.cs" />

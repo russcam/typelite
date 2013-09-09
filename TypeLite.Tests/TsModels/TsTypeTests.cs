@@ -70,6 +70,13 @@ namespace TypeLite.Tests.TsModels {
 		}
 
 		[Fact]
+		public void WhenGetTypeFamilyForEnum_EnumIsReturned() {
+			var family = TsType.GetTypeFamily(typeof(CustomerKind));
+
+			Assert.Equal(TsTypeFamily.Enum, family);
+		}
+
+		[Fact]
 		public void WhenGetTypeFamilyForIEnumerable_ClassIsReturned() {
 			var family = TsType.GetTypeFamily(typeof(List<int>));
 

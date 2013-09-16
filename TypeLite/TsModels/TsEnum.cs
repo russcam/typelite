@@ -78,7 +78,7 @@ namespace TypeLite.TsModels {
 		protected IEnumerable<TsEnumValue> GetEnumValues(Type clrType) {
 			return clrType.GetFields()
 				.Where(field => field.IsLiteral && !string.IsNullOrEmpty(field.Name))
-				.Select(field => new TsEnumValue(field.Name, (int)field.GetValue(null)));
+				.Select(field => new TsEnumValue(field.Name, field.GetValue(null)));
 		}
 	}
 }

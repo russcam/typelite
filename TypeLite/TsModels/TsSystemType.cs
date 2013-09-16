@@ -36,6 +36,8 @@ namespace TypeLite.TsModels {
 				case "Single":
 				case "Double":
 				case "Decimal":
+				case "IntPtr":
+				case "UIntPtr":
 					this.Kind = SystemTypeKind.Number; break;
 				case "DateTime":
 					this.Kind = SystemTypeKind.Date; break;

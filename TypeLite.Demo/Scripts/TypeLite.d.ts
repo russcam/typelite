@@ -13,7 +13,6 @@ interface Customer {
   Email: string;
   VIP: boolean;
   Kind: Eshop.CustomerKind;
-  TEST: Eshop.CustomerKind;
   Orders: Eshop.Order[];
 }
 interface Order {

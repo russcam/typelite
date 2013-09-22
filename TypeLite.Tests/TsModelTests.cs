@@ -10,7 +10,6 @@ using Xunit;
 
 namespace TypeLite.Tests {
 	public class TsModelTests {
-
 		[Fact]
 		public void WhenInitialized_ClassesCollectionIsEmpty() {
 			var target = new TsModel();
@@ -19,13 +18,13 @@ namespace TypeLite.Tests {
 			Assert.Empty(target.Classes);
 		}
 
-        [Fact]
-        public void WhenInitialized_ReferencesCollectionIsEmpty() {
-            var target = new TsModel();
+		[Fact]
+		public void WhenInitialized_ReferencesCollectionIsEmpty() {
+			var target = new TsModel();
 
-            Assert.NotNull(target.References);
-            Assert.Empty(target.References);
-        }
+			Assert.NotNull(target.References);
+			Assert.Empty(target.References);
+		}
 
 		[Fact]
 		public void WhenInitialized_ModulesCollectionIsEmpty() {
@@ -35,34 +34,34 @@ namespace TypeLite.Tests {
 			Assert.Empty(target.Modules);
 		}
 
-        [Fact]
-        public void WhenInitializedWithCollectionOfClasses_ClassesAreAddedToModel() {
-            var classes = new[] { new TsClass(typeof(Person)) };
+		[Fact]
+		public void WhenInitializedWithCollectionOfClasses_ClassesAreAddedToModel() {
+			var classes = new[] { new TsClass(typeof(Person)) };
 
-            var target = new TsModel(classes);
+			var target = new TsModel(classes);
 
-            Assert.Equal(classes, target.Classes);
-        }
+			Assert.Equal(classes, target.Classes);
+		}
 
 		#region RunVisitor tests
 
-        [Fact]
-        public void WhenRunVisitor_VisitModelIsCalledForModel() {
-            var visitor = new Mock<TsModelVisitor>();
-            var builder = new TsModelBuilder();
-            builder.Add(typeof(Person), true);
+		[Fact]
+		public void WhenRunVisitor_VisitModelIsCalledForModel() {
+			var visitor = new Mock<TsModelVisitor>();
+			var builder = new TsModelBuilder();
+			builder.Add(typeof(Person), true);
 
-            var target = builder.Build();
+			var target = builder.Build();
 
-            visitor.Setup(o => o.VisitModel(target)).Verifiable();
+			visitor.Setup(o => o.VisitModel(target)).Verifiable();
 
-            target.RunVisitor(visitor.Object);
+			target.RunVisitor(visitor.Object);
 
-            visitor.VerifyAll();
-        }
+			visitor.VerifyAll();
+		}
 
 		[Fact]
-		public void WhenRunVisitor_VisitModelIsCalledForModules() {
+		public void WhenRunVisitor_VisitModulIsCalledForModules() {
 			var visitor = new Mock<TsModelVisitor>();
 			visitor.Setup(o => o.VisitModule(It.Is<TsModule>(m => m.Name == typeof(Person).Namespace))).Verifiable();
 
@@ -95,6 +94,20 @@ namespace TypeLite.Tests {
 			var visitor = new Mock<TsModelVisitor>();
 			visitor.Setup(o => o.VisitProperty(It.Is<TsProperty>(p => p.Name == "Street"))).Verifiable();
 			visitor.Setup(o => o.VisitProperty(It.Is<TsProperty>(p => p.Name == "Town"))).Verifiable();
+
+			var builder = new TsModelBuilder();
+			builder.Add(typeof(Address), true);
+
+			var target = builder.Build();
+			target.RunVisitor(visitor.Object);
+
+			visitor.VerifyAll();
+		}
+
+		[Fact]
+		public void WhenRunVisitor_VisitEnumIsCalledForEnumsOfModel() {
+			var visitor = new Mock<TsModelVisitor>();
+			visitor.Setup(o => o.VisitEnum(It.Is<TsEnum>(c => c.ClrType == typeof(ContactType)))).Verifiable();
 
 			var builder = new TsModelBuilder();
 			builder.Add(typeof(Address), true);

@@ -91,18 +91,6 @@ namespace TypeLite {
 			return resolved;
 		}
 
-
-        /// <summary>
-        /// Creates a TsEnum from TsType
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        private TsEnum CreateEnumType(TsType type)
-        {
-            var resolved = new TsEnum(type.ClrType);
-            return resolved;
-        }
-
 		/// <summary>
 		/// Resolves module instance from the module name.
 		/// </summary>

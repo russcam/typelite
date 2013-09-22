@@ -15,7 +15,7 @@ namespace TypeLite {
 		private TsTypeFormatterCollection _formatter;
 		private TsMemberIdentifierFormatter _memberFormatter;
 		private HashSet<TsClass> _generatedClasses;
-	    private HashSet<TsEnum> _generatedEnums;
+		private HashSet<TsEnum> _generatedEnums;
 
 		/// <summary>
 		/// Gets collection of formatters for individual TsTypes
@@ -31,13 +31,13 @@ namespace TypeLite {
 		/// </summary>
 		public TsGenerator() {
 			_generatedClasses = new HashSet<TsClass>();
-            _generatedEnums = new HashSet<TsEnum>();
+			_generatedEnums = new HashSet<TsEnum>();
 
 			_formatter = new TsTypeFormatterCollection();
 			_formatter.RegisterTypeFormatter<TsClass>((type, formatter) => ((TsClass)type).Name);
 			_formatter.RegisterTypeFormatter<TsSystemType>((type, formatter) => ((TsSystemType)type).Kind.ToTypeScriptString());
 			_formatter.RegisterTypeFormatter<TsCollection>((type, formatter) => formatter.FormatType(((TsCollection)type).ItemsType) + "[]");
-            _formatter.RegisterTypeFormatter<TsEnum>((type,formatter)=>((TsEnum)type).Name);
+			_formatter.RegisterTypeFormatter<TsEnum>((type, formatter) => ((TsEnum)type).Name);
 			_memberFormatter = (identifier) => identifier.Name;
 		}
 
@@ -83,42 +83,37 @@ namespace TypeLite {
 
 			sb.AppendLine();
 
-          
 
 
-            foreach (var enumModel in model.Enums)
-            {
-                if (!enumModel.IsIgnored)
-                {
-                    var module = model.Modules.SingleOrDefault(m => m.Name == enumModel.Module.Name);
-                    if (module == null)
-                        model.Modules.Add(enumModel.Module);
-                    else
-                        module.AddEnum(enumModel);
-                    
-                }
-            }
 
-            foreach (var classModel in model.Classes)
-            {
-                if (!classModel.IsIgnored)
-                {
-                    var module = model.Modules.SingleOrDefault(m => m.Name == classModel.Module.Name);
-                     if (module == null)
-                        model.Modules.Add(classModel.Module);
-                     else
-                        module.AddClass(classModel);
-                }
+			foreach (var enumModel in model.Enums) {
+				if (!enumModel.IsIgnored) {
+					var module = model.Modules.SingleOrDefault(m => m.Name == enumModel.Module.Name);
+					if (module == null)
+						model.Modules.Add(enumModel.Module);
+					else
+						module.AddEnum(enumModel);
 
-            }
+				}
+			}
 
-            foreach (var module in model.Modules)
-            {
-                this.AppendModule(module, sb);
-            }
-          
+			foreach (var classModel in model.Classes) {
+				if (!classModel.IsIgnored) {
+					var module = model.Modules.SingleOrDefault(m => m.Name == classModel.Module.Name);
+					if (module == null)
+						model.Modules.Add(classModel.Module);
+					else
+						module.AddClass(classModel);
+				}
 
-           
+			}
+
+			foreach (var module in model.Modules) {
+				this.AppendModule(module, sb);
+			}
+
+
+
 			return sb.ToString();
 
 		}
@@ -137,16 +132,14 @@ namespace TypeLite {
 			sb.AppendFormat("declare module {0} ", module.Name);
 			sb.AppendLine("{");
 
-            foreach (var enumModel in module.Enums)
-            {
-                if (enumModel.IsIgnored)
-                {
-                    continue;
-                }
+			foreach (var enumModel in module.Enums) {
+				if (enumModel.IsIgnored) {
+					continue;
+				}
 
-                this.AppendEnumDefinition(enumModel,sb);
-                    
-            }
+				this.AppendEnumDefinition(enumModel, sb);
+
+			}
 
 			foreach (var classModel in module.Classes) {
 				if (classModel.IsIgnored) {
@@ -186,25 +179,23 @@ namespace TypeLite {
 			_generatedClasses.Add(classModel);
 		}
 
-        private void AppendEnumDefinition(TsEnum enumModel, StringBuilder sb)
-        {
-            sb.AppendFormat("enum {0} ", _formatter.FormatType(enumModel));
-           
+		private void AppendEnumDefinition(TsEnum enumModel, StringBuilder sb) {
+			sb.AppendFormat("enum {0} ", _formatter.FormatType(enumModel));
 
-            sb.AppendLine("{");
 
-            int i = 1;
-            foreach (var v in enumModel.Values)
-            {
-                sb.AppendFormat(i < enumModel.Values.Count ? "  {0} = {1}," : "  {0} = {1}", v.Name, v.Value);
-                sb.AppendLine();
-                i++;
-            }
+			sb.AppendLine("{");
 
-            sb.AppendLine("}");
+			int i = 1;
+			foreach (var v in enumModel.Values) {
+				sb.AppendFormat(i < enumModel.Values.Count ? "  {0} = {1}," : "  {0} = {1}", v.Name, v.Value);
+				sb.AppendLine();
+				i++;
+			}
 
-            _generatedEnums.Add(enumModel);
-        }
+			sb.AppendLine("}");
+
+			_generatedEnums.Add(enumModel);
+		}
 
 		/// <summary>
 		/// Gets fully qualified name of the type
@@ -224,11 +215,10 @@ namespace TypeLite {
 				}
 			}
 
-            if (type as TsEnum!=null)
-            {
-                var enumType = (TsEnum) type;
-                moduleName = enumType.Module != null ? enumType.Module.Name : string.Empty;
-            }
+			if (type as TsEnum != null) {
+				var enumType = (TsEnum)type;
+				moduleName = enumType.Module != null ? enumType.Module.Name : string.Empty;
+			}
 
 			if (!string.IsNullOrEmpty(moduleName)) {
 				return moduleName + "." + _formatter.FormatType(type);

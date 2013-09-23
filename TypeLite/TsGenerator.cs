@@ -80,42 +80,35 @@ namespace TypeLite {
 			foreach (var reference in model.References) {
 				this.AppendReference(reference, sb);
 			}
-
 			sb.AppendLine();
-
-
-
 
 			foreach (var enumModel in model.Enums) {
 				if (!enumModel.IsIgnored) {
 					var module = model.Modules.SingleOrDefault(m => m.Name == enumModel.Module.Name);
-					if (module == null)
+					if (module == null) {
 						model.Modules.Add(enumModel.Module);
-					else
+					} else {
 						module.AddEnum(enumModel);
-
+					}
 				}
 			}
 
 			foreach (var classModel in model.Classes) {
 				if (!classModel.IsIgnored) {
 					var module = model.Modules.SingleOrDefault(m => m.Name == classModel.Module.Name);
-					if (module == null)
+					if (module == null) {
 						model.Modules.Add(classModel.Module);
-					else
+					} else {
 						module.AddClass(classModel);
+					}
 				}
-
 			}
 
 			foreach (var module in model.Modules) {
 				this.AppendModule(module, sb);
 			}
 
-
-
 			return sb.ToString();
-
 		}
 
 		/// <summary>
@@ -138,7 +131,6 @@ namespace TypeLite {
 				}
 
 				this.AppendEnumDefinition(enumModel, sb);
-
 			}
 
 			foreach (var classModel in module.Classes) {
@@ -181,7 +173,6 @@ namespace TypeLite {
 
 		private void AppendEnumDefinition(TsEnum enumModel, StringBuilder sb) {
 			sb.AppendFormat("enum {0} ", _formatter.FormatType(enumModel));
-
 
 			sb.AppendLine("{");
 

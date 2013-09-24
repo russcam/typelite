@@ -63,18 +63,16 @@ namespace TypeLite.Tests {
 			Assert.Contains("Addresses: TypeLite.Tests.TestModels.Address[]", script);
 		}
 
-        [Fact]
-        public void WhenClassWithEnumReferenced_FullyQualifiedNameIsUsed()
-        {
-            var builder = new TsModelBuilder();
-            builder.Add<Item>();
-            var model = builder.Build();
-            var target = new TsGenerator();
-            var script = target.Generate(model);
+		[Fact]
+		public void WhenClassWithEnumReferenced_FullyQualifiedNameIsUsed() {
+			var builder = new TsModelBuilder();
+			builder.Add<Item>();
+			var model = builder.Build();
+			var target = new TsGenerator();
+			var script = target.Generate(model);
 
-            Assert.Contains("Type: TypeLite.Tests.TestModels.ItemType", script);
-            
-        }
+			Assert.Contains("Type: TypeLite.Tests.TestModels.ItemType", script);
+		}
 
 		#endregion
 	}

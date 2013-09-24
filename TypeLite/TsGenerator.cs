@@ -82,28 +82,6 @@ namespace TypeLite {
 			}
 			sb.AppendLine();
 
-			foreach (var enumModel in model.Enums) {
-				if (!enumModel.IsIgnored) {
-					var module = model.Modules.SingleOrDefault(m => m.Name == enumModel.Module.Name);
-					if (module == null) {
-						model.Modules.Add(enumModel.Module);
-					} else {
-						module.AddEnum(enumModel);
-					}
-				}
-			}
-
-			foreach (var classModel in model.Classes) {
-				if (!classModel.IsIgnored) {
-					var module = model.Modules.SingleOrDefault(m => m.Name == classModel.Module.Name);
-					if (module == null) {
-						model.Modules.Add(classModel.Module);
-					} else {
-						module.AddClass(classModel);
-					}
-				}
-			}
-
 			foreach (var module in model.Modules) {
 				this.AppendModule(module, sb);
 			}
@@ -196,19 +174,14 @@ namespace TypeLite {
 		private string GetFullyQualifiedTypeName(TsType type) {
 			var moduleName = string.Empty;
 
-			if (type as TsClass != null) {
-				var classType = (TsClass)type;
-				moduleName = classType.Module != null ? classType.Module.Name : string.Empty;
+			if (type as TsModuleMember != null) {
+				var memberType = (TsModuleMember)type;
+				moduleName = memberType.Module != null ? memberType.Module.Name : string.Empty;
 			} else if (type as TsCollection != null) {
 				var collectionType = (TsCollection)type;
-				if (collectionType.ItemsType as TsClass != null) {
-					moduleName = ((TsClass)collectionType.ItemsType).Module != null ? ((TsClass)collectionType.ItemsType).Module.Name : string.Empty;
+				if (collectionType.ItemsType as TsModuleMember != null) {
+					moduleName = ((TsModuleMember)collectionType.ItemsType).Module != null ? ((TsModuleMember)collectionType.ItemsType).Module.Name : string.Empty;
 				}
-			}
-
-			if (type as TsEnum != null) {
-				var enumType = (TsEnum)type;
-				moduleName = enumType.Module != null ? enumType.Module.Name : string.Empty;
 			}
 
 			if (!string.IsNullOrEmpty(moduleName)) {

@@ -58,6 +58,7 @@
     <Compile Include="TsModels\TsEnum.cs" />
     <Compile Include="TsModels\TsEnumValue.cs" />
     <Compile Include="TsModels\TsModule.cs" />
+    <Compile Include="TsModels\TsModuleMember.cs" />
     <Compile Include="TsPropertyAttribute.cs" />
     <Compile Include="TypeScript.cs" />
     <Compile Include="TsGenerator.cs" />

@@ -9,7 +9,7 @@ namespace TypeLite {
 	/// Resolves TsTypes to more specialized types 
 	/// </summary>
 	/// <remarks>
-	/// When a class is added to the model by TsModelBuilder, TsType is used for all type references. The purpose of the TypeResolver is to visit references and resolve them to the more specific types.
+	/// When a class is added to the model by TsModelBuilder, TsType is used for all type references. The purpose of the TypeResolver is to visit references and resolve them to the specific types.
 	/// </remarks>
 	internal class TypeResolver : TsModelVisitor {
 		TsModel _model;
@@ -41,6 +41,16 @@ namespace TypeLite {
 
 			if (classModel.BaseType != null && classModel.BaseType != TsType.Any) {
 				classModel.BaseType = this.ResolveType(classModel.BaseType);
+			}
+		}
+
+		/// <summary>
+		/// Resolves references in the enum.
+		/// </summary>
+		/// <param name="enumModel"></param>
+		public override void VisitEnum(TsEnum enumModel) {
+			if (enumModel.Module != null) {
+				enumModel.Module = this.ResolveModule(enumModel.Module.Name);
 			}
 		}
 

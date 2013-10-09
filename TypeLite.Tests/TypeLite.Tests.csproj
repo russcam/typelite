@@ -56,6 +56,8 @@
     <Compile Include="RegressionTests\DateTimeTests.cs" />
     <Compile Include="RegressionTests\DbGeometryIgnoreTests.cs" />
     <Compile Include="RegressionTests\Generics0_8Tests.cs" />
+    <Compile Include="RegressionTests\Issue14_IgnoreAttributeIsNotWorking.cs" />
+    <Compile Include="RegressionTests\Issue15_ConvertSystemType.cs" />
     <Compile Include="RegressionTests\NullablesTests.cs" />
     <Compile Include="TestModels\Address.cs" />
     <Compile Include="TestModels\ContactType.cs" />
@@ -77,6 +79,7 @@
     <Compile Include="TsModels\TsSystemTypeTests.cs" />
     <Compile Include="TsModels\TsTypeTests.cs" />
     <Compile Include="TsModelTests.cs" />
+    <Compile Include="TypeConvertorCollectionTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

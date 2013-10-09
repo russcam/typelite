@@ -13,9 +13,10 @@ namespace TypeLite {
 	/// </summary>
 	public class TsGenerator {
 		private TsTypeFormatterCollection _formatter;
+		private TypeConvertorCollection _convertor;
 		private TsMemberIdentifierFormatter _memberFormatter;
 		private HashSet<TsClass> _generatedClasses;
-	    private HashSet<TsEnum> _generatedEnums;
+		private HashSet<TsEnum> _generatedEnums;
 
 		/// <summary>
 		/// Gets collection of formatters for individual TsTypes
@@ -31,13 +32,16 @@ namespace TypeLite {
 		/// </summary>
 		public TsGenerator() {
 			_generatedClasses = new HashSet<TsClass>();
-            _generatedEnums = new HashSet<TsEnum>();
+			_generatedEnums = new HashSet<TsEnum>();
 
 			_formatter = new TsTypeFormatterCollection();
 			_formatter.RegisterTypeFormatter<TsClass>((type, formatter) => ((TsClass)type).Name);
 			_formatter.RegisterTypeFormatter<TsSystemType>((type, formatter) => ((TsSystemType)type).Kind.ToTypeScriptString());
 			_formatter.RegisterTypeFormatter<TsCollection>((type, formatter) => formatter.FormatType(((TsCollection)type).ItemsType) + "[]");
-            _formatter.RegisterTypeFormatter<TsEnum>((type,formatter)=>((TsEnum)type).Name);
+			_formatter.RegisterTypeFormatter<TsEnum>((type, formatter) => ((TsEnum)type).Name);
+
+			_convertor = new TypeConvertorCollection();
+
 			_memberFormatter = (identifier) => identifier.Name;
 		}
 
@@ -47,7 +51,7 @@ namespace TypeLite {
 		/// <typeparam name="TFor">The type to register the formatter for. TFor is restricted to TsType and derived classes.</typeparam>
 		/// <param name="formatter">The formatter to register</param>
 		/// <remarks>
-		/// If a formatter for the type is already registered, it is overwriten to the new value.
+		/// If a formatter for the type is already registered, it is overwriten with the new value.
 		/// </remarks>
 		public void RegisterTypeFormatter<TFor>(TsTypeFormatter formatter) where TFor : TsType {
 			_formatter.RegisterTypeFormatter<TFor>(formatter);
@@ -59,6 +63,18 @@ namespace TypeLite {
 		/// <param name="formatter">The formatter to register.</param>
 		public void RegisterTypeFormatter(TsTypeFormatter formatter) {
 			_formatter.RegisterTypeFormatter<TsClass>(formatter);
+		}
+
+		/// <summary>
+		/// Registers the convertor for the specific Type
+		/// </summary>
+		/// <typeparam name="TFor">The type to register the convertor for.</typeparam>
+		/// <param name="convertor">The convertor to register</param>
+		/// <remarks>
+		/// If a convertor for the type is already registered, it is overwriten with the new value.
+		/// </remarks>
+		public void RegisterTypeConvertor<TFor>(TypeConvertor convertor) {
+			_convertor.RegisterTypeConverter<TFor>(convertor);
 		}
 
 		/// <summary>
@@ -80,47 +96,13 @@ namespace TypeLite {
 			foreach (var reference in model.References) {
 				this.AppendReference(reference, sb);
 			}
-
 			sb.AppendLine();
 
-          
+			foreach (var module in model.Modules) {
+				this.AppendModule(module, sb);
+			}
 
-
-            foreach (var enumModel in model.Enums)
-            {
-                if (!enumModel.IsIgnored)
-                {
-                    var module = model.Modules.SingleOrDefault(m => m.Name == enumModel.Module.Name);
-                    if (module == null)
-                        model.Modules.Add(enumModel.Module);
-                    else
-                        module.AddEnum(enumModel);
-                    
-                }
-            }
-
-            foreach (var classModel in model.Classes)
-            {
-                if (!classModel.IsIgnored)
-                {
-                    var module = model.Modules.SingleOrDefault(m => m.Name == classModel.Module.Name);
-                     if (module == null)
-                        model.Modules.Add(classModel.Module);
-                     else
-                        module.AddClass(classModel);
-                }
-
-            }
-
-            foreach (var module in model.Modules)
-            {
-                this.AppendModule(module, sb);
-            }
-          
-
-           
 			return sb.ToString();
-
 		}
 
 		/// <summary>
@@ -137,16 +119,13 @@ namespace TypeLite {
 			sb.AppendFormat("declare module {0} ", module.Name);
 			sb.AppendLine("{");
 
-            foreach (var enumModel in module.Enums)
-            {
-                if (enumModel.IsIgnored)
-                {
-                    continue;
-                }
+			foreach (var enumModel in module.Enums) {
+				if (enumModel.IsIgnored) {
+					continue;
+				}
 
-                this.AppendEnumDefinition(enumModel,sb);
-                    
-            }
+				this.AppendEnumDefinition(enumModel, sb);
+			}
 
 			foreach (var classModel in module.Classes) {
 				if (classModel.IsIgnored) {
@@ -165,7 +144,7 @@ namespace TypeLite {
 		/// <param name="classModel">The class to generate definition for.</param>
 		/// <param name="sb">The output.</param>
 		private void AppendClassDefinition(TsClass classModel, StringBuilder sb) {
-			sb.AppendFormat("interface {0} ", _formatter.FormatType(classModel));
+			sb.AppendFormat("interface {0} ", this.GetTypeName(classModel));
 			if (classModel.BaseType != null) {
 				sb.AppendFormat("extends {0} ", this.GetFullyQualifiedTypeName(classModel.BaseType));
 			}
@@ -186,25 +165,22 @@ namespace TypeLite {
 			_generatedClasses.Add(classModel);
 		}
 
-        private void AppendEnumDefinition(TsEnum enumModel, StringBuilder sb)
-        {
-            sb.AppendFormat("enum {0} ", _formatter.FormatType(enumModel));
-           
+		private void AppendEnumDefinition(TsEnum enumModel, StringBuilder sb) {
+			sb.AppendFormat("enum {0} ", this.GetTypeName(enumModel));
 
-            sb.AppendLine("{");
+			sb.AppendLine("{");
 
-            int i = 1;
-            foreach (var v in enumModel.Values)
-            {
-                sb.AppendFormat(i < enumModel.Values.Count ? "  {0} = {1}," : "  {0} = {1}", v.Name, v.Value);
-                sb.AppendLine();
-                i++;
-            }
+			int i = 1;
+			foreach (var v in enumModel.Values) {
+				sb.AppendFormat(i < enumModel.Values.Count ? "  {0} = {1}," : "  {0} = {1}", v.Name, v.Value);
+				sb.AppendLine();
+				i++;
+			}
 
-            sb.AppendLine("}");
+			sb.AppendLine("}");
 
-            _generatedEnums.Add(enumModel);
-        }
+			_generatedEnums.Add(enumModel);
+		}
 
 		/// <summary>
 		/// Gets fully qualified name of the type
@@ -214,24 +190,31 @@ namespace TypeLite {
 		private string GetFullyQualifiedTypeName(TsType type) {
 			var moduleName = string.Empty;
 
-			if (type as TsClass != null) {
-				var classType = (TsClass)type;
-				moduleName = classType.Module != null ? classType.Module.Name : string.Empty;
+			if (type as TsModuleMember != null) {
+				var memberType = (TsModuleMember)type;
+				moduleName = memberType.Module != null ? memberType.Module.Name : string.Empty;
 			} else if (type as TsCollection != null) {
 				var collectionType = (TsCollection)type;
-				if (collectionType.ItemsType as TsClass != null) {
-					moduleName = ((TsClass)collectionType.ItemsType).Module != null ? ((TsClass)collectionType.ItemsType).Module.Name : string.Empty;
+				if (collectionType.ItemsType as TsModuleMember != null) {
+					moduleName = ((TsModuleMember)collectionType.ItemsType).Module != null ? ((TsModuleMember)collectionType.ItemsType).Module.Name : string.Empty;
 				}
 			}
 
-            if (type as TsEnum!=null)
-            {
-                var enumType = (TsEnum) type;
-                moduleName = enumType.Module != null ? enumType.Module.Name : string.Empty;
-            }
-
 			if (!string.IsNullOrEmpty(moduleName)) {
-				return moduleName + "." + _formatter.FormatType(type);
+				return moduleName + "." + this.GetTypeName(type);
+			}
+
+			return this.GetTypeName(type);
+		}
+
+		/// <summary>
+		/// Gets name of the type in the TypeScript
+		/// </summary>
+		/// <param name="type">The type to get name of</param>
+		/// <returns>name of the type</returns>
+		private string GetTypeName(TsType type) {
+			if (_convertor.IsConvertorRegistered(type.ClrType)) {
+				return _convertor.ConvertType(type.ClrType);
 			}
 
 			return _formatter.FormatType(type);

@@ -16,7 +16,7 @@ namespace TypeLite.TsModels {
 		/// <summary>
 		/// Gets or sets value of the enum
 		/// </summary>
-		public int Value { get; set; }
+		public string Value { get; set; }
 
 		/// <summary>
 		/// Initializes a new instance of the TsEnumValue class.
@@ -29,9 +29,34 @@ namespace TypeLite.TsModels {
 		/// </summary>
 		/// <param name="name">The name of the enum value.</param>
 		/// <param name="value">The value of the enum value.</param>
-		public TsEnumValue(string name, int value) {
+		public TsEnumValue(string name, object value) {
 			this.Name = name;
-			this.Value = value;
+
+			var valueType = Enum.GetUnderlyingType(value.GetType());
+			if (valueType == typeof(byte)) {
+				this.Value = ((byte)value).ToString();
+			}
+			if (valueType == typeof(sbyte)) {
+				this.Value = ((sbyte)value).ToString();
+			}
+			if (valueType == typeof(short)) {
+				this.Value = ((short)value).ToString();
+			}
+			if (valueType == typeof(ushort)) {
+				this.Value = ((ushort)value).ToString();
+			}
+			if (valueType == typeof(int)) {
+				this.Value = ((int)value).ToString();
+			}
+			if (valueType == typeof(uint)) {
+				this.Value = ((uint)value).ToString();
+			}
+			if (valueType == typeof(long)) {
+				this.Value = ((long)value).ToString();
+			}
+			if (valueType == typeof(ulong)) {
+				this.Value = ((ulong)value).ToString();
+			}
 		}
 	}
 }

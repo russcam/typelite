@@ -10,7 +10,7 @@ namespace TypeLite {
 	/// </summary>
 	internal class TsTypeFormatterCollection : ITsTypeFormatter {
 		internal Dictionary<Type, TsTypeFormatter> _formatters;
-
+		
 		/// <summary>
 		/// Initializes a new instance of the TsTypeFormatterCollection class
 		/// </summary>

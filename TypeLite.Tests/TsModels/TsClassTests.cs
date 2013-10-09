@@ -124,9 +124,9 @@ namespace TypeLite.Tests.TsModels {
 			var enumtype = property.PropertyType as TsEnum;
 			Assert.NotNull(enumtype);
 			Assert.True(enumtype.Values.Any());
-			Assert.True(enumtype.Values.Any(a => a.Name == "Book" && a.Value == (int)ItemType.Book));
-			Assert.True(enumtype.Values.Any(a => a.Name == "Music" && a.Value == (int)ItemType.Music));
-			Assert.True(enumtype.Values.Any(a => a.Name == "Clothing" && a.Value == (int)ItemType.Clothing));
+			Assert.True(enumtype.Values.Any(a => a.Name == "Book" && a.Value == ((int)ItemType.Book).ToString()));
+			Assert.True(enumtype.Values.Any(a => a.Name == "Music" && a.Value == ((int)ItemType.Music).ToString()));
+			Assert.True(enumtype.Values.Any(a => a.Name == "Clothing" && a.Value == ((int)ItemType.Clothing).ToString()));
 			Assert.Null(target.BaseType);
 		}
 

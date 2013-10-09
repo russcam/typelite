@@ -30,8 +30,9 @@ namespace TypeLite {
 		/// Adds type with all referenced classes to the model.
 		/// </summary>
 		/// <typeparam name="T">The type to add to the model.</typeparam>
-		public void Add<T>() {
-			this.Add<T>(true);
+		/// <returns>type added to the model</returns>
+		public TsClass Add<T>() {
+			return this.Add<T>(true);
 		}
 
 		/// <summary>
@@ -39,32 +40,34 @@ namespace TypeLite {
 		/// </summary>
 		/// <typeparam name="T">The type to add to the model.</typeparam>
 		/// <param name="includeReferences">bool value indicating whether classes referenced by T should be added to the model.</param>
-		public void Add<T>(bool includeReferences) {
-			this.Add(typeof(T), includeReferences);
+		/// <returns>type added to the model</returns>
+		public TsClass Add<T>(bool includeReferences) {
+			return this.Add(typeof(T), includeReferences);
 		}
 
 		/// <summary>
 		/// Adds type with all referenced classes to the model.
 		/// </summary>
 		/// <param name="clrType">The type to add to the model.</param>
-		public void Add(Type clrType) {
-			this.Add(clrType, true);
+		/// <returns>type added to the model</returns>
+		public TsClass Add(Type clrType) {
+			return this.Add(clrType, true);
 		}
 
 		/// <summary>
-		/// Adds type and optianlly referenced classes to the model.
+		/// Adds type and optionally referenced classes to the model.
 		/// </summary>
 		/// <param name="clrType">The type to add to the model.</param>
 		/// <param name="includeReferences">bool value indicating whether classes referenced by T should be added to the model.</param>
-		public void Add(Type clrType, bool includeReferences) {
+		/// <returns>type added to the model</returns>
+		public TsClass Add(Type clrType, bool includeReferences) {
 			var typeFamily = TsType.GetTypeFamily(clrType);
 			if (typeFamily != TsTypeFamily.Class) {
 				throw new ArgumentException(string.Format("Type '{0}' isn't class or struct. Only classes and structures can be added to the model", clrType.FullName));
 			}
 
 			if (clrType.IsNullable()) {
-				this.Add(clrType.GetNullableValueType(), includeReferences);
-				return;
+				return this.Add(clrType.GetNullableValueType(), includeReferences);
 			}
 
 			if (!this.Classes.ContainsKey(clrType)) {
@@ -80,18 +83,20 @@ namespace TypeLite {
 					foreach (var e in added.Properties.Where(p => p.PropertyType.ClrType.IsEnum))
 						this.AddEnum(e.PropertyType as TsEnum);
 				}
+
+				return added;
+			} else {
+				return this.Classes[clrType];
 			}
 		}
 
 		/// <summary>
-		/// Adds all of the enums referenced in the class
-		/// to the output
-		/// ignore
+		/// Adds enum to the model
 		/// </summary>
-		/// <param name="tsenum"></param>
-		private void AddEnum(TsEnum tsenum) {
-			if (!this.Enums.ContainsKey(tsenum.ClrType)) {
-				this.Enums[tsenum.ClrType] = tsenum;
+		/// <param name="tsEnum">The enum to add</param>
+		private void AddEnum(TsEnum tsEnum) {
+			if (!this.Enums.ContainsKey(tsEnum.ClrType)) {
+				this.Enums[tsEnum.ClrType] = tsEnum;
 			}
 		}
 

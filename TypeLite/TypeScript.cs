@@ -24,8 +24,8 @@ namespace TypeLite {
 	/// Represents a wrapper around TsModelBuilder and TsGenerator that simplify usage a enables fluent configuration.
 	/// </summary>
 	public class TypeScriptFluent {
-		private TsModelBuilder _modelBuilder;
-		private TsGenerator _scriptGenerator;
+		protected TsModelBuilder _modelBuilder;
+		protected TsGenerator _scriptGenerator;
 
 		/// <summary>
 		/// Gets the ModelBuilder being configured with fluent configuration.
@@ -45,13 +45,21 @@ namespace TypeLite {
 		}
 
 		/// <summary>
+		/// Initializes a new instance of the TypeScriptFluent class
+		/// </summary>
+		/// <param name="fluentConfigurator">The source fluent configurator</param>
+		protected TypeScriptFluent(TypeScriptFluent fluentConfigurator) {
+			_modelBuilder = fluentConfigurator._modelBuilder;
+			_scriptGenerator = fluentConfigurator._scriptGenerator;
+		}
+
+		/// <summary>
 		/// Adds specific class with all referenced classes to the model.
 		/// </summary>
 		/// <typeparam name="T">The class type to add.</typeparam>
 		/// <returns>Instance of the TypeScriptFluent that enables fluent configuration.</returns>
-		public TypeScriptFluent For<T>() {
-			_modelBuilder.Add<T>();
-			return this;
+		public TypeScriptFluentClass For<T>() {
+			return this.For(typeof(T));
 		}
 
 		/// <summary>
@@ -59,9 +67,9 @@ namespace TypeLite {
 		/// </summary>
 		/// <param name="type">The type to add to the model.</param>
 		/// <returns>Instance of the TypeScriptFluent that enables fluent configuration.</returns>
-		public TypeScriptFluent For(Type type) {
-			_modelBuilder.Add(type);
-			return this;
+		public TypeScriptFluentClass For(Type type) {
+			var classModel = _modelBuilder.Add(type);
+			return new TypeScriptFluentClass(this, classModel);
 		}
 
 		/// <summary>
@@ -131,6 +139,38 @@ namespace TypeLite {
 		/// <returns>TypeScript definition for types included in this model builder.</returns>
 		public override string ToString() {
 			return this.Generate();
+		}
+	}
+
+	/// <summary>
+	/// Represents a wrapper around TsModelBuilder and TsGenerator that simplify usage a enables fluent configuration for classes.
+	/// </summary>
+	public class TypeScriptFluentClass : TypeScriptFluent {
+		public TsClass Class { get; protected set; }
+
+		internal TypeScriptFluentClass(TypeScriptFluent fluentConfigurator, TsClass classModel)
+			: base(fluentConfigurator) {
+			this.Class = classModel;
+		}
+
+		/// <summary>
+		/// Changes the name of the class being configured .
+		/// </summary>
+		/// <param name="name">The new name of the class</param>
+		/// <returns>Instance of the TypeScriptFluentClass that enables fluent configuration.</returns>
+		public TypeScriptFluentClass Named(string name) {
+			this.Class.Name = name;
+			return this;
+		}
+
+		/// <summary>
+		/// Maps the class being configured to the specific module
+		/// </summary>
+		/// <param name="moduleName">The name of the module</param>
+		/// <returns>Instance of the TypeScriptFluentClass that enables fluent configuration.</returns>
+		public TypeScriptFluentClass ToModule(string moduleName) {
+			this.Class.Module = new TsModule(moduleName);
+			return this;
 		}
 	}
 }

@@ -78,6 +78,7 @@
     <Compile Include="TsModels\TsSystemTypeTests.cs" />
     <Compile Include="TsModels\TsTypeTests.cs" />
     <Compile Include="TsModelTests.cs" />
+    <Compile Include="TypeConvertorCollectionTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

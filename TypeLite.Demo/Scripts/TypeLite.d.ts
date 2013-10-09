@@ -30,8 +30,3 @@ declare module System {
 interface Guid {
 }
 }
-declare module TypeLite.Demo.Models {
-interface Issue16 {
-  B: any;
-}
-}

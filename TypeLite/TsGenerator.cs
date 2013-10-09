@@ -13,6 +13,7 @@ namespace TypeLite {
 	/// </summary>
 	public class TsGenerator {
 		private TsTypeFormatterCollection _formatter;
+		private TypeConvertorCollection _convertor;
 		private TsMemberIdentifierFormatter _memberFormatter;
 		private HashSet<TsClass> _generatedClasses;
 		private HashSet<TsEnum> _generatedEnums;
@@ -38,6 +39,9 @@ namespace TypeLite {
 			_formatter.RegisterTypeFormatter<TsSystemType>((type, formatter) => ((TsSystemType)type).Kind.ToTypeScriptString());
 			_formatter.RegisterTypeFormatter<TsCollection>((type, formatter) => formatter.FormatType(((TsCollection)type).ItemsType) + "[]");
 			_formatter.RegisterTypeFormatter<TsEnum>((type, formatter) => ((TsEnum)type).Name);
+
+			_convertor = new TypeConvertorCollection();
+
 			_memberFormatter = (identifier) => identifier.Name;
 		}
 
@@ -47,7 +51,7 @@ namespace TypeLite {
 		/// <typeparam name="TFor">The type to register the formatter for. TFor is restricted to TsType and derived classes.</typeparam>
 		/// <param name="formatter">The formatter to register</param>
 		/// <remarks>
-		/// If a formatter for the type is already registered, it is overwriten to the new value.
+		/// If a formatter for the type is already registered, it is overwriten with the new value.
 		/// </remarks>
 		public void RegisterTypeFormatter<TFor>(TsTypeFormatter formatter) where TFor : TsType {
 			_formatter.RegisterTypeFormatter<TFor>(formatter);
@@ -59,6 +63,18 @@ namespace TypeLite {
 		/// <param name="formatter">The formatter to register.</param>
 		public void RegisterTypeFormatter(TsTypeFormatter formatter) {
 			_formatter.RegisterTypeFormatter<TsClass>(formatter);
+		}
+
+		/// <summary>
+		/// Registers the convertor for the specific Type
+		/// </summary>
+		/// <typeparam name="TFor">The type to register the convertor for.</typeparam>
+		/// <param name="convertor">The convertor to register</param>
+		/// <remarks>
+		/// If a convertor for the type is already registered, it is overwriten with the new value.
+		/// </remarks>
+		public void RegisterTypeConvertor<TFor>(TypeConvertor convertor) {
+			_convertor.RegisterTypeConverter<TFor>(convertor);
 		}
 
 		/// <summary>
@@ -128,7 +144,7 @@ namespace TypeLite {
 		/// <param name="classModel">The class to generate definition for.</param>
 		/// <param name="sb">The output.</param>
 		private void AppendClassDefinition(TsClass classModel, StringBuilder sb) {
-			sb.AppendFormat("interface {0} ", _formatter.FormatType(classModel));
+			sb.AppendFormat("interface {0} ", this.GetTypeName(classModel));
 			if (classModel.BaseType != null) {
 				sb.AppendFormat("extends {0} ", this.GetFullyQualifiedTypeName(classModel.BaseType));
 			}
@@ -150,7 +166,7 @@ namespace TypeLite {
 		}
 
 		private void AppendEnumDefinition(TsEnum enumModel, StringBuilder sb) {
-			sb.AppendFormat("enum {0} ", _formatter.FormatType(enumModel));
+			sb.AppendFormat("enum {0} ", this.GetTypeName(enumModel));
 
 			sb.AppendLine("{");
 
@@ -185,7 +201,20 @@ namespace TypeLite {
 			}
 
 			if (!string.IsNullOrEmpty(moduleName)) {
-				return moduleName + "." + _formatter.FormatType(type);
+				return moduleName + "." + this.GetTypeName(type);
+			}
+
+			return this.GetTypeName(type);
+		}
+
+		/// <summary>
+		/// Gets name of the type in the TypeScript
+		/// </summary>
+		/// <param name="type">The type to get name of</param>
+		/// <returns>name of the type</returns>
+		private string GetTypeName(TsType type) {
+			if (_convertor.IsConvertorRegistered(type.ClrType)) {
+				return _convertor.ConvertType(type.ClrType);
 			}
 
 			return _formatter.FormatType(type);

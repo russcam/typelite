@@ -106,6 +106,17 @@ namespace TypeLite {
 		}
 
 		/// <summary>
+		/// Registers a convertor for the specific type
+		/// </summary>
+		/// <typeparam name="TFor">The type to register the convertor for.</typeparam>
+		/// <param name="convertor">The convertor to register</param>
+		/// <returns>Instance of the TypeScriptFluent that enables fluent configuration.</returns>
+		public TypeScriptFluent WithConvertor<TFor>(TypeConvertor convertor) {
+			_scriptGenerator.RegisterTypeConvertor<TFor>(convertor);
+			return this;
+		}
+
+		/// <summary>
 		/// Generates TypeScript definitions for types included in this model builder.
 		/// </summary>
 		/// <returns>TypeScript definition for types included in this model builder.</returns>

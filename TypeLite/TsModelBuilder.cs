@@ -125,7 +125,7 @@ namespace TypeLite {
 		/// </summary>
 		/// <param name="classModel"></param>
 		private void AddReferences(TsClass classModel) {
-			foreach (var property in classModel.Properties) {
+			foreach (var property in classModel.Properties.Where(model => !model.IsIgnored)) {
 				var propertyTypeFamily = TsType.GetTypeFamily(property.PropertyType.ClrType);
 				if (propertyTypeFamily == TsTypeFamily.Collection) {
 					var collectionItemType = TsType.GetEnumerableType(property.PropertyType.ClrType);

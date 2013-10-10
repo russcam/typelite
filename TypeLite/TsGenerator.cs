@@ -37,7 +37,7 @@ namespace TypeLite {
 			_formatter = new TsTypeFormatterCollection();
 			_formatter.RegisterTypeFormatter<TsClass>((type, formatter) => ((TsClass)type).Name);
 			_formatter.RegisterTypeFormatter<TsSystemType>((type, formatter) => ((TsSystemType)type).Kind.ToTypeScriptString());
-			_formatter.RegisterTypeFormatter<TsCollection>((type, formatter) => GetTypeName(((TsCollection)type).ItemsType) + "[]");
+			_formatter.RegisterTypeFormatter<TsCollection>((type, formatter) => this.GetTypeName(((TsCollection)type).ItemsType) + "[]");
 			_formatter.RegisterTypeFormatter<TsEnum>((type, formatter) => ((TsEnum)type).Name);
 
 			_convertor = new TypeConvertorCollection();
@@ -195,8 +195,7 @@ namespace TypeLite {
 				moduleName = memberType.Module != null ? memberType.Module.Name : string.Empty;
 			} else if (type as TsCollection != null) {
 				var collectionType = (TsCollection)type;
-                if (collectionType.ItemsType as TsModuleMember != null && !_convertor.IsConvertorRegistered(collectionType.ItemsType.ClrType))
-                {
+				if (collectionType.ItemsType as TsModuleMember != null && !_convertor.IsConvertorRegistered(collectionType.ItemsType.ClrType)) {
 					moduleName = ((TsModuleMember)collectionType.ItemsType).Module != null ? ((TsModuleMember)collectionType.ItemsType).Module.Name : string.Empty;
 				}
 			}

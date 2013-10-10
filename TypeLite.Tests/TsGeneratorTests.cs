@@ -116,7 +116,7 @@ namespace TypeLite.Tests {
         }
 
         [Fact]
-        public void WhenConvertorIsRegisteredForGuid_NoSystemStringInterfaceIsDefined()
+        public void WhenConvertorIsRegisteredForGuid_NoStringInterfaceIsDefined()
         {
             var builder = new TsModelBuilder();
             builder.Add<Address>();

@@ -124,14 +124,14 @@ namespace TypeLite {
 			sb.AppendFormat("declare module {0} ", module.Name);
 			sb.AppendLine("{");
 
-			foreach (var enumModel in module.Enums) {
+			foreach (var enumModel in enums) {
 				if (enumModel.IsIgnored) {
 					continue;
 				}
 				this.AppendEnumDefinition(enumModel, sb);
 			}
 
-			foreach (var classModel in module.Classes) {
+			foreach (var classModel in classes) {
 				if (classModel.IsIgnored) {
 					continue;
 				}

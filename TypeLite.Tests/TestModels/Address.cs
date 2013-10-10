@@ -11,5 +11,6 @@ namespace TypeLite.Tests.TestModels {
 		public string Street { get; set; }
 		public string Town { get; set; }
 		public ContactType AddressType { get; set; }
+        public ConsoleKey Shortkey { get; set; }
 	}
 }

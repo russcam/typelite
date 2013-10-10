@@ -116,6 +116,11 @@ namespace TypeLite {
 		}
 
 		private void AppendModule(TsModule module, StringBuilder sb) {
+            var classes = module.Classes.Where(c => !_convertor.IsConvertorRegistered(c.ClrType)).ToList();
+            var enums = module.Enums.Where(e => !_convertor.IsConvertorRegistered(e.ClrType)).ToList();
+            if (enums.Count == 0 && classes.Count == 0)
+                return;
+
 			sb.AppendFormat("declare module {0} ", module.Name);
 			sb.AppendLine("{");
 
@@ -123,7 +128,6 @@ namespace TypeLite {
 				if (enumModel.IsIgnored) {
 					continue;
 				}
-
 				this.AppendEnumDefinition(enumModel, sb);
 			}
 
@@ -131,7 +135,7 @@ namespace TypeLite {
 				if (classModel.IsIgnored) {
 					continue;
 				}
-
+                
 				this.AppendClassDefinition(classModel, sb);
 			}
 

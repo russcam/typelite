@@ -87,6 +87,34 @@ namespace TypeLite.Tests {
 			Assert.Contains("Street: KnockoutObservable<string>", script);
 		}
 
-		#endregion
+        [Fact]
+        public void WhenConvertorIsRegisteredForGuid_ConvertedTypeNameIsUsed()
+        {
+            var builder = new TsModelBuilder();
+            builder.Add<Address>();
+            var model = builder.Build();
+
+            var target = new TsGenerator();
+            target.RegisterTypeConvertor<Guid>(type => "string");
+            var script = target.Generate(model);
+
+            Assert.Contains("Id: string", script);
+        }
+
+        [Fact]
+        public void WhenConvertorIsRegisteredForGuidCollection_ConvertedTypeNameIsUsed()
+        {
+            var builder = new TsModelBuilder();
+            builder.Add<Address>();
+            var model = builder.Build();
+
+            var target = new TsGenerator();
+            target.RegisterTypeConvertor<Guid>(type => "string");
+            var script = target.Generate(model);
+
+            Assert.Contains("Ids: string[]", script);
+        }
+
+        #endregion
 	}
 }

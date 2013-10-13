@@ -25,7 +25,7 @@ namespace TypeLite.TsModels {
 		}
 
 		/// <summary>
-		/// Initializes a enw instance of the TsEnumValue class with the specific name and value.
+		/// Initializes a new instance of the TsEnumValue class with the specific name and value.
 		/// </summary>
 		/// <param name="name">The name of the enum value.</param>
 		/// <param name="value">The value of the enum value.</param>

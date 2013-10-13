@@ -6,7 +6,7 @@ using TypeLite.TsModels;
 
 namespace TypeLite {
 	/// <summary>
-	/// Contains a collection of convertors that provides a way to convert the specific type to custom string bypassing other rules.
+	/// Contains a collection of converters that provides a way to convert the specific type to custom string bypassing other rules.
 	/// </summary>
 	public class TypeConvertorCollection {
 		internal Dictionary<Type, TypeConvertor> _convertors;
@@ -19,19 +19,19 @@ namespace TypeLite {
 		}
 
 		/// <summary>
-		/// Registers the convertor for the specific Type
+		/// Registers the converter for the specific Type
 		/// </summary>
-		/// <typeparam name="TFor">The type to register the convertor for.</typeparam>
-		/// <param name="convertor">The convertor to register</param>
+		/// <typeparam name="TFor">The type to register the converter for.</typeparam>
+		/// <param name="convertor">The converter to register</param>
 		public void RegisterTypeConverter<TFor>(TypeConvertor convertor) {
 			_convertors[typeof(TFor)] = convertor;
 		}
 
 		/// <summary>
-		/// Checkes whether any convertor is registerd for the specific Type
+		/// Checks whether any converter is registered for the specific Type
 		/// </summary>
 		/// <param name="type">The type to check</typeparam>
-		/// <returns>true if a convertor is registered for the specific Type otherwise return false</returns>
+		/// <returns>true if a converter is registered for the specific Type otherwise return false</returns>
 		public bool IsConvertorRegistered(Type type) {
 			return _convertors.ContainsKey(type);
 		}
@@ -40,7 +40,7 @@ namespace TypeLite {
 		/// Converts specific type to its string representation.
 		/// </summary>
 		/// <param name="type">The type to convert</typeparam>
-		/// <returns>the string representation of the type if a convertor fo the type is registered otherwise return null</returns>
+		/// <returns>the string representation of the type if a converter of the type is registered otherwise return null</returns>
 		public string ConvertType(Type type) {
 			if (_convertors.ContainsKey(type)) {
 				return _convertors[type](type);

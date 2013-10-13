@@ -13,7 +13,7 @@ namespace TypeLite.TsModels {
 		/// Gets or sets type of the items in the collection.
 		/// </summary>
 		/// <remarks>
-		/// If the collection isn't stronlgy typed, the ItemsType property is initialized to TsType.Any.
+		/// If the collection isn't strongly typed, the ItemsType property is initialized to TsType.Any.
 		/// </remarks>
 		public TsType ItemsType { get; set; }
 

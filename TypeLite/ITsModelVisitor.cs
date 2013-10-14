@@ -34,7 +34,7 @@ namespace TypeLite {
 		void VisitProperty(TsProperty property);
 
 		/// <summary>
-		/// When overriden in a derived class, it can examine or modify the enum model.
+		/// When overridden in a derived class, it can examine or modify the enum model.
 		/// </summary>
 		/// <param name="enumModel">The model enum being visited.</param>
 		void VisitEnum(TsEnum enumModel);

@@ -6,7 +6,7 @@ using TypeLite.Extensions;
 
 namespace TypeLite.TsModels {
 	/// <summary>
-	/// Represents a sysstem type in the code model.
+	/// Represents a system type in the code model.
 	/// </summary>
 	public class TsSystemType : TsType {
 		/// <summary>

@@ -45,7 +45,7 @@ namespace TypeLite.TsModels {
 			var isString = (type == typeof(string));
 			var isEnumerable = typeof(IEnumerable).IsAssignableFrom(type);
 
-			// surprisingly  Decimal isn't a primitve type
+			// surprisingly  Decimal isn't a primitive type
 			if (isString || type.IsPrimitive || type.FullName == "System.Decimal" || type.FullName == "System.DateTime") {
 				return TsTypeFamily.System;
 			} else if (isEnumerable) {
@@ -64,7 +64,7 @@ namespace TypeLite.TsModels {
 		}
 
 		/// <summary>
-		/// Gets type of items in generic verion of IEnumerable.
+		/// Gets type of items in generic version of IEnumerable.
 		/// </summary>
 		/// <param name="type">The IEnumerable type to get items type from</param>
 		/// <returns>The type of items in the generic IEnumerable or null if the type doesn't implement the generic version of IEnumerable.</returns>

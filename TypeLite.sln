@@ -18,6 +18,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeLite.Net4", "TypeLite.N
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EEE2AFA0-BFF3-433C-B72C-E9BE1598D017}"
 	ProjectSection(SolutionItems) = preProject
+		TypeLite.lib.nuspec = TypeLite.lib.nuspec
 		TypeLite.nuspec = TypeLite.nuspec
 	EndProjectSection
 EndProject

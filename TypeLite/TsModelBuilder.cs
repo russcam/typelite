@@ -36,7 +36,7 @@ namespace TypeLite {
 		}
 
 		/// <summary>
-		/// Adds type and optianlly referenced classes to the model.
+		/// Adds type and optionally referenced classes to the model.
 		/// </summary>
 		/// <typeparam name="T">The type to add to the model.</typeparam>
 		/// <param name="includeReferences">bool value indicating whether classes referenced by T should be added to the model.</param>

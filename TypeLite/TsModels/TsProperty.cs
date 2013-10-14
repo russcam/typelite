@@ -33,7 +33,7 @@ namespace TypeLite.TsModels {
 		/// <summary>
 		/// Initializes a new instance of the TsProperty class with the specific CLR property.
 		/// </summary>
-		/// <param name="clrProperty">The CLR preperty represented by this instance of the TsProperty.</param>
+		/// <param name="clrProperty">The CLR property represented by this instance of the TsProperty.</param>
 		public TsProperty(PropertyInfo clrProperty) {
 			this.ClrProperty = clrProperty;
 			this.Name = clrProperty.Name;

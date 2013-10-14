@@ -1,3 +1,7 @@
+Version 0.9.1.3		(10. 10. 2013)
+=====================================
+Fixed		Incorrect output of type convertor if the module is specified
+
 Version 0.9.1.2		(9. 10. 2013)
 =====================================
 Fixed		#15: Problems with enum underlaying types

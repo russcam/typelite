@@ -22,7 +22,7 @@ namespace TypeLite {
 		/// Converts the specific type to it's string representation using a formatter registered for the type
 		/// </summary>
 		/// <param name="type">The type to format.</param>
-		/// <returns>The sring representation of the type.</returns>
+		/// <returns>The string representation of the type.</returns>
 		public string FormatType(TsType type) {
 			if (_formatters.ContainsKey(type.GetType())) {
 				return _formatters[type.GetType()](type, this);

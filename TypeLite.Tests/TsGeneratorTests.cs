@@ -87,33 +87,31 @@ namespace TypeLite.Tests {
 			Assert.Contains("Street: KnockoutObservable<string>", script);
 		}
 
-        [Fact]
-        public void WhenConvertorIsRegisteredForGuid_ConvertedTypeNameIsUsed()
-        {
-            var builder = new TsModelBuilder();
-            builder.Add<Address>();
-            var model = builder.Build();
+		[Fact]
+		public void WhenConvertorIsRegisteredForGuid_ConvertedTypeNameIsUsed() {
+			var builder = new TsModelBuilder();
+			builder.Add<Address>();
+			var model = builder.Build();
 
-            var target = new TsGenerator();
-            target.RegisterTypeConvertor<Guid>(type => "string");
-            var script = target.Generate(model);
+			var target = new TsGenerator();
+			target.RegisterTypeConvertor<Guid>(type => "string");
+			var script = target.Generate(model);
 
-            Assert.Contains("Id: string", script);
-        }
+			Assert.Contains("Id: string", script);
+		}
 
-        [Fact]
-        public void WhenConvertorIsRegisteredForGuidCollection_ConvertedTypeNameIsUsed()
-        {
-            var builder = new TsModelBuilder();
-            builder.Add<Address>();
-            var model = builder.Build();
+		[Fact]
+		public void WhenConvertorIsRegisteredForGuidCollection_ConvertedTypeNameIsUsed() {
+			var builder = new TsModelBuilder();
+			builder.Add<Address>();
+			var model = builder.Build();
 
-            var target = new TsGenerator();
-            target.RegisterTypeConvertor<Guid>(type => "string");
-            var script = target.Generate(model);
+			var target = new TsGenerator();
+			target.RegisterTypeConvertor<Guid>(type => "string");
+			var script = target.Generate(model);
 
-            Assert.Contains("Ids: string[]", script);
-        }
+			Assert.Contains("Ids: string[]", script);
+		}
 
         [Fact]
         public void WhenConvertorIsRegisteredForGuid_NoStringInterfaceIsDefined()
@@ -130,6 +128,6 @@ namespace TypeLite.Tests {
 
         }
 
-        #endregion
+		#endregion
 	}
 }

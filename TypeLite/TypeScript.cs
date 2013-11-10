@@ -146,6 +146,9 @@ namespace TypeLite {
 	/// Represents a wrapper around TsModelBuilder and TsGenerator that simplify usage a enables fluent configuration for classes.
 	/// </summary>
 	public class TypeScriptFluentClass : TypeScriptFluent {
+        /// <summary>
+        /// Gets the class being configured.
+        /// </summary>
 		public TsClass Class { get; protected set; }
 
 		internal TypeScriptFluentClass(TypeScriptFluent fluentConfigurator, TsClass classModel)

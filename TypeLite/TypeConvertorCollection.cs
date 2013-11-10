@@ -30,7 +30,7 @@ namespace TypeLite {
 		/// <summary>
 		/// Checks whether any converter is registered for the specific Type
 		/// </summary>
-		/// <param name="type">The type to check</typeparam>
+		/// <param name="type">The type to check</param>
 		/// <returns>true if a converter is registered for the specific Type otherwise return false</returns>
 		public bool IsConvertorRegistered(Type type) {
 			return _convertors.ContainsKey(type);
@@ -39,7 +39,7 @@ namespace TypeLite {
 		/// <summary>
 		/// Converts specific type to its string representation.
 		/// </summary>
-		/// <param name="type">The type to convert</typeparam>
+		/// <param name="type">The type to convert</param>
 		/// <returns>the string representation of the type if a converter of the type is registered otherwise return null</returns>
 		public string ConvertType(Type type) {
 			if (_convertors.ContainsKey(type)) {

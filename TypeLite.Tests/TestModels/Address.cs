@@ -12,5 +12,8 @@ namespace TypeLite.Tests.TestModels {
 		public string Town { get; set; }
 		public ContactType AddressType { get; set; }
         public ConsoleKey Shortkey { get; set; }
+
+        [TsProperty(IsOptional=true)]
+        public int CountryID { get; set; }
 	}
 }

@@ -6,63 +6,70 @@ using System.Text;
 using TypeLite.Extensions;
 
 namespace TypeLite.TsModels {
-	/// <summary>
-	/// Represents a property of the class in the code model.
-	/// </summary>
-	public class TsProperty : IMemberIdentifier {
-		/// <summary>
-		/// Gets or sets name of the property.
-		/// </summary>
-		public string Name { get; set; }
+    /// <summary>
+    /// Represents a property of the class in the code model.
+    /// </summary>
+    public class TsProperty : IMemberIdentifier {
+        /// <summary>
+        /// Gets or sets name of the property.
+        /// </summary>
+        public string Name { get; set; }
 
-		/// <summary>
-		/// Gets or sets type of the property.
-		/// </summary>
-		public TsType PropertyType { get; set; }
+        /// <summary>
+        /// Gets or sets type of the property.
+        /// </summary>
+        public TsType PropertyType { get; set; }
 
-		/// <summary>
-		/// Gets the CLR property represented by this TsProperty.
-		/// </summary>
-		public PropertyInfo ClrProperty { get; private set; }
+        /// <summary>
+        /// Gets the CLR property represented by this TsProperty.
+        /// </summary>
+        public PropertyInfo ClrProperty { get; private set; }
 
-		/// <summary>
-		/// Gets or sets bool value indicating whether this property will be ignored by TsGenerator.
-		/// </summary>
-		public bool IsIgnored { get; set; }
+        /// <summary>
+        /// Gets or sets bool value indicating whether this property will be ignored by TsGenerator.
+        /// </summary>
+        public bool IsIgnored { get; set; }
 
-		/// <summary>
-		/// Initializes a new instance of the TsProperty class with the specific CLR property.
-		/// </summary>
-		/// <param name="clrProperty">The CLR property represented by this instance of the TsProperty.</param>
-		public TsProperty(PropertyInfo clrProperty) {
-			this.ClrProperty = clrProperty;
-			this.Name = clrProperty.Name;
+        /// <summary>
+        /// Gets or sets bool value indicating whether this property is optional in TypeScript interface.
+        /// </summary>
+        public bool IsOptional { get; set;}
 
+        /// <summary>
+        /// Initializes a new instance of the TsProperty class with the specific CLR property.
+        /// </summary>
+        /// <param name="clrProperty">The CLR property represented by this instance of the TsProperty.</param>
+        public TsProperty(PropertyInfo clrProperty) {
+            this.ClrProperty = clrProperty;
+            this.Name = clrProperty.Name;
 
+            if (clrProperty.ReflectedType.IsGenericType) {
+                var definitionType = clrProperty.ReflectedType.GetGenericTypeDefinition();
+                var definitionTypeProperty = definitionType.GetProperty(clrProperty.Name);
+                if (definitionTypeProperty.PropertyType.IsGenericParameter) {
+                    this.PropertyType = TsType.Any;
+                } else {
+                    this.PropertyType = new TsType(clrProperty.PropertyType);
+                }
+            } else {
+                var propertyType = clrProperty.PropertyType;
+                if (propertyType.IsNullable()) {
+                    propertyType = propertyType.GetNullableValueType();
+                }
 
-			if (clrProperty.ReflectedType.IsGenericType) {
-				var definitionType = clrProperty.ReflectedType.GetGenericTypeDefinition();
-				var definitionTypeProperty = definitionType.GetProperty(clrProperty.Name);
-				if (definitionTypeProperty.PropertyType.IsGenericParameter) {
-					this.PropertyType = TsType.Any;
-				} else {
-					this.PropertyType = new TsType(clrProperty.PropertyType);
-				}
-			}
-            else {
-                //added support for enums, if type is enum create it as ts enum;
-                this.PropertyType = clrProperty.PropertyType.IsEnum ? new TsEnum(clrProperty.PropertyType) : new TsType(clrProperty.PropertyType);
-				
-			}
+                this.PropertyType = propertyType.IsEnum ? new TsEnum(propertyType) : new TsType(propertyType);
+            }
 
-			var attribute = clrProperty.GetCustomAttribute<TsPropertyAttribute>(false);
-			if (attribute != null) {
-				if (!string.IsNullOrEmpty(attribute.Name)) {
-					this.Name = attribute.Name;
-				}
-			}
+            var attribute = clrProperty.GetCustomAttribute<TsPropertyAttribute>(false);
+            if (attribute != null) {
+                if (!string.IsNullOrEmpty(attribute.Name)) {
+                    this.Name = attribute.Name;
+                }
 
-			this.IsIgnored = (clrProperty.GetCustomAttribute<TsIgnoreAttribute>(false) != null);
-		}
-	}
+                this.IsOptional = attribute.IsOptional;
+            }
+
+            this.IsIgnored = (clrProperty.GetCustomAttribute<TsIgnoreAttribute>(false) != null);
+        }
+    }
 }

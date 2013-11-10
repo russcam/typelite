@@ -160,7 +160,7 @@ namespace TypeLite {
 					continue;
 				}
 
-				sb.AppendFormat("  {0}: {1};", _memberFormatter(property), this.GetFullyQualifiedTypeName(property.PropertyType));
+				sb.AppendFormat("  {0}: {1};", this.GetPropertyName(property), this.GetFullyQualifiedTypeName(property.PropertyType));
 				sb.AppendLine();
 			}
 
@@ -223,5 +223,19 @@ namespace TypeLite {
 
 			return _formatter.FormatType(type);
 		}
+
+        /// <summary>
+        /// Gets property name in the TypeScript
+        /// </summary>
+        /// <param name="property">The property to get name of</param>
+        /// <returns>name of the property</returns>
+        private string GetPropertyName(TsProperty property) {
+            var name = _memberFormatter(property);
+            if (property.IsOptional) {
+                name += "?";
+            }
+
+            return name;
+        }
 	}
 }

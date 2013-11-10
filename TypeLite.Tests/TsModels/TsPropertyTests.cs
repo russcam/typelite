@@ -27,6 +27,15 @@ namespace TypeLite.Tests.TsModels {
 			Assert.False(target.IsIgnored);
 		}
 
+        [Fact]
+        public void WhenInitialized_IsOptionalIsFalse() {
+            var propertyInfo = typeof(Person).GetProperty("Name");
+
+            var target = new TsProperty(propertyInfo);
+
+            Assert.False(target.IsOptional);
+        }
+
 		[Fact]
 		public void WhenInitialized_NameIsSet() {
 			var propertyInfo = typeof(Person).GetProperty("Name");

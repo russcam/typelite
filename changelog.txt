@@ -1,3 +1,8 @@
+Version 0.9.1.5		(10. 11. 2013)
+=====================================
+Added		Optional fields
+Fixed		#24: Nullable enums
+
 Version 0.9.1.4		(14. 10. 2013)
 =====================================
 Added		Nuget package TypeLITE.Lib without T4 templates

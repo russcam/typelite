@@ -31,11 +31,11 @@ namespace TypeLite.TsModels {
 		/// <param name="clrType">The CLR enum represented by this instance of the TsEnum.</param>
 		public TsEnum(Type clrType)
 			: base(clrType) {
-			if (!clrType.IsEnum) {
+			if (!this.ClrType.IsEnum) {
 				throw new ArgumentException("ClrType isn't enum.");
 			}
 
-			this.Name = clrType.Name;
+            this.Name = this.ClrType.Name;
 			this.Values = new List<TsEnumValue>(this.GetEnumValues(clrType));
 
 			var attribute = this.ClrType.GetCustomAttribute<TsEnumAttribute>(false);

@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeLite", "TypeLite\TypeLite.csproj", "{43DCB624-F929-4572-97A3-6B14AC6AD158}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeLite.Tests", "TypeLite.Tests\TypeLite.Tests.csproj", "{E2ACF34E-C051-4571-8DA9-45A010128356}"
@@ -21,6 +23,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		TypeLite.lib.nuspec = TypeLite.lib.nuspec
 		TypeLite.nuspec = TypeLite.nuspec
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeLite.Demo.Portable", "TypeLite.Demo.Portable\TypeLite.Demo.Portable.csproj", "{22D48FCE-9B05-4FAC-9966-311E0B7D61AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,6 +48,10 @@ Global
 		{0AD860B2-2AAA-47CC-ACBA-F2D97BE19D66}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0AD860B2-2AAA-47CC-ACBA-F2D97BE19D66}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0AD860B2-2AAA-47CC-ACBA-F2D97BE19D66}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22D48FCE-9B05-4FAC-9966-311E0B7D61AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22D48FCE-9B05-4FAC-9966-311E0B7D61AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22D48FCE-9B05-4FAC-9966-311E0B7D61AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22D48FCE-9B05-4FAC-9966-311E0B7D61AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

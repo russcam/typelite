@@ -3,6 +3,7 @@
 <#@ assembly name="$(TargetDir)TypeLite.dll" #>
 <#@ assembly name="$(TargetDir)TypeLite.Net4.dll" #>
 <#@ assembly name="$(TargetDir)$(TargetFileName)" #>
+<#@ assembly name="$(TargetDir)TypeLite.Demo.Portable.dll" #>
 
 <#@ import namespace="TypeLite" #> 
 <#@ import namespace="TypeLite.Net4" #>

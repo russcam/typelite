@@ -30,3 +30,18 @@ declare module System {
 interface Guid {
 }
 }
+declare module Library {
+enum Genre {
+  Scifi = 1,
+  Coursebook = 2
+}
+interface Book {
+  Title: string;
+  Pages: number;
+  Genre: Library.Genre;
+}
+interface Library {
+  Name: string;
+  Books: Library.Book[];
+}
+}

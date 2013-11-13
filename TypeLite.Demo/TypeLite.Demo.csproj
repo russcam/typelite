@@ -245,6 +245,10 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TypeLite.Demo.Portable\TypeLite.Demo.Portable.csproj">
+      <Project>{22d48fce-9b05-4fac-9966-311e0b7d61af}</Project>
+      <Name>TypeLite.Demo.Portable</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TypeLite.Net4\TypeLite.Net4.csproj">
       <Project>{0ad860b2-2aaa-47cc-acba-f2d97be19d66}</Project>
       <Name>TypeLite.Net4</Name>

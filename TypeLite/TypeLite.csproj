@@ -57,6 +57,7 @@
     <Compile Include="TsClassAttribute.cs" />
     <Compile Include="TsEnumAttribute.cs" />
     <Compile Include="TsIgnoreAttribute.cs" />
+    <Compile Include="TsMemberTypeFormatter.cs" />
     <Compile Include="TsModels\IMemberIdentifier.cs" />
     <Compile Include="TsModels\SystemTypeKind.cs" />
     <Compile Include="TsMemberIdentifierFormatter.cs" />

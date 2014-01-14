@@ -113,6 +113,16 @@ namespace TypeLite {
 			return this;
 		}
 
+        /// <summary>
+        /// Registers a formatter for member types
+        /// </summary>
+        /// <param name="formatter">The formatter to register</param>
+        /// <returns>Instance of the TypeScriptFluent that enables fluent configuration.</returns>
+        public TypeScriptFluent WithFormatter(TsMemberTypeFormatter formatter) {
+            _scriptGenerator.RegisterMemberTypeFormatter(formatter);
+            return this;
+        }
+
 		/// <summary>
 		/// Registers a converter for the specific type
 		/// </summary>
@@ -123,6 +133,16 @@ namespace TypeLite {
 			_scriptGenerator.RegisterTypeConvertor<TFor>(convertor);
 			return this;
 		}
+
+        /// <summary>
+        /// Registers a typescript reference file
+        /// </summary>
+        /// <param name="reference">Name of the d.ts typescript reference file</param>
+        /// <returns></returns>
+        public TypeScriptFluent WithReference(string reference) {
+            _scriptGenerator.AddReference(reference);
+            return this;
+        }
 
 		/// <summary>
 		/// Generates TypeScript definitions for types included in this model builder.

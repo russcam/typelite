@@ -15,8 +15,10 @@ namespace TypeLite {
 		private TsTypeFormatterCollection _formatter;
 		private TypeConvertorCollection _convertor;
 		private TsMemberIdentifierFormatter _memberFormatter;
+        private TsMemberTypeFormatter _memberTypeFormatter;
 		private HashSet<TsClass> _generatedClasses;
 		private HashSet<TsEnum> _generatedEnums;
+        private List<string> _references;
 
 		/// <summary>
 		/// Gets collection of formatters for individual TsTypes
@@ -31,18 +33,20 @@ namespace TypeLite {
 		/// Initializes a new instance of the TsGenerator class with the default formatters.
 		/// </summary>
 		public TsGenerator() {
+            _references = new List<string>();
 			_generatedClasses = new HashSet<TsClass>();
 			_generatedEnums = new HashSet<TsEnum>();
 
 			_formatter = new TsTypeFormatterCollection();
 			_formatter.RegisterTypeFormatter<TsClass>((type, formatter) => ((TsClass)type).Name);
 			_formatter.RegisterTypeFormatter<TsSystemType>((type, formatter) => ((TsSystemType)type).Kind.ToTypeScriptString());
-			_formatter.RegisterTypeFormatter<TsCollection>((type, formatter) => this.GetTypeName(((TsCollection)type).ItemsType) + "[]");
+			_formatter.RegisterTypeFormatter<TsCollection>((type, formatter) => this.GetTypeName(((TsCollection)type).ItemsType));
 			_formatter.RegisterTypeFormatter<TsEnum>((type, formatter) => ((TsEnum)type).Name);
 
 			_convertor = new TypeConvertorCollection();
 
 			_memberFormatter = (identifier) => identifier.Name;
+            _memberTypeFormatter = (typeName, isTypeCollection) => typeName + (isTypeCollection ? "[]" : "");
 		}
 
 		/// <summary>
@@ -85,6 +89,22 @@ namespace TypeLite {
 			_memberFormatter = formatter;
 		}
 
+        /// <summary>
+        /// Registers a formatter for class member types.
+        /// </summary>
+        /// <param name="formatter">The formatter to register.</param>
+        public void RegisterMemberTypeFormatter(TsMemberTypeFormatter formatter) {
+            _memberTypeFormatter = formatter;
+        }
+
+        /// <summary>
+        /// Add a typescript reference
+        /// </summary>
+        /// <param name="reference">Name of d.ts file used as typescript reference</param>
+        public void AddReference(string reference) {
+            _references.Add(reference);
+        }
+
 		/// <summary>
 		/// Generates TypeScript definitions for classes in the model.
 		/// </summary>
@@ -93,7 +113,7 @@ namespace TypeLite {
 		public string Generate(TsModel model) {
 			var sb = new StringBuilder();
 
-			foreach (var reference in model.References) {
+			foreach (var reference in _references.Concat(model.References)) {
 				this.AppendReference(reference, sb);
 			}
 			sb.AppendLine();
@@ -160,7 +180,7 @@ namespace TypeLite {
 					continue;
 				}
 
-				sb.AppendFormat("  {0}: {1};", this.GetPropertyName(property), this.GetFullyQualifiedTypeName(property.PropertyType));
+				sb.AppendFormat("  {0}: {1};", this.GetPropertyName(property), this.GetPropertyType(property));
 				sb.AppendLine();
 			}
 
@@ -236,6 +256,15 @@ namespace TypeLite {
             }
 
             return name;
+        }
+
+        /// <summary>
+        /// Gets property type in the TypeScript
+        /// </summary>
+        /// <param name="property">The property to get type of</param>
+        /// <returns>type of the property</returns>
+        private string GetPropertyType(TsProperty property) {
+            return _memberTypeFormatter(this.GetFullyQualifiedTypeName(property.PropertyType), property.PropertyType is TsCollection);
         }
 	}
 }

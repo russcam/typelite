@@ -1,3 +1,8 @@
+Version 0.9.1.6		(17. 1. 2014)
+=====================================
+Added		MemberTypeFormatter
+Fixed		#28: Fluent method for adding references
+
 Version 0.9.1.5		(10. 11. 2013)
 =====================================
 Added		Optional fields

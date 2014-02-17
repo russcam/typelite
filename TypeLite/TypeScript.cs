@@ -123,7 +123,17 @@ namespace TypeLite {
             return this;
         }
 
-		/// <summary>
+        /// <summary>
+        /// Registers a formatter for type visibility
+        /// </summary>
+        /// <param name="formatter">The formatter to register</param>
+        /// <returns>Instance of the TypeScriptFluent that enables fluent configuration.</returns>
+        public TypeScriptFluent WithVisibility(TsTypeVisibilityFormatter formatter) {
+            _scriptGenerator.RegisterTypeVisibilityFormatter(formatter);
+            return this;
+        }
+
+        /// <summary>
 		/// Registers a converter for the specific type
 		/// </summary>
 		/// <typeparam name="TFor">The type to register the converter for.</typeparam>

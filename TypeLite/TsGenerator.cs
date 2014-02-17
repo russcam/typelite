@@ -16,6 +16,7 @@ namespace TypeLite {
 		private TypeConvertorCollection _convertor;
 		private TsMemberIdentifierFormatter _memberFormatter;
         private TsMemberTypeFormatter _memberTypeFormatter;
+        private TsTypeVisibilityFormatter _typeVisibilityFormatter;
 		private HashSet<TsClass> _generatedClasses;
 		private HashSet<TsEnum> _generatedEnums;
         private List<string> _references;
@@ -47,6 +48,7 @@ namespace TypeLite {
 
 			_memberFormatter = (identifier) => identifier.Name;
             _memberTypeFormatter = (typeName, isTypeCollection) => typeName + (isTypeCollection ? "[]" : "");
+            _typeVisibilityFormatter = (typeName) => false;
 		}
 
 		/// <summary>
@@ -95,6 +97,14 @@ namespace TypeLite {
         /// <param name="formatter">The formatter to register.</param>
         public void RegisterMemberTypeFormatter(TsMemberTypeFormatter formatter) {
             _memberTypeFormatter = formatter;
+        }
+
+        /// <summary>
+        /// Registers a formatter for class member types.
+        /// </summary>
+        /// <param name="formatter">The formatter to register.</param>
+        public void RegisterTypeVisibilityFormatter(TsTypeVisibilityFormatter formatter) {
+            _typeVisibilityFormatter = formatter;
         }
 
         /// <summary>
@@ -266,5 +276,15 @@ namespace TypeLite {
         private string GetPropertyType(TsProperty property) {
             return _memberTypeFormatter(this.GetFullyQualifiedTypeName(property.PropertyType), property.PropertyType is TsCollection);
         }
-	}
+
+        /// <summary>
+        /// Gets whether a type should be marked with "Export" keyword in TypeScript
+        /// </summary>
+        /// <param name="typeName">The type to get the visibility of</param>
+        /// <returns>bool indicating if type should be marked weith keyword "Export"</returns>
+        private bool GetTypeVisibility(string typeName) {
+            return _typeVisibilityFormatter(typeName);
+        }
+
+    }
 }

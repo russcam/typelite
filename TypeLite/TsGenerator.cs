@@ -17,10 +17,11 @@ namespace TypeLite {
 		private TsMemberIdentifierFormatter _memberFormatter;
         private TsMemberTypeFormatter _memberTypeFormatter;
         private TsTypeVisibilityFormatter _typeVisibilityFormatter;
+        private TsModuleNameFormatter _moduleNameFormatter;
 		private HashSet<TsClass> _generatedClasses;
 		private HashSet<TsEnum> _generatedEnums;
         private List<string> _references;
-
+        private Dictionary<string, string> _renamedModules;
 		/// <summary>
 		/// Gets collection of formatters for individual TsTypes
 		/// </summary>
@@ -49,6 +50,8 @@ namespace TypeLite {
 			_memberFormatter = (identifier) => identifier.Name;
             _memberTypeFormatter = (typeName, isTypeCollection) => typeName + (isTypeCollection ? "[]" : "");
             _typeVisibilityFormatter = (typeName) => false;
+            _moduleNameFormatter = (moduleName) => moduleName;
+            _renamedModules = new Dictionary<string, string>();
 		}
 
 		/// <summary>
@@ -107,6 +110,15 @@ namespace TypeLite {
             _typeVisibilityFormatter = formatter;
         }
 
+
+        /// <summary>
+        /// Registers a formatter for module names.
+        /// </summary>
+        /// <param name="formatter">The formatter to register.</param>
+        public void RegisterModuleNameFormatter(TsModuleNameFormatter formatter) {
+            _moduleNameFormatter = formatter;
+        }
+
         /// <summary>
         /// Add a typescript reference
         /// </summary>
@@ -132,7 +144,13 @@ namespace TypeLite {
 				this.AppendModule(module, sb);
 			}
 
-			return sb.ToString();
+            string result = sb.ToString();
+
+            foreach (KeyValuePair<string, string> _renamedModule in _renamedModules) {
+                result = result.Replace(_renamedModule.Key, _renamedModule.Value);
+            }
+
+            return result;
 		}
 
 		/// <summary>
@@ -151,7 +169,12 @@ namespace TypeLite {
             if (enums.Count == 0 && classes.Count == 0)
                 return;
 
-			sb.AppendFormat("declare module {0} ", module.Name);
+            string moduleName = GetModuleName(module.Name);
+            if (moduleName != module.Name) {
+                _renamedModules.Add(module.Name, moduleName);
+            }
+
+            sb.AppendFormat("declare module {0} ", moduleName);
 			sb.AppendLine("{");
 
 			foreach (var enumModel in enums) {
@@ -178,7 +201,9 @@ namespace TypeLite {
 		/// <param name="classModel">The class to generate definition for.</param>
 		/// <param name="sb">The output.</param>
 		private void AppendClassDefinition(TsClass classModel, StringBuilder sb) {
-			sb.AppendFormat("interface {0} ", this.GetTypeName(classModel));
+            string typeName = this.GetTypeName(classModel);
+            string visibility = GetTypeVisibility(typeName) ? "export " : "";
+            sb.AppendFormat("{0}interface {1} ", visibility, typeName);
 			if (classModel.BaseType != null) {
 				sb.AppendFormat("extends {0} ", this.GetFullyQualifiedTypeName(classModel.BaseType));
 			}
@@ -200,7 +225,9 @@ namespace TypeLite {
 		}
 
 		private void AppendEnumDefinition(TsEnum enumModel, StringBuilder sb) {
-			sb.AppendFormat("enum {0} ", this.GetTypeName(enumModel));
+            string typeName = this.GetTypeName(enumModel);
+            string visibility = GetTypeVisibility(typeName) ? "export " : "";
+            sb.AppendFormat("{0}enum {1} ", visibility, typeName);
 
 			sb.AppendLine("{");
 
@@ -284,6 +311,15 @@ namespace TypeLite {
         /// <returns>bool indicating if type should be marked weith keyword "Export"</returns>
         private bool GetTypeVisibility(string typeName) {
             return _typeVisibilityFormatter(typeName);
+        }
+
+        /// <summary>
+        /// Formats a module name
+        /// </summary>
+        /// <param name="moduleName">The module name to be formatted</param>
+        /// <returns>The module name after formatting.</returns>
+        private string GetModuleName(string moduleName) {
+            return _moduleNameFormatter(moduleName);
         }
 
     }

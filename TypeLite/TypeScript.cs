@@ -124,6 +124,16 @@ namespace TypeLite {
         }
 
         /// <summary>
+        /// Registers a formatter for module names
+        /// </summary>
+        /// <param name="formatter">The formatter to register</param>
+        /// <returns>Instance of the TypeScriptFluent that enables fluent configuration.</returns>
+        public TypeScriptFluent WithFormatter(TsModuleNameFormatter formatter) {
+            _scriptGenerator.RegisterModuleNameFormatter(formatter);
+            return this;
+        }
+
+        /// <summary>
         /// Registers a formatter for type visibility
         /// </summary>
         /// <param name="formatter">The formatter to register</param>

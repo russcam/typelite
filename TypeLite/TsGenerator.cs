@@ -128,21 +128,33 @@ namespace TypeLite {
         }
 
 		/// <summary>
-		/// Generates TypeScript definitions for classes in the model.
+		/// Generates TypeScript definitions for classes and enums in the model.
 		/// </summary>
 		/// <param name="model">The code model with classes to generate definitions for.</param>
 		/// <returns>TypeScript definitions for classes in the model.</returns>
 		public string Generate(TsModel model) {
-			var sb = new StringBuilder();
+            return this.Generate(model, TsGeneratorOutput.Classes | TsGeneratorOutput.Enums);
+		}
 
-			foreach (var reference in _references.Concat(model.References)) {
-				this.AppendReference(reference, sb);
-			}
-			sb.AppendLine();
+        /// <summary>
+        /// Generates TypeScript definitions for classes and/or enums in the model.
+        /// </summary>
+        /// <param name="model">The code model with classes to generate definitions for.</param>
+        /// <param name="generatorOutput">The type of definitions to generate</param>
+        /// <returns>TypeScript definitions for classes and/or enums in the model..</returns>
+        public string Generate(TsModel model, TsGeneratorOutput generatorOutput) {
+            var sb = new StringBuilder();
 
-			foreach (var module in model.Modules) {
-				this.AppendModule(module, sb);
-			}
+            if ((generatorOutput & TsGeneratorOutput.Classes) == TsGeneratorOutput.Classes) {
+                foreach (var reference in _references.Concat(model.References)) {
+                    this.AppendReference(reference, sb);
+                }
+                sb.AppendLine();
+            }
+
+            foreach (var module in model.Modules) {
+                this.AppendModule(module, sb, generatorOutput);
+            }
 
             string result = sb.ToString();
 
@@ -151,7 +163,7 @@ namespace TypeLite {
             }
 
             return result;
-		}
+        }
 
 		/// <summary>
 		/// Generates reference to other d.ts file and appends it to the output.
@@ -163,7 +175,7 @@ namespace TypeLite {
 			sb.AppendLine();
 		}
 
-		private void AppendModule(TsModule module, StringBuilder sb) {
+        private void AppendModule(TsModule module, StringBuilder sb, TsGeneratorOutput generatorOutput) {
             var classes = module.Classes.Where(c => !_convertor.IsConvertorRegistered(c.ClrType)).ToList();
             var enums = module.Enums.Where(e => !_convertor.IsConvertorRegistered(e.ClrType)).ToList();
             if (enums.Count == 0 && classes.Count == 0)
@@ -177,20 +189,24 @@ namespace TypeLite {
             sb.AppendFormat("declare module {0} ", moduleName);
 			sb.AppendLine("{");
 
-			foreach (var enumModel in enums) {
-				if (enumModel.IsIgnored) {
-					continue;
-				}
-				this.AppendEnumDefinition(enumModel, sb);
-			}
+            if ((generatorOutput & TsGeneratorOutput.Enums) == TsGeneratorOutput.Enums) {
+                foreach (var enumModel in enums) {
+                    if (enumModel.IsIgnored) {
+                        continue;
+                    }
+                    this.AppendEnumDefinition(enumModel, sb);
+                }
+            }
 
-			foreach (var classModel in classes) {
-				if (classModel.IsIgnored) {
-					continue;
-				}
-                
-				this.AppendClassDefinition(classModel, sb);
-			}
+            if ((generatorOutput & TsGeneratorOutput.Classes) == TsGeneratorOutput.Classes) {
+                foreach (var classModel in classes) {
+                    if (classModel.IsIgnored) {
+                        continue;
+                    }
+
+                    this.AppendClassDefinition(classModel, sb);
+                }
+            }
 
 			sb.AppendLine("}");
 		}

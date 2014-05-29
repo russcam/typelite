@@ -173,6 +173,16 @@ namespace TypeLite {
 			return _scriptGenerator.Generate(model);
 		}
 
+        /// <summary>
+        /// Generates TypeScript definitions for types included in this model builder. Optionally restricts output to classes or enums.
+        /// </summary>
+        /// <param name="output">The type of definitions to generate</param>
+        /// <returns>TypeScript definition for types included in this model builder.</returns>
+        public string Generate(TsGeneratorOutput output) {
+            var model = _modelBuilder.Build();
+            return _scriptGenerator.Generate(model, output);
+        }
+
 		/// <summary>
 		/// Returns a string that represents the current object.
 		/// </summary>

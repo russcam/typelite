@@ -7,6 +7,17 @@
 <#@ import namespace="TypeLite.Net4" #> 
 <#@output extension=".d.ts"#>
 
-<#= TypeScript.Definitions()
-		.ForLoadedAssemblies()
- #>
+ <#@include file="Manager.ttinclude"#>
+<# var manager = Manager.Create(Host, GenerationEnvironment); #>
+
+<# var ts = TypeScript.Definitions()
+		.WithReference("Enums.ts")
+		.ForLoadedAssemblies();
+#>
+
+<#= ts.Generate(TsGeneratorOutput.Classes) #>
+
+<# manager.StartNewFile("Enums.ts"); #>
+<#= ts.Generate(TsGeneratorOutput.Enums) #>
+<# manager.EndBlock(); #>
+<# manager.Process(true); #>

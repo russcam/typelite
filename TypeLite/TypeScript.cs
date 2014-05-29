@@ -123,7 +123,27 @@ namespace TypeLite {
             return this;
         }
 
-		/// <summary>
+        /// <summary>
+        /// Registers a formatter for module names
+        /// </summary>
+        /// <param name="formatter">The formatter to register</param>
+        /// <returns>Instance of the TypeScriptFluent that enables fluent configuration.</returns>
+        public TypeScriptFluent WithFormatter(TsModuleNameFormatter formatter) {
+            _scriptGenerator.RegisterModuleNameFormatter(formatter);
+            return this;
+        }
+
+        /// <summary>
+        /// Registers a formatter for type visibility
+        /// </summary>
+        /// <param name="formatter">The formatter to register</param>
+        /// <returns>Instance of the TypeScriptFluent that enables fluent configuration.</returns>
+        public TypeScriptFluent WithVisibility(TsTypeVisibilityFormatter formatter) {
+            _scriptGenerator.RegisterTypeVisibilityFormatter(formatter);
+            return this;
+        }
+
+        /// <summary>
 		/// Registers a converter for the specific type
 		/// </summary>
 		/// <typeparam name="TFor">The type to register the converter for.</typeparam>
@@ -152,6 +172,16 @@ namespace TypeLite {
 			var model = _modelBuilder.Build();
 			return _scriptGenerator.Generate(model);
 		}
+
+        /// <summary>
+        /// Generates TypeScript definitions for types included in this model builder. Optionally restricts output to classes or enums.
+        /// </summary>
+        /// <param name="output">The type of definitions to generate</param>
+        /// <returns>TypeScript definition for types included in this model builder.</returns>
+        public string Generate(TsGeneratorOutput output) {
+            var model = _modelBuilder.Build();
+            return _scriptGenerator.Generate(model, output);
+        }
 
 		/// <summary>
 		/// Returns a string that represents the current object.

@@ -3,11 +3,10 @@
  
 
 
+
+/// <reference path="Enums.ts" />
+
 declare module Eshop {
-enum CustomerKind {
-  Corporate = 1,
-  Individual = 2
-}
 interface Customer {
   Name: string;
   Email: string;
@@ -31,10 +30,6 @@ interface Guid {
 }
 }
 declare module Library {
-enum Genre {
-  Scifi = 1,
-  Coursebook = 2
-}
 interface Book {
   Title: string;
   Pages: number;
@@ -45,3 +40,5 @@ interface Library {
   Books: Library.Book[];
 }
 }
+
+

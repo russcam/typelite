@@ -16,10 +16,12 @@ namespace TypeLite {
 		private TypeConvertorCollection _convertor;
 		private TsMemberIdentifierFormatter _memberFormatter;
         private TsMemberTypeFormatter _memberTypeFormatter;
+        private TsTypeVisibilityFormatter _typeVisibilityFormatter;
+        private TsModuleNameFormatter _moduleNameFormatter;
 		private HashSet<TsClass> _generatedClasses;
 		private HashSet<TsEnum> _generatedEnums;
         private List<string> _references;
-
+        private Dictionary<string, string> _renamedModules;
 		/// <summary>
 		/// Gets collection of formatters for individual TsTypes
 		/// </summary>
@@ -47,6 +49,9 @@ namespace TypeLite {
 
 			_memberFormatter = (identifier) => identifier.Name;
             _memberTypeFormatter = (typeName, isTypeCollection) => typeName + (isTypeCollection ? "[]" : "");
+            _typeVisibilityFormatter = (typeName) => false;
+            _moduleNameFormatter = (moduleName) => moduleName;
+            _renamedModules = new Dictionary<string, string>();
 		}
 
 		/// <summary>
@@ -98,6 +103,23 @@ namespace TypeLite {
         }
 
         /// <summary>
+        /// Registers a formatter for class member types.
+        /// </summary>
+        /// <param name="formatter">The formatter to register.</param>
+        public void RegisterTypeVisibilityFormatter(TsTypeVisibilityFormatter formatter) {
+            _typeVisibilityFormatter = formatter;
+        }
+
+
+        /// <summary>
+        /// Registers a formatter for module names.
+        /// </summary>
+        /// <param name="formatter">The formatter to register.</param>
+        public void RegisterModuleNameFormatter(TsModuleNameFormatter formatter) {
+            _moduleNameFormatter = formatter;
+        }
+
+        /// <summary>
         /// Add a typescript reference
         /// </summary>
         /// <param name="reference">Name of d.ts file used as typescript reference</param>
@@ -106,24 +128,42 @@ namespace TypeLite {
         }
 
 		/// <summary>
-		/// Generates TypeScript definitions for classes in the model.
+		/// Generates TypeScript definitions for classes and enums in the model.
 		/// </summary>
 		/// <param name="model">The code model with classes to generate definitions for.</param>
 		/// <returns>TypeScript definitions for classes in the model.</returns>
 		public string Generate(TsModel model) {
-			var sb = new StringBuilder();
-
-			foreach (var reference in _references.Concat(model.References)) {
-				this.AppendReference(reference, sb);
-			}
-			sb.AppendLine();
-
-			foreach (var module in model.Modules) {
-				this.AppendModule(module, sb);
-			}
-
-			return sb.ToString();
+            return this.Generate(model, TsGeneratorOutput.Classes | TsGeneratorOutput.Enums);
 		}
+
+        /// <summary>
+        /// Generates TypeScript definitions for classes and/or enums in the model.
+        /// </summary>
+        /// <param name="model">The code model with classes to generate definitions for.</param>
+        /// <param name="generatorOutput">The type of definitions to generate</param>
+        /// <returns>TypeScript definitions for classes and/or enums in the model..</returns>
+        public string Generate(TsModel model, TsGeneratorOutput generatorOutput) {
+            var sb = new StringBuilder();
+
+            if ((generatorOutput & TsGeneratorOutput.Classes) == TsGeneratorOutput.Classes) {
+                foreach (var reference in _references.Concat(model.References)) {
+                    this.AppendReference(reference, sb);
+                }
+                sb.AppendLine();
+            }
+
+            foreach (var module in model.Modules) {
+                this.AppendModule(module, sb, generatorOutput);
+            }
+
+            string result = sb.ToString();
+
+            foreach (KeyValuePair<string, string> _renamedModule in _renamedModules) {
+                result = result.Replace(_renamedModule.Key, _renamedModule.Value);
+            }
+
+            return result;
+        }
 
 		/// <summary>
 		/// Generates reference to other d.ts file and appends it to the output.
@@ -135,29 +175,38 @@ namespace TypeLite {
 			sb.AppendLine();
 		}
 
-		private void AppendModule(TsModule module, StringBuilder sb) {
+        private void AppendModule(TsModule module, StringBuilder sb, TsGeneratorOutput generatorOutput) {
             var classes = module.Classes.Where(c => !_convertor.IsConvertorRegistered(c.ClrType)).ToList();
             var enums = module.Enums.Where(e => !_convertor.IsConvertorRegistered(e.ClrType)).ToList();
             if (enums.Count == 0 && classes.Count == 0)
                 return;
 
-			sb.AppendFormat("declare module {0} ", module.Name);
+            string moduleName = GetModuleName(module.Name);
+            if (moduleName != module.Name) {
+                _renamedModules.Add(module.Name, moduleName);
+            }
+
+            sb.AppendFormat("declare module {0} ", moduleName);
 			sb.AppendLine("{");
 
-			foreach (var enumModel in enums) {
-				if (enumModel.IsIgnored) {
-					continue;
-				}
-				this.AppendEnumDefinition(enumModel, sb);
-			}
+            if ((generatorOutput & TsGeneratorOutput.Enums) == TsGeneratorOutput.Enums) {
+                foreach (var enumModel in enums) {
+                    if (enumModel.IsIgnored) {
+                        continue;
+                    }
+                    this.AppendEnumDefinition(enumModel, sb);
+                }
+            }
 
-			foreach (var classModel in classes) {
-				if (classModel.IsIgnored) {
-					continue;
-				}
-                
-				this.AppendClassDefinition(classModel, sb);
-			}
+            if ((generatorOutput & TsGeneratorOutput.Classes) == TsGeneratorOutput.Classes) {
+                foreach (var classModel in classes) {
+                    if (classModel.IsIgnored) {
+                        continue;
+                    }
+
+                    this.AppendClassDefinition(classModel, sb);
+                }
+            }
 
 			sb.AppendLine("}");
 		}
@@ -168,7 +217,9 @@ namespace TypeLite {
 		/// <param name="classModel">The class to generate definition for.</param>
 		/// <param name="sb">The output.</param>
 		private void AppendClassDefinition(TsClass classModel, StringBuilder sb) {
-			sb.AppendFormat("interface {0} ", this.GetTypeName(classModel));
+            string typeName = this.GetTypeName(classModel);
+            string visibility = GetTypeVisibility(typeName) ? "export " : "";
+            sb.AppendFormat("{0}interface {1} ", visibility, typeName);
 			if (classModel.BaseType != null) {
 				sb.AppendFormat("extends {0} ", this.GetFullyQualifiedTypeName(classModel.BaseType));
 			}
@@ -190,7 +241,9 @@ namespace TypeLite {
 		}
 
 		private void AppendEnumDefinition(TsEnum enumModel, StringBuilder sb) {
-			sb.AppendFormat("enum {0} ", this.GetTypeName(enumModel));
+            string typeName = this.GetTypeName(enumModel);
+            string visibility = GetTypeVisibility(typeName) ? "export " : "";
+            sb.AppendFormat("{0}enum {1} ", visibility, typeName);
 
 			sb.AppendLine("{");
 
@@ -266,5 +319,24 @@ namespace TypeLite {
         private string GetPropertyType(TsProperty property) {
             return _memberTypeFormatter(this.GetFullyQualifiedTypeName(property.PropertyType), property.PropertyType is TsCollection);
         }
-	}
+
+        /// <summary>
+        /// Gets whether a type should be marked with "Export" keyword in TypeScript
+        /// </summary>
+        /// <param name="typeName">The type to get the visibility of</param>
+        /// <returns>bool indicating if type should be marked weith keyword "Export"</returns>
+        private bool GetTypeVisibility(string typeName) {
+            return _typeVisibilityFormatter(typeName);
+        }
+
+        /// <summary>
+        /// Formats a module name
+        /// </summary>
+        /// <param name="moduleName">The module name to be formatted</param>
+        /// <returns>The module name after formatting.</returns>
+        private string GetModuleName(string moduleName) {
+            return _moduleNameFormatter(moduleName);
+        }
+
+    }
 }

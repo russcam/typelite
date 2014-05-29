@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TsFiles.cs" />
     <Compile Include="TypeScriptFluentExtensions.cs" />
   </ItemGroup>
   <ItemGroup>

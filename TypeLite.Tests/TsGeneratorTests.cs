@@ -64,6 +64,28 @@ namespace TypeLite.Tests {
         }
 
         [Fact]
+        public void WhenClassIsReferencedAndOutputIsSetToEnums_ClassIsntInOutput() {
+            var builder = new TsModelBuilder();
+            builder.Add<Item>();
+            var model = builder.Build();
+            var target = new TsGenerator();
+            var script = target.Generate(model, TsGeneratorOutput.Enums);
+
+            Assert.DoesNotContain("interface Item", script);
+        }
+
+        [Fact]
+        public void WhenEnumIsReferencedAndOutputIsSetToClass_EnumIsntInOutput() {
+            var builder = new TsModelBuilder();
+            builder.Add<Item>();
+            var model = builder.Build();
+            var target = new TsGenerator();
+            var script = target.Generate(model, TsGeneratorOutput.Classes);
+
+            Assert.DoesNotContain("enum ItemType", script);
+        }
+
+        [Fact]
         public void WhenClassWithEnumReferenced_FullyQualifiedNameIsUsed() {
             var builder = new TsModelBuilder();
             builder.Add<Item>();

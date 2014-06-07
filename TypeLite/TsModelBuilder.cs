@@ -129,8 +129,17 @@ namespace TypeLite {
 				var propertyTypeFamily = TsType.GetTypeFamily(property.PropertyType.ClrType);
 				if (propertyTypeFamily == TsTypeFamily.Collection) {
 					var collectionItemType = TsType.GetEnumerableType(property.PropertyType.ClrType);
-					if (collectionItemType != null && TsType.GetTypeFamily(collectionItemType) == TsTypeFamily.Class) {
-						this.Add(collectionItemType);
+					if (collectionItemType != null) {
+						var typeFamily = TsType.GetTypeFamily(collectionItemType);
+
+						switch (typeFamily){
+							case TsTypeFamily.Class:
+								this.Add(collectionItemType);
+								break;
+							case TsTypeFamily.Enum:
+								this.AddEnum(new TsEnum(collectionItemType));
+								break;
+						}
 					}
 				} else if (propertyTypeFamily == TsTypeFamily.Class) {
 					this.Add(property.PropertyType.ClrType);

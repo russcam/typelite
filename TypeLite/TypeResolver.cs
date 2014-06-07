@@ -75,6 +75,15 @@ namespace TypeLite {
 			if (_knownTypes.ContainsKey(toResolve.ClrType)) {
 				return _knownTypes[toResolve.ClrType];
 			}
+			else if (toResolve.ClrType.IsGenericType)
+			{
+				// We stored its open type definition instead
+				TsType openType = null;
+				if (_knownTypes.TryGetValue(toResolve.ClrType.GetGenericTypeDefinition(), out openType))
+				{
+					return openType;
+				}
+			}
 
 			var typeFamily = TsType.GetTypeFamily(toResolve.ClrType);
 			TsType type = null;

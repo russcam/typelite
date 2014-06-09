@@ -70,9 +70,11 @@ namespace TypeLite {
 				return this.Add(clrType.GetNullableValueType(), includeReferences);
 			}
 
-			if (!this.Classes.ContainsKey(clrType)) {
-				var added = new TsClass(clrType);
-				this.Classes[clrType] = added;
+			var effectiveType = clrType.IsGenericType ? clrType.GetGenericTypeDefinition() : clrType;
+
+			if (!this.Classes.ContainsKey(effectiveType)) {
+				var added = new TsClass(effectiveType);
+				this.Classes[effectiveType] = added;
 
 				if (added.BaseType != null) {
 					this.Add(added.BaseType.ClrType);
@@ -86,7 +88,7 @@ namespace TypeLite {
 
 				return added;
 			} else {
-				return this.Classes[clrType];
+				return this.Classes[effectiveType];
 			}
 		}
 
@@ -129,8 +131,17 @@ namespace TypeLite {
 				var propertyTypeFamily = TsType.GetTypeFamily(property.PropertyType.ClrType);
 				if (propertyTypeFamily == TsTypeFamily.Collection) {
 					var collectionItemType = TsType.GetEnumerableType(property.PropertyType.ClrType);
-					if (collectionItemType != null && TsType.GetTypeFamily(collectionItemType) == TsTypeFamily.Class) {
-						this.Add(collectionItemType);
+					if (collectionItemType != null) {
+						var typeFamily = TsType.GetTypeFamily(collectionItemType);
+
+						switch (typeFamily){
+							case TsTypeFamily.Class:
+								this.Add(collectionItemType);
+								break;
+							case TsTypeFamily.Enum:
+								this.AddEnum(new TsEnum(collectionItemType));
+								break;
+						}
 					}
 				} else if (propertyTypeFamily == TsTypeFamily.Class) {
 					this.Add(property.PropertyType.ClrType);

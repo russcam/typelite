@@ -49,7 +49,7 @@ namespace TypeLite.TsModels {
                 if (definitionTypeProperty.PropertyType.IsGenericParameter) {
                     this.PropertyType = TsType.Any;
                 } else {
-                    this.PropertyType = new TsType(clrProperty.PropertyType);
+                    this.PropertyType = clrProperty.PropertyType.IsEnum ? new TsEnum(clrProperty.PropertyType) : new TsType(clrProperty.PropertyType);
                 }
             } else {
                 var propertyType = clrProperty.PropertyType;

@@ -1,3 +1,9 @@
+Version 0.9.1.8		(8. 6. 2014)
+=====================================
+Fixed		#33: Enums not created when using list
+Fixed		#41: Combination of generics <T> and Enum throws an exception
+Fixed		#42: Duplicate TS iterfaces for generic parameters
+
 Version 0.9.1.7		(29. 5. 2014)
 =====================================
 Added		#17: Enums should go to .ts files

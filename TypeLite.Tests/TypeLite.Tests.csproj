@@ -66,6 +66,7 @@
     <Compile Include="RegressionTests\Issue15_ConvertSystemType.cs" />
     <Compile Include="RegressionTests\Issue24_NullableEnumProperty.cs" />
     <Compile Include="RegressionTests\Issue33_EnumCollectionTypePropertyFailsToGenerateEnum.cs" />
+    <Compile Include="RegressionTests\Issue32_DuplicateInterfacesForClosedGenericPropertyTypes.cs" />
     <Compile Include="RegressionTests\Issue41_EnumsInGenericClasses.cs" />
     <Compile Include="RegressionTests\NullablesTests.cs" />
     <Compile Include="TestModels\Address.cs" />

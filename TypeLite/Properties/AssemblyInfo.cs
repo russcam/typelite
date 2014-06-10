@@ -24,8 +24,8 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.9.1.7")]
-[assembly: AssemblyFileVersion("0.9.1.7")]
+[assembly: AssemblyVersion("0.9.1.8")]
+[assembly: AssemblyFileVersion("0.9.1.8")]
 [assembly: InternalsVisibleTo("TypeLite.Tests, PublicKey=0024000004800000940000000602000000240000525341310004000001000100df9defcb717cb5" +
                                                         "79cf724afd36bb140f421806385e1d8f4f869833dfe4e2865e0fa45341d73b1dbe8de8b2540bec" +
                                                         "9b93a6e219e8a796a391e2b8612a8f837cfa99fd14e1efb93d93f865728283ee3f70852d12e39b" +

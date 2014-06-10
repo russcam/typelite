@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeLite", "TypeLite\TypeLite.csproj", "{43DCB624-F929-4572-97A3-6B14AC6AD158}"
 EndProject
@@ -20,8 +20,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeLite.Net4", "TypeLite.N
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EEE2AFA0-BFF3-433C-B72C-E9BE1598D017}"
 	ProjectSection(SolutionItems) = preProject
+		changelog.txt = changelog.txt
 		TypeLite.lib.nuspec = TypeLite.lib.nuspec
 		TypeLite.nuspec = TypeLite.nuspec
+		TypeLite.snk = TypeLite.snk
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeLite.Demo.Portable", "TypeLite.Demo.Portable\TypeLite.Demo.Portable.csproj", "{22D48FCE-9B05-4FAC-9966-311E0B7D61AF}"

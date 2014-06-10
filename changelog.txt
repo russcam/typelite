@@ -1,5 +1,9 @@
 Version 0.9.1.8		(8. 6. 2014)
 =====================================
+Added		Strong assembly names
+
+Version 0.9.1.9		(10. 6. 2014)
+=====================================
 Fixed		#33: Enums not created when using list
 Fixed		#41: Combination of generics <T> and Enum throws an exception
 Fixed		#42: Duplicate TS iterfaces for generic parameters

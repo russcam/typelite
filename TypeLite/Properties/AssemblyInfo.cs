@@ -24,10 +24,10 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.9.1.8")]
-[assembly: AssemblyFileVersion("0.9.1.8")]
-[assembly: InternalsVisibleTo("TypeLite.Tests, PublicKey=0024000004800000940000000602000000240000525341310004000001000100df9defcb717cb5" +
-                                                        "79cf724afd36bb140f421806385e1d8f4f869833dfe4e2865e0fa45341d73b1dbe8de8b2540bec" +
-                                                        "9b93a6e219e8a796a391e2b8612a8f837cfa99fd14e1efb93d93f865728283ee3f70852d12e39b" +
-                                                        "70dea6999152821cc9b7c7f8b14d45ad10f6506df64f5929b77366c9b07b64f4a592b8affe09da" +
-                                                        "8800238c")]
+[assembly: AssemblyVersion("0.9.1.9")]
+[assembly: AssemblyFileVersion("0.9.1.9")]
+[assembly: InternalsVisibleTo("TypeLite.Tests, PublicKey=0024000004800000940000000602000000240000525341310004000001000100d9351cdf0fc79c" +
+                                                        "633b745a17c690b062462a709fe67aa221fbbdd2e8c3a966198544713fdbd4715d2f3992bf5c6d" + 
+                                                        "5b64fae15ad44e75583549a921dd378f55a785a41f3fff9f10825f4154c932a3fae6ca0004afd4" + 
+                                                        "7bfdeaeb0b4d9679a1e3a829780804896220726299fa652a644b948adb82f48d349125b27c50c4" +
+                                                        "9b2521f1")]

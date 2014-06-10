@@ -35,7 +35,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>TypeLiteTests.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\TypeLite.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Moq">
@@ -96,7 +96,6 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>TsUtils.d.ts</LastGenOutput>
     </None>
-    <None Include="TypeLiteTests.snk" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TypeLite\TypeLite.csproj">

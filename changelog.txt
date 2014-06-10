@@ -1,3 +1,7 @@
+Version 0.9.1.9		(10. 6. 2014)
+=====================================
+Added		Strong assembly names
+
 Version 0.9.1.7		(29. 5. 2014)
 =====================================
 Added		#17: Enums should go to .ts files

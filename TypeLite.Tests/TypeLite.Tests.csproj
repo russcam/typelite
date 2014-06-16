@@ -70,6 +70,7 @@
     <Compile Include="RegressionTests\Issue41_EnumsInGenericClasses.cs" />
     <Compile Include="RegressionTests\Issue44_EnumsWithExport.cs" />
     <Compile Include="RegressionTests\Issue43_EnumsWithDeclare.cs" />
+    <Compile Include="RegressionTests\Issue45_EmptyNamespaceInEmuns.cs" />
     <Compile Include="RegressionTests\NullablesTests.cs" />
     <Compile Include="TestModels\Address.cs" />
     <Compile Include="TestModels\ContactType.cs" />

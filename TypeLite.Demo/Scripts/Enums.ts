@@ -4,8 +4,6 @@ export enum CustomerKind {
   Individual = 2
 }
 }
-module System {
-}
 module Library {
 export enum Genre {
   Scifi = 1,

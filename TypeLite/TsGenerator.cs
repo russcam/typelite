@@ -178,8 +178,11 @@ namespace TypeLite {
         private void AppendModule(TsModule module, StringBuilder sb, TsGeneratorOutput generatorOutput) {
             var classes = module.Classes.Where(c => !_convertor.IsConvertorRegistered(c.ClrType)).ToList();
             var enums = module.Enums.Where(e => !_convertor.IsConvertorRegistered(e.ClrType)).ToList();
-            if (enums.Count == 0 && classes.Count == 0)
+            if ((generatorOutput == TsGeneratorOutput.Enums && enums.Count == 0) ||
+                (generatorOutput == TsGeneratorOutput.Classes && classes.Count == 0) ||
+                (generatorOutput == (TsGeneratorOutput.Classes | TsGeneratorOutput.Enums) && enums.Count == 0 && classes.Count == 0)) {
                 return;
+            }
 
             string moduleName = GetModuleName(module.Name);
             if (moduleName != module.Name) {

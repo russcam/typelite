@@ -24,11 +24,6 @@ namespace TypeLite.TsModels {
 		public TsType BaseType { get; internal set; }
 
 		/// <summary>
-		/// Gets or sets the name of the class.
-		/// </summary>
-		public string Name { get; set; }
-
-		/// <summary>
 		/// Gets or sets bool value indicating whether this class will be ignored by TsGenerator.
 		/// </summary>
 		public bool IsIgnored { get; set; }

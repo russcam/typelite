@@ -17,11 +17,19 @@ namespace TypeLite.Tests {
 		#region Add tests
 
 		[Fact]
-		public void WhenAddTypeThatIsntClass_ExceptionIsThrown() {
+		public void WhenAddTypeThatIsntClassStructOrEnum_ExceptionIsThrown() {
 			var target = new TsModelBuilder();
 
 			Assert.Throws<ArgumentException>(() => target.Add(typeof(string)));
 		}
+
+        [Fact]
+        public void WhenAddEnum_EnumIsAddedToModel() {
+            var target = new TsModelBuilder();
+            target.Add(typeof(CustomerKind));
+
+            Assert.Single(target.Enums.Values.Where(o => o.ClrType == typeof(CustomerKind)));
+        }
 
 		[Fact]
 		public void WhenAdd_ClassIsAddedToModel() {

@@ -1,13 +1,13 @@
-declare module Eshop {
-enum CustomerKind {
+module Eshop {
+export enum CustomerKind {
   Corporate = 1,
   Individual = 2
 }
 }
-declare module System {
+module System {
 }
-declare module Library {
-enum Genre {
+module Library {
+    enum Genre {
   Scifi = 1,
   Coursebook = 2
 }

@@ -49,7 +49,7 @@ namespace TypeLite {
 
 			_memberFormatter = (identifier) => identifier.Name;
             _memberTypeFormatter = (typeName, isTypeCollection) => typeName + (isTypeCollection ? "[]" : "");
-            _typeVisibilityFormatter = (typeName) => false;
+            _typeVisibilityFormatter = (typeName) => true;
             _moduleNameFormatter = (moduleName) => moduleName;
             _renamedModules = new Dictionary<string, string>();
 		}
@@ -186,7 +186,11 @@ namespace TypeLite {
                 _renamedModules.Add(module.Name, moduleName);
             }
 
-            sb.AppendFormat("declare module {0} ", moduleName);
+            if (generatorOutput != TsGeneratorOutput.Enums) {
+                sb.Append("declare ");
+            }
+
+            sb.AppendFormat("module {0} ", moduleName);
 			sb.AppendLine("{");
 
             if ((generatorOutput & TsGeneratorOutput.Enums) == TsGeneratorOutput.Enums) {

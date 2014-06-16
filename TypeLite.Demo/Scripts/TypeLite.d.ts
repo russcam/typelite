@@ -7,35 +7,35 @@
 /// <reference path="Enums.ts" />
 
 declare module Eshop {
-interface Customer {
+export interface Customer {
   Name: string;
   Email: string;
   VIP: boolean;
   Kind: Eshop.CustomerKind;
   Orders: Eshop.Order[];
 }
-interface Order {
+export interface Order {
   Products: Eshop.Product[];
   TotalPrice: number;
   Created: Date;
 }
-interface Product {
+export interface Product {
   Name: string;
   Price: number;
   ID: System.Guid;
 }
 }
 declare module System {
-interface Guid {
+export interface Guid {
 }
 }
 declare module Library {
-interface Book {
+export interface Book {
   Title: string;
   Pages: number;
   Genre: Library.Genre;
 }
-interface Library {
+export interface Library {
   Name: string;
   Books: Library.Book[];
 }

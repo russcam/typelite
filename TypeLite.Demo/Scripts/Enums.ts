@@ -7,7 +7,7 @@ export enum CustomerKind {
 module System {
 }
 module Library {
-    enum Genre {
+export enum Genre {
   Scifi = 1,
   Coursebook = 2
 }

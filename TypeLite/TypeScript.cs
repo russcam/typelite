@@ -68,8 +68,10 @@ namespace TypeLite {
 		/// <param name="type">The type to add to the model.</param>
 		/// <returns>Instance of the TypeScriptFluent that enables fluent configuration.</returns>
 		public TypeScriptFluentModuleMember For(Type type) {
-			var classModel = _modelBuilder.Add(type);
-			return new TypeScriptFluentModuleMember(this, classModel as TsClass);
+			var model = _modelBuilder.Add(type);
+			if (model is TsClass || model is TsEnum)
+				return new TypeScriptFluentModuleMember(this, model);
+			throw new InvalidOperationException("The type must be a class or an enum");
 		}
 
 		/// <summary>

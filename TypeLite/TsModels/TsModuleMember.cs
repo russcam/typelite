@@ -40,7 +40,12 @@ namespace TypeLite.TsModels {
         public TsModuleMember(Type clrType)
             : base(clrType) {
 
-            this.Module = new TsModule(this.ClrType.Namespace);
+            var moduleName = this.ClrType.Namespace;
+            if (clrType.DeclaringType != null) {
+                moduleName += "." + clrType.DeclaringType.Name;
+            }
+
+            this.Module = new TsModule(moduleName);
             this.Name = this.ClrType.Name;
         }
     }

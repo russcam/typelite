@@ -104,6 +104,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TypeLite.Net4\TypeLite.Net4.csproj">
+      <Project>{0ad860b2-2aaa-47cc-acba-f2d97be19d66}</Project>
+      <Name>TypeLite.Net4</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TypeLite\TypeLite.csproj">
       <Project>{43dcb624-f929-4572-97a3-6b14ac6ad158}</Project>
       <Name>TypeLite</Name>
@@ -119,6 +123,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>TsUtils.tt</DependentUpon>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="TestScripts\Enums.ts">
+      <DependentUpon>TsUtils.tt</DependentUpon>
+    </TypeScriptCompile>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

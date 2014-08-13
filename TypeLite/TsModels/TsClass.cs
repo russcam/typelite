@@ -16,6 +16,11 @@ namespace TypeLite.TsModels {
 		public ICollection<TsProperty> Properties { get; private set; }
 
 		/// <summary>
+		/// Gets collection of fields of the class.
+		/// </summary>
+		public ICollection<TsProperty> Fields { get; private set; }
+
+		/// <summary>
 		/// Gets base type of the class
 		/// </summary>
 		/// <remarks>
@@ -39,6 +44,12 @@ namespace TypeLite.TsModels {
 				.GetProperties()
 				.Where(pi => pi.DeclaringType == this.ClrType)
 				.Select(pi => new TsProperty(pi))
+				.ToList();
+
+			this.Fields = this.ClrType
+				.GetFields()
+				.Where(fi => fi.DeclaringType == this.ClrType)
+				.Select(fi => new TsProperty(fi))
 				.ToList();
 
 			if (clrType.IsGenericType) {

@@ -233,7 +233,7 @@ namespace TypeLite {
 
             sb.AppendLine("{");
 
-            foreach (var property in classModel.Properties) {
+            foreach (var property in classModel.Properties.Union(classModel.Fields)) {
                 if (property.IsIgnored) {
                     continue;
                 }

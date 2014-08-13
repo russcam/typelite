@@ -33,6 +33,13 @@ namespace TypeLite.Tests.TsModels {
 		}
 
 		[Fact]
+		public void WhenInitialized_FieldsAreCreated() {
+			var target = new TsClass(typeof(Address));
+
+			Assert.Single(target.Fields.Where(o => o.ClrProperty == typeof(Address).GetField("PostalCode")));
+		}
+
+		[Fact]
 		public void WhenInitializedWithClassWithBaseTypeObject_BaseTypeIsSetToNull() {
 			var target = new TsClass(typeof(Address));
 

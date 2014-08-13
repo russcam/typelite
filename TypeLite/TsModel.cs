@@ -73,7 +73,7 @@ namespace TypeLite {
 			foreach (var classModel in this.Classes) {
 				visitor.VisitClass(classModel);
 
-				foreach (var property in classModel.Properties) {
+				foreach (var property in classModel.Properties.Union(classModel.Fields)) {
 					visitor.VisitProperty(property);
 				}
 			}

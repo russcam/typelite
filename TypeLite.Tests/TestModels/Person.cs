@@ -9,6 +9,9 @@ namespace TypeLite.Tests.TestModels {
 		public string Name { get; set; }
 		public int YearOfBirth { get; set; }
 
+        // field
+	    public string PhoneNumber;
+
 		public Address PrimaryAddress { get; set; }
 		public List<Address> Addresses { get; set; }
 	}

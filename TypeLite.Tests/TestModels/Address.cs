@@ -10,7 +10,11 @@ namespace TypeLite.Tests.TestModels {
         public Guid[] Ids { get; set; }
 		public string Street { get; set; }
 		public string Town { get; set; }
-		public ContactType AddressType { get; set; }
+        
+        // field
+	    public string PostalCode;
+		
+        public ContactType AddressType { get; set; }
         public ConsoleKey Shortkey { get; set; }
 
         [TsProperty(IsOptional=true)]

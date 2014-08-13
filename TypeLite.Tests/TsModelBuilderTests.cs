@@ -142,7 +142,9 @@ namespace TypeLite.Tests {
 			Assert.Same(addressClass, personClass.Properties.Where(p => p.Name == "PrimaryAddress").Single().PropertyType);
 			Assert.IsType<TsSystemType>(personClass.Properties.Where(p => p.Name == "Name").Single().PropertyType);
 			Assert.IsType<TsCollection>(personClass.Properties.Where(p => p.Name == "Addresses").Single().PropertyType);
-		}
+
+            Assert.IsType<TsSystemType>(personClass.Fields.Where(f => f.Name == "PhoneNumber").Single().PropertyType);
+        }
 
 		[Fact]
 		public void WhenBuild_ModulesInModelAreResolved() {

@@ -39,7 +39,24 @@ namespace TypeLite.Tests.TsModels {
 			Assert.Single(target.Fields.Where(o => o.ClrProperty == typeof(Address).GetField("PostalCode")));
 		}
 
-		[Fact]
+        [Fact]
+        public void WhenInitialized_ConstantsAreCreated()
+        {
+            var target = new TsClass(typeof(Person));
+
+            Assert.Single(target.Constants.Where(o => o.ClrProperty == typeof(Person).GetField("MaxAddresses")));
+        }
+
+        [Fact]
+        public void WhenInitialized_ConstantsHaveCorrectValues()
+        {
+            var target = new TsClass(typeof(Person));
+
+            var maxAddresses = target.Constants.Single(o => o.ClrProperty == typeof(Person).GetField("MaxAddresses"));
+            Assert.Equal(Person.MaxAddresses, maxAddresses.ConstantValue);
+        }
+        
+        [Fact]
 		public void WhenInitializedWithClassWithBaseTypeObject_BaseTypeIsSetToNull() {
 			var target = new TsClass(typeof(Address));
 

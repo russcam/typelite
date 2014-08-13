@@ -144,6 +144,8 @@ namespace TypeLite.Tests {
 			Assert.IsType<TsCollection>(personClass.Properties.Where(p => p.Name == "Addresses").Single().PropertyType);
 
             Assert.IsType<TsSystemType>(personClass.Fields.Where(f => f.Name == "PhoneNumber").Single().PropertyType);
+
+            Assert.IsType<TsSystemType>(personClass.Constants.Where(c => c.Name == "MaxAddresses").Single().PropertyType);
         }
 
 		[Fact]

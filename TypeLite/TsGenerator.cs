@@ -147,6 +147,12 @@ namespace TypeLite {
 
             if ((generatorOutput & TsGeneratorOutput.Properties) == TsGeneratorOutput.Properties
                 || (generatorOutput & TsGeneratorOutput.Fields) == TsGeneratorOutput.Fields) {
+
+                if ((generatorOutput & TsGeneratorOutput.Constants) == TsGeneratorOutput.Constants) {
+                    // We can't generate constants together with properties or fields, because we can't set values in a .d.ts file.
+                    throw new InvalidOperationException("Cannot generate constants together with properties or fields");
+                }
+
                 foreach (var reference in _references.Concat(model.References)) {
                     this.AppendReference(reference, sb);
                 }
@@ -191,7 +197,8 @@ namespace TypeLite {
                 _renamedModules.Add(module.Name, moduleName);
             }
 
-            if (generatorOutput != TsGeneratorOutput.Enums) {
+            if (generatorOutput != TsGeneratorOutput.Enums
+                && (generatorOutput & TsGeneratorOutput.Constants) != TsGeneratorOutput.Constants) {
                 sb.Append("declare ");
             }
 
@@ -215,6 +222,16 @@ namespace TypeLite {
                     }
 
                     this.AppendClassDefinition(classModel, sb, generatorOutput);
+                }
+            }
+
+            if ((generatorOutput & TsGeneratorOutput.Constants) == TsGeneratorOutput.Constants) {
+                foreach (var classModel in classes) {
+                    if (classModel.IsIgnored) {
+                        continue;
+                    }
+
+                    this.AppendConstantModule(classModel, sb);
                 }
             }
 
@@ -261,7 +278,7 @@ namespace TypeLite {
 
         private void AppendEnumDefinition(TsEnum enumModel, StringBuilder sb, TsGeneratorOutput output) {
             string typeName = this.GetTypeName(enumModel);
-            string visibility = output == TsGeneratorOutput.Enums ? "export " : "";
+            string visibility = output == TsGeneratorOutput.Enums || (output & TsGeneratorOutput.Constants) == TsGeneratorOutput.Constants ? "export " : "";
 
             sb.AppendFormat("{0}enum {1} ", visibility, typeName);
             sb.AppendLine("{");
@@ -276,6 +293,39 @@ namespace TypeLite {
             sb.AppendLine("}");
 
             _generatedEnums.Add(enumModel);
+        }
+
+        /// <summary>
+        /// Generates class definition and appends it to the output.
+        /// </summary>
+        /// <param name="classModel">The class to generate definition for.</param>
+        /// <param name="sb">The output.</param>
+        /// <param name="generatorOutput"></param>
+        private void AppendConstantModule(TsClass classModel, StringBuilder sb)
+        {
+            if (!classModel.Constants.Any()) {
+                return;
+            }
+
+            string typeName = this.GetTypeName(classModel);
+            sb.AppendFormat("export module {0} ", typeName);
+
+            sb.AppendLine("{");
+
+            foreach (var property in classModel.Constants)
+            {
+                if (property.IsIgnored)
+                {
+                    continue;
+                }
+
+                sb.AppendFormat("  export var {0}: {1} = {2};", this.GetPropertyName(property), this.GetPropertyType(property), this.GetPropertyConstantValue(property));
+                sb.AppendLine();
+            }
+
+            sb.AppendLine("}");
+
+            _generatedClasses.Add(classModel);
         }
 
         /// <summary>
@@ -337,6 +387,16 @@ namespace TypeLite {
         /// <returns>type of the property</returns>
         private string GetPropertyType(TsProperty property) {
             return _memberTypeFormatter(this.GetFullyQualifiedTypeName(property.PropertyType), property.PropertyType is TsCollection);
+        }
+
+        /// <summary>
+        /// Gets property constant value in TypeScript format
+        /// </summary>
+        /// <param name="property">The property to get constant value of</param>
+        /// <returns>constant value of the property</returns>
+        private string GetPropertyConstantValue(TsProperty property) {
+            var quote = property.PropertyType.ClrType == typeof (string) ? "\"" : "";
+            return quote + property.ConstantValue.ToString() + quote;
         }
 
         /// <summary>

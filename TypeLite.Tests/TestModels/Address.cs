@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace TypeLite.Tests.TestModels {
 	public class Address {
+	    public const int DefaultCountryId = 1;
+	    public const string DefaultPostalCode = "";
+
         public Guid Id { get; set; }
         public Guid[] Ids { get; set; }
 		public string Street { get; set; }

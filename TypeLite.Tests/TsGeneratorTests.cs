@@ -88,6 +88,17 @@ namespace TypeLite.Tests {
         }
 
         [Fact]
+        public void WhenClassIsReferencedAndOutputIsSetToEnums_ConstantIsntInOutput() {
+            var builder = new TsModelBuilder();
+            builder.Add<Item>();
+            var model = builder.Build();
+            var target = new TsGenerator();
+            var script = target.Generate(model, TsGeneratorOutput.Enums);
+
+            Assert.DoesNotContain("MaxItems", script);
+        }
+
+        [Fact]
         public void WhenEnumIsReferencedAndOutputIsSetToProperties_EnumIsntInOutput() {
             var builder = new TsModelBuilder();
             builder.Add<Item>();
@@ -98,6 +109,16 @@ namespace TypeLite.Tests {
             Assert.DoesNotContain("enum ItemType", script);
         }
 
+        [Fact]
+        public void WhenEnumIsReferencedAndOutputIsSetToProperties_ConstantIsntInOutput() {
+            var builder = new TsModelBuilder();
+            builder.Add<Item>();
+            var model = builder.Build();
+            var target = new TsGenerator();
+            var script = target.Generate(model, TsGeneratorOutput.Properties);
+
+            Assert.DoesNotContain("MaxItems", script);
+        }
 
         [Fact]
         public void WhenEnumIsReferencedAndOutputIsSetToFields_EnumIsntInOutput() {
@@ -106,6 +127,39 @@ namespace TypeLite.Tests {
             var model = builder.Build();
             var target = new TsGenerator();
             var script = target.Generate(model, TsGeneratorOutput.Fields);
+
+            Assert.DoesNotContain("enum ItemType", script);
+        }
+
+        [Fact]
+        public void WhenEnumIsReferencedAndOutputIsSetToFields_ConstantIsntInOutput() {
+            var builder = new TsModelBuilder();
+            builder.Add<Item>();
+            var model = builder.Build();
+            var target = new TsGenerator();
+            var script = target.Generate(model, TsGeneratorOutput.Fields);
+
+            Assert.DoesNotContain("MaxItems", script);
+        }
+
+        [Fact]
+        public void WhenClassIsReferencedAndOutputIsSetToConstants_ClassIsntInOutput() {
+            var builder = new TsModelBuilder();
+            builder.Add<Item>();
+            var model = builder.Build();
+            var target = new TsGenerator();
+            var script = target.Generate(model, TsGeneratorOutput.Constants);
+
+            Assert.DoesNotContain("interface Item", script);
+        }
+
+        [Fact]
+        public void WhenClassIsReferencedAndOutputIsSetToConstants_EnumIsntInOutput() {
+            var builder = new TsModelBuilder();
+            builder.Add<Item>();
+            var model = builder.Build();
+            var target = new TsGenerator();
+            var script = target.Generate(model, TsGeneratorOutput.Constants);
 
             Assert.DoesNotContain("enum ItemType", script);
         }

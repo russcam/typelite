@@ -3,6 +3,14 @@ export enum ContactType {
   Personal = 0,
   Bussiness = 1
 }
+export module Person {
+  export var MaxAddresses: number = 3;
+  export var DefaultPhoneNumber: string = "[None]";
+}
+export module Address {
+  export var DefaultCountryId: number = 1;
+  export var DefaultPostalCode: string = "";
+}
 }
 module System {
 export enum ConsoleKey {

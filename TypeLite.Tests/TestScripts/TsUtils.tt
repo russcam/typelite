@@ -19,6 +19,6 @@
 <#= ts.Generate(TsGeneratorOutput.Properties | TsGeneratorOutput.Fields) #>
 
 <# manager.StartNewFile("Enums.ts"); #>
-<#= ts.Generate(TsGeneratorOutput.Enums) #>
+<#= ts.Generate(TsGeneratorOutput.Enums | TsGeneratorOutput.Constants) #>
 <# manager.EndBlock(); #>
 <# manager.Process(true); #>

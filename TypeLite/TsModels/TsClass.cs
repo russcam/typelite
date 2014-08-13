@@ -15,10 +15,15 @@ namespace TypeLite.TsModels {
 		/// </summary>
 		public ICollection<TsProperty> Properties { get; private set; }
 
-		/// <summary>
-		/// Gets collection of fields of the class.
-		/// </summary>
-		public ICollection<TsProperty> Fields { get; private set; }
+        /// <summary>
+        /// Gets collection of fields of the class.
+        /// </summary>
+        public ICollection<TsProperty> Fields { get; private set; }
+
+        /// <summary>
+        /// Gets collection of constants of the class.
+        /// </summary>
+        public ICollection<TsProperty> Constants { get; private set; }
 
 		/// <summary>
 		/// Gets base type of the class
@@ -46,11 +51,19 @@ namespace TypeLite.TsModels {
 				.Select(pi => new TsProperty(pi))
 				.ToList();
 
-			this.Fields = this.ClrType
-				.GetFields()
-				.Where(fi => fi.DeclaringType == this.ClrType)
-				.Select(fi => new TsProperty(fi))
-				.ToList();
+            this.Fields = this.ClrType
+                .GetFields()
+                .Where(fi => fi.DeclaringType == this.ClrType 
+                    && !(fi.IsLiteral && !fi.IsInitOnly)) // skip constants
+                .Select(fi => new TsProperty(fi))
+                .ToList();
+
+            this.Constants = this.ClrType
+                .GetFields()
+                .Where(fi => fi.DeclaringType == this.ClrType
+                    && fi.IsLiteral && !fi.IsInitOnly) // constants only
+                .Select(fi => new TsProperty(fi))
+                .ToList();
 
 			if (clrType.IsGenericType) {
 				this.Name = clrType.Name.Remove(clrType.Name.IndexOf('`'));

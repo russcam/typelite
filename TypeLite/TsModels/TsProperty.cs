@@ -36,6 +36,11 @@ namespace TypeLite.TsModels {
         public bool IsOptional { get; set;}
 
         /// <summary>
+        /// Gets or sets the constant value of this property.
+        /// </summary>
+        public object ConstantValue { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the TsProperty class with the specific CLR property.
         /// </summary>
         /// <param name="clrProperty">The CLR property represented by this instance of the TsProperty.</param>
@@ -70,6 +75,9 @@ namespace TypeLite.TsModels {
             }
 
             this.IsIgnored = (clrProperty.GetCustomAttribute<TsIgnoreAttribute>(false) != null);
+
+            // Only fields can be constants.
+            this.ConstantValue = null;
         }
 
         /// <summary>
@@ -107,6 +115,14 @@ namespace TypeLite.TsModels {
 			}
 
 			this.IsIgnored = (clrProperty.GetCustomAttribute<TsIgnoreAttribute>(false) != null);
-		}
+
+            if (clrProperty.IsLiteral && !clrProperty.IsInitOnly) {
+                // it's a constant
+                this.ConstantValue = clrProperty.GetValue(null);
+            } else {
+                // not a constant
+                this.ConstantValue = null;
+            }
+        }
 	}
 }

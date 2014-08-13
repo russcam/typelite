@@ -128,12 +128,12 @@ namespace TypeLite {
         }
 
         /// <summary>
-        /// Generates TypeScript definitions for classes and enums in the model.
+        /// Generates TypeScript definitions for properties and enums in the model.
         /// </summary>
         /// <param name="model">The code model with classes to generate definitions for.</param>
         /// <returns>TypeScript definitions for classes in the model.</returns>
         public string Generate(TsModel model) {
-            return this.Generate(model, TsGeneratorOutput.Classes | TsGeneratorOutput.Enums);
+            return this.Generate(model, TsGeneratorOutput.Properties | TsGeneratorOutput.Enums);
         }
 
         /// <summary>
@@ -145,7 +145,8 @@ namespace TypeLite {
         public string Generate(TsModel model, TsGeneratorOutput generatorOutput) {
             var sb = new StringBuilder();
 
-            if ((generatorOutput & TsGeneratorOutput.Classes) == TsGeneratorOutput.Classes) {
+            if ((generatorOutput & TsGeneratorOutput.Properties) == TsGeneratorOutput.Properties
+                || (generatorOutput & TsGeneratorOutput.Fields) == TsGeneratorOutput.Fields) {
                 foreach (var reference in _references.Concat(model.References)) {
                     this.AppendReference(reference, sb);
                 }
@@ -179,8 +180,9 @@ namespace TypeLite {
             var classes = module.Classes.Where(c => !_convertor.IsConvertorRegistered(c.ClrType)).ToList();
             var enums = module.Enums.Where(e => !_convertor.IsConvertorRegistered(e.ClrType)).ToList();
             if ((generatorOutput == TsGeneratorOutput.Enums && enums.Count == 0) ||
-                (generatorOutput == TsGeneratorOutput.Classes && classes.Count == 0) ||
-                (generatorOutput == (TsGeneratorOutput.Classes | TsGeneratorOutput.Enums) && enums.Count == 0 && classes.Count == 0)) {
+                (generatorOutput == TsGeneratorOutput.Properties && classes.Count == 0) ||
+                (enums.Count == 0 && classes.Count == 0))
+            {
                 return;
             }
 
@@ -205,13 +207,14 @@ namespace TypeLite {
                 }
             }
 
-            if ((generatorOutput & TsGeneratorOutput.Classes) == TsGeneratorOutput.Classes) {
+            if (((generatorOutput & TsGeneratorOutput.Properties) == TsGeneratorOutput.Properties)
+                || (generatorOutput & TsGeneratorOutput.Fields) == TsGeneratorOutput.Fields) {
                 foreach (var classModel in classes) {
                     if (classModel.IsIgnored) {
                         continue;
                     }
 
-                    this.AppendClassDefinition(classModel, sb);
+                    this.AppendClassDefinition(classModel, sb, generatorOutput);
                 }
             }
 
@@ -223,7 +226,8 @@ namespace TypeLite {
         /// </summary>
         /// <param name="classModel">The class to generate definition for.</param>
         /// <param name="sb">The output.</param>
-        private void AppendClassDefinition(TsClass classModel, StringBuilder sb) {
+        /// <param name="generatorOutput"></param>
+        private void AppendClassDefinition(TsClass classModel, StringBuilder sb, TsGeneratorOutput generatorOutput) {
             string typeName = this.GetTypeName(classModel);
             string visibility = this.GetTypeVisibility(typeName) ? "export " : "";
             sb.AppendFormat("{0}interface {1} ", visibility, typeName);
@@ -233,7 +237,15 @@ namespace TypeLite {
 
             sb.AppendLine("{");
 
-            foreach (var property in classModel.Properties.Union(classModel.Fields)) {
+            var members = new List<TsProperty>();
+            if ((generatorOutput & TsGeneratorOutput.Properties) == TsGeneratorOutput.Properties) {
+                members.AddRange(classModel.Properties);
+            }
+            if ((generatorOutput & TsGeneratorOutput.Fields) == TsGeneratorOutput.Fields) {
+                members.AddRange(classModel.Fields);
+            }
+
+            foreach (var property in members) {
                 if (property.IsIgnored) {
                     continue;
                 }

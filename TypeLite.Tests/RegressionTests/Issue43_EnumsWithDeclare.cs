@@ -20,13 +20,25 @@ namespace TypeLite.Tests.RegressionTests {
         }
 
         [Fact]
-        public void WhenModuleIsGeneratedWithClassOnlyOption_ModuleHasDeclareKeyword() {
+        public void WhenModuleIsGeneratedWithPropertiesOnlyOption_ModuleHasDeclareKeyword() {
             var builder = new TsModelBuilder();
             builder.Add<MyTestClass>();
 
             var generator = new TsGenerator();
             var model = builder.Build();
-            var result = generator.Generate(model, TsGeneratorOutput.Classes);
+            var result = generator.Generate(model, TsGeneratorOutput.Properties);
+
+            Assert.Contains("declare", result);
+        }
+
+        [Fact]
+        public void WhenModuleIsGeneratedWithFieldsOnlyOption_ModuleHasDeclareKeyword() {
+            var builder = new TsModelBuilder();
+            builder.Add<MyTestClass>();
+
+            var generator = new TsGenerator();
+            var model = builder.Build();
+            var result = generator.Generate(model, TsGeneratorOutput.Fields);
 
             Assert.Contains("declare", result);
         }

@@ -16,7 +16,7 @@
 	.For<Employee>();
 #>
 
-<#= ts.Generate(TsGeneratorOutput.Classes) #>
+<#= ts.Generate(TsGeneratorOutput.Properties | TsGeneratorOutput.Fields) #>
 
 <# manager.StartNewFile("Enums.ts"); #>
 <#= ts.Generate(TsGeneratorOutput.Enums) #>

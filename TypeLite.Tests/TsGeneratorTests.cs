@@ -88,12 +88,24 @@ namespace TypeLite.Tests {
         }
 
         [Fact]
-        public void WhenEnumIsReferencedAndOutputIsSetToClass_EnumIsntInOutput() {
+        public void WhenEnumIsReferencedAndOutputIsSetToProperties_EnumIsntInOutput() {
             var builder = new TsModelBuilder();
             builder.Add<Item>();
             var model = builder.Build();
             var target = new TsGenerator();
-            var script = target.Generate(model, TsGeneratorOutput.Classes);
+            var script = target.Generate(model, TsGeneratorOutput.Properties);
+
+            Assert.DoesNotContain("enum ItemType", script);
+        }
+
+
+        [Fact]
+        public void WhenEnumIsReferencedAndOutputIsSetToFields_EnumIsntInOutput() {
+            var builder = new TsModelBuilder();
+            builder.Add<Item>();
+            var model = builder.Build();
+            var target = new TsGenerator();
+            var script = target.Generate(model, TsGeneratorOutput.Fields);
 
             Assert.DoesNotContain("enum ItemType", script);
         }
@@ -130,7 +142,7 @@ namespace TypeLite.Tests {
 
             var target = new TsGenerator();
             target.RegisterTypeConvertor<string>(type => "KnockoutObservable<string>");
-            var script = target.Generate(model);
+            var script = target.Generate(model, TsGeneratorOutput.Fields);
 
             Assert.Contains("PostalCode: KnockoutObservable<string>", script);
         }

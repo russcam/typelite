@@ -58,7 +58,7 @@ namespace TypeLite {
 		/// </summary>
 		/// <typeparam name="T">The class type to add.</typeparam>
 		/// <returns>Instance of the TypeScriptFluent that enables fluent configuration.</returns>
-		public TypeScriptFluentClass For<T>() {
+		public TypeScriptFluentModuleMember For<T>() {
 			return this.For(typeof(T));
 		}
 
@@ -67,9 +67,11 @@ namespace TypeLite {
 		/// </summary>
 		/// <param name="type">The type to add to the model.</param>
 		/// <returns>Instance of the TypeScriptFluent that enables fluent configuration.</returns>
-		public TypeScriptFluentClass For(Type type) {
-			var classModel = _modelBuilder.Add(type);
-			return new TypeScriptFluentClass(this, classModel);
+		public TypeScriptFluentModuleMember For(Type type) {
+			var model = _modelBuilder.Add(type);
+			if (model is TsClass || model is TsEnum)
+				return new TypeScriptFluentModuleMember(this, model);
+			throw new InvalidOperationException("The type must be a class or an enum");
 		}
 
 		/// <summary>
@@ -193,36 +195,36 @@ namespace TypeLite {
 	}
 
 	/// <summary>
-	/// Represents a wrapper around TsModelBuilder and TsGenerator that simplify usage a enables fluent configuration for classes.
+	/// Represents a wrapper around TsModelBuilder and TsGenerator that simplify usage a enables fluent configuration for types.
 	/// </summary>
-	public class TypeScriptFluentClass : TypeScriptFluent {
+	public class TypeScriptFluentModuleMember : TypeScriptFluent {
         /// <summary>
         /// Gets the class being configured.
         /// </summary>
-		public TsClass Class { get; protected set; }
+		public TsModuleMember Member { get; protected set; }
 
-		internal TypeScriptFluentClass(TypeScriptFluent fluentConfigurator, TsClass classModel)
+		internal TypeScriptFluentModuleMember(TypeScriptFluent fluentConfigurator, TsModuleMember member)
 			: base(fluentConfigurator) {
-			this.Class = classModel;
+			this.Member = member;
 		}
 
 		/// <summary>
-		/// Changes the name of the class being configured .
+		/// Changes the name of the type being configured .
 		/// </summary>
-		/// <param name="name">The new name of the class</param>
-		/// <returns>Instance of the TypeScriptFluentClass that enables fluent configuration.</returns>
-		public TypeScriptFluentClass Named(string name) {
-			this.Class.Name = name;
+		/// <param name="name">The new name of the type</param>
+        /// <returns>Instance of the TypeScriptFluentModuleMember that enables fluent configuration.</returns>
+		public TypeScriptFluentModuleMember Named(string name) {
+			this.Member.Name = name;
 			return this;
 		}
 
 		/// <summary>
-		/// Maps the class being configured to the specific module
+		/// Maps the type being configured to the specific module
 		/// </summary>
 		/// <param name="moduleName">The name of the module</param>
-		/// <returns>Instance of the TypeScriptFluentClass that enables fluent configuration.</returns>
-		public TypeScriptFluentClass ToModule(string moduleName) {
-			this.Class.Module = new TsModule(moduleName);
+        /// <returns>Instance of the TypeScriptFluentModuleMember that enables fluent configuration.</returns>
+		public TypeScriptFluentModuleMember ToModule(string moduleName) {
+			this.Member.Module = new TsModule(moduleName);
 			return this;
 		}
 	}

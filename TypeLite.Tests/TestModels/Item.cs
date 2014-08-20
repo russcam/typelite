@@ -11,6 +11,7 @@ namespace TypeLite.Tests.TestModels {
 		public ItemType Type { get; set; }
 		public string Name { get; set; }
 
+	    public const int MaxItems = 100;
 	}
 
 	public enum ItemType {

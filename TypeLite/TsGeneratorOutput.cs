@@ -9,7 +9,9 @@ namespace TypeLite {
     /// </summary>
     [Flags]
     public enum TsGeneratorOutput {
-        Classes = 1,
-        Enums = 2
+        Properties = 1,
+        Enums = 2,
+        Fields = 4,
+        Constants = 8
     }
 }

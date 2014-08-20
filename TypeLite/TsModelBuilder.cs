@@ -31,7 +31,7 @@ namespace TypeLite {
 		/// </summary>
 		/// <typeparam name="T">The type to add to the model.</typeparam>
 		/// <returns>type added to the model</returns>
-		public TsClass Add<T>() {
+		public TsModuleMember Add<T>() {
 			return this.Add<T>(true);
 		}
 
@@ -41,7 +41,7 @@ namespace TypeLite {
 		/// <typeparam name="T">The type to add to the model.</typeparam>
 		/// <param name="includeReferences">bool value indicating whether classes referenced by T should be added to the model.</param>
 		/// <returns>type added to the model</returns>
-		public TsClass Add<T>(bool includeReferences) {
+        public TsModuleMember Add<T>(bool includeReferences) {
 			return this.Add(typeof(T), includeReferences);
 		}
 
@@ -50,7 +50,7 @@ namespace TypeLite {
 		/// </summary>
 		/// <param name="clrType">The type to add to the model.</param>
 		/// <returns>type added to the model</returns>
-		public TsClass Add(Type clrType) {
+        public TsModuleMember Add(Type clrType) {
 			return this.Add(clrType, true);
 		}
 
@@ -60,15 +60,21 @@ namespace TypeLite {
 		/// <param name="clrType">The type to add to the model.</param>
 		/// <param name="includeReferences">bool value indicating whether classes referenced by T should be added to the model.</param>
 		/// <returns>type added to the model</returns>
-		public TsClass Add(Type clrType, bool includeReferences) {
+        public TsModuleMember Add(Type clrType, bool includeReferences) {
 			var typeFamily = TsType.GetTypeFamily(clrType);
-			if (typeFamily != TsTypeFamily.Class) {
+			if (typeFamily != TsTypeFamily.Class && typeFamily != TsTypeFamily.Enum) {
 				throw new ArgumentException(string.Format("Type '{0}' isn't class or struct. Only classes and structures can be added to the model", clrType.FullName));
 			}
 
 			if (clrType.IsNullable()) {
 				return this.Add(clrType.GetNullableValueType(), includeReferences);
 			}
+
+            if (typeFamily == TsTypeFamily.Enum) {
+                var enumType = new TsEnum(clrType);
+                this.AddEnum(enumType);
+                return enumType;
+            }
 
 			var effectiveType = clrType.IsGenericType ? clrType.GetGenericTypeDefinition() : clrType;
 
@@ -97,9 +103,9 @@ namespace TypeLite {
 		/// </summary>
 		/// <param name="tsEnum">The enum to add</param>
 		private void AddEnum(TsEnum tsEnum) {
-			if (!this.Enums.ContainsKey(tsEnum.ClrType)) {
-				this.Enums[tsEnum.ClrType] = tsEnum;
-			}
+            if (!this.Enums.ContainsKey(tsEnum.ClrType)) {
+                this.Enums[tsEnum.ClrType] = tsEnum;
+            }
 		}
 
 		/// <summary>

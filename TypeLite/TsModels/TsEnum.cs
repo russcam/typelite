@@ -11,11 +11,6 @@ namespace TypeLite.TsModels {
 	/// </summary>
 	public class TsEnum : TsModuleMember {
 		/// <summary>
-		/// Gets or sets the name of the enum.
-		/// </summary>
-		public string Name { get; set; }
-
-		/// <summary>
 		/// Gets or sets bool value indicating whether this enum will be ignored by TsGenerator.
 		/// </summary>
 		public bool IsIgnored { get; set; }
@@ -35,7 +30,6 @@ namespace TypeLite.TsModels {
 				throw new ArgumentException("ClrType isn't enum.");
 			}
 
-            this.Name = this.ClrType.Name;
 			this.Values = new List<TsEnumValue>(this.GetEnumValues(clrType));
 
 			var attribute = this.ClrType.GetCustomAttribute<TsEnumAttribute>(false);

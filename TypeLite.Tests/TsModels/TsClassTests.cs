@@ -33,6 +33,30 @@ namespace TypeLite.Tests.TsModels {
 		}
 
 		[Fact]
+		public void WhenInitialized_FieldsAreCreated() {
+			var target = new TsClass(typeof(Address));
+
+			Assert.Single(target.Fields.Where(o => o.ClrProperty == typeof(Address).GetField("PostalCode")));
+		}
+
+        [Fact]
+        public void WhenInitialized_ConstantsAreCreated()
+        {
+            var target = new TsClass(typeof(Person));
+
+            Assert.Single(target.Constants.Where(o => o.ClrProperty == typeof(Person).GetField("MaxAddresses")));
+        }
+
+        [Fact]
+        public void WhenInitialized_ConstantsHaveCorrectValues()
+        {
+            var target = new TsClass(typeof(Person));
+
+            var maxAddresses = target.Constants.Single(o => o.ClrProperty == typeof(Person).GetField("MaxAddresses"));
+            Assert.Equal(Person.MaxAddresses, maxAddresses.ConstantValue);
+        }
+        
+        [Fact]
 		public void WhenInitializedWithClassWithBaseTypeObject_BaseTypeIsSetToNull() {
 			var target = new TsClass(typeof(Address));
 
@@ -71,6 +95,14 @@ namespace TypeLite.Tests.TsModels {
 			Assert.NotNull(target.Module);
 			Assert.Equal(typeof(Address).Namespace, target.Module.Name);
 		}
+
+        [Fact]
+        public void WhenInitializedWithInnerClass_ModuleIsSetToNamespaceAndOuterClass() {
+            var target = new TsClass(typeof(TypeLite.Tests.TestModels.Outer.Inner));
+
+            Assert.NotNull(target.Module);
+            Assert.Equal(typeof(TypeLite.Tests.TestModels.Outer.Inner).Namespace + ".Outer", target.Module.Name);
+        }
 
 		[Fact]
 		public void WhenInitializedAndClassHasCustomModuleInAttribute_CustomModuleIsUsed() {

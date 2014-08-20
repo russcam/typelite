@@ -17,11 +17,19 @@ namespace TypeLite.Tests {
 		#region Add tests
 
 		[Fact]
-		public void WhenAddTypeThatIsntClass_ExceptionIsThrown() {
+		public void WhenAddTypeThatIsntClassStructOrEnum_ExceptionIsThrown() {
 			var target = new TsModelBuilder();
 
 			Assert.Throws<ArgumentException>(() => target.Add(typeof(string)));
 		}
+
+        [Fact]
+        public void WhenAddEnum_EnumIsAddedToModel() {
+            var target = new TsModelBuilder();
+            target.Add(typeof(CustomerKind));
+
+            Assert.Single(target.Enums.Values.Where(o => o.ClrType == typeof(CustomerKind)));
+        }
 
 		[Fact]
 		public void WhenAdd_ClassIsAddedToModel() {
@@ -134,7 +142,11 @@ namespace TypeLite.Tests {
 			Assert.Same(addressClass, personClass.Properties.Where(p => p.Name == "PrimaryAddress").Single().PropertyType);
 			Assert.IsType<TsSystemType>(personClass.Properties.Where(p => p.Name == "Name").Single().PropertyType);
 			Assert.IsType<TsCollection>(personClass.Properties.Where(p => p.Name == "Addresses").Single().PropertyType);
-		}
+
+            Assert.IsType<TsSystemType>(personClass.Fields.Where(f => f.Name == "PhoneNumber").Single().PropertyType);
+
+            Assert.IsType<TsSystemType>(personClass.Constants.Where(c => c.Name == "MaxAddresses").Single().PropertyType);
+        }
 
 		[Fact]
 		public void WhenBuild_ModulesInModelAreResolved() {

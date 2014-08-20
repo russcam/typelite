@@ -5,15 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace TypeLite.Tests.RegressionTests
-{
-    public class Issue41_EnumsInGenericClasses
-    {
+namespace TypeLite.Tests.RegressionTests {
+    public class Issue41_EnumsInGenericClasses {
         [Fact]
-        public void DoesNotThrowNullReferenceException_WhenEnumPropertyInGenericClass()
-        {
-            Assert.DoesNotThrow(() =>
-            {
+        public void DoesNotThrowNullReferenceException_WhenEnumPropertyInGenericClass() {
+            Assert.DoesNotThrow(() => {
                 var builder = new TsModelBuilder();
                 builder.Add<Bob<object>>();
 
@@ -24,16 +20,14 @@ namespace TypeLite.Tests.RegressionTests
         }
 
         [TsClass]
-        public class Bob<T>
-        {
+        public class Bob<T> {
             public MyTestEnum MyEnum { get; set; }
             public string TestString { get; set; }
             public string MyProperty { get; set; }
         }
 
         [TsEnum]
-        public enum MyTestEnum
-        {
+        public enum MyTestEnum {
             One,
             Two,
             Three

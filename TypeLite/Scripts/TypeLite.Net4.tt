@@ -15,7 +15,7 @@
 		.ForLoadedAssemblies();
 #>
 
-<#= ts.Generate(TsGeneratorOutput.Classes) #>
+<#= ts.Generate(TsGeneratorOutput.Properties) #>
 
 <# manager.StartNewFile("Enums.ts"); #>
 <#= ts.Generate(TsGeneratorOutput.Enums) #>

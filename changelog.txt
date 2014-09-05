@@ -1,3 +1,9 @@
+Version 0.9.5.1		(5. 9. 2014)
+=====================================
+Fixed		#52 Support for using [TsEnum] without class
+Added		#60 DateTimeOffset generated as Date
+Added		#50 Support for generating TypeScript interfaces from .NET interfaces
+
 Version 0.9.4.1		(3. 9. 2014)
 =====================================
 Fixed		#59 Bug in tt files

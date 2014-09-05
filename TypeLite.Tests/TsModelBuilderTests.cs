@@ -90,6 +90,15 @@ namespace TypeLite.Tests {
 			Assert.Single(target.Classes.Values.Where(o => o.ClrType == typeof(Person)));
 		}
 
+        [Fact]
+        public void WhenInterfaceIsAdded_InterfaceIsAddedAsClass() {
+            var target = new TsModelBuilder();
+
+            target.Add<IShippingService>(true);
+
+            Assert.Single(target.Classes.Values.Where(o => o.ClrType == typeof(IShippingService)));
+        }
+
 		#endregion
 
 		#region Add(Assembly) tests

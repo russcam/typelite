@@ -64,6 +64,7 @@
     <Compile Include="TsEnumAttribute.cs" />
     <Compile Include="TsGeneratorOutput.cs" />
     <Compile Include="TsIgnoreAttribute.cs" />
+    <Compile Include="TsInterfaceAttribute.cs" />
     <Compile Include="TsMemberTypeFormatter.cs" />
     <Compile Include="TsModuleNameFormatter.cs" />
     <Compile Include="TsTypeVisibilityFormatter.cs" />

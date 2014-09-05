@@ -252,6 +252,18 @@ namespace TypeLite.Tests {
             Assert.Contains("CountryID?: number", script);
         }
 
+        [Fact]
+        public void WhenInterfaceIsAdded_InterfaceIsInOutput() {
+            var builder = new TsModelBuilder();
+            builder.Add<IShippingService>();
+            var model = builder.Build();
+            var target = new TsGenerator();
+            var script = target.Generate(model, TsGeneratorOutput.Properties);
+
+            Assert.Contains("IShippingService", script);
+            Assert.Contains("Price", script);
+        }
+
         #endregion
     }
 }

@@ -56,7 +56,7 @@ namespace TypeLite.TsModels {
 				return TsTypeFamily.Enum;
 			}
 
-			if ((type.IsClass && type.FullName != "System.Object") || type.IsValueType /* structures */) {
+			if ((type.IsClass && type.FullName != "System.Object") || type.IsValueType /* structures */ || type.IsInterface) {
 				return TsTypeFamily.Class;
 			}
 

@@ -30,6 +30,11 @@ declare module System {
 interface Guid {
 }
 }
+declare module TypeLite.Demo.Models {
+interface IShippingService {
+  Price: number;
+}
+}
 declare module Library {
 interface Book {
   Title: string;

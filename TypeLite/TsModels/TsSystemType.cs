@@ -40,6 +40,7 @@ namespace TypeLite.TsModels {
 				case "UIntPtr":
 					this.Kind = SystemTypeKind.Number; break;
 				case "DateTime":
+                case "DateTimeOffset":
 					this.Kind = SystemTypeKind.Date; break;
 				default:
 					throw new ArgumentException(string.Format("The type '{0}' is not supported system type.", clrType.FullName));

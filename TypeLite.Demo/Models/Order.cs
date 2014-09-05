@@ -9,5 +9,6 @@ namespace TypeLite.Demo.Models {
 		public Product[] Products { get; set; }
 		public decimal TotalPrice { get; set; }
 		public DateTime Created { get; set; }
+        public DateTimeOffset Shipped { get; set; }
 	}
 }

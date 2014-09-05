@@ -18,6 +18,7 @@ interface Order {
   Products: Eshop.Product[];
   TotalPrice: number;
   Created: Date;
+  Shipped: Date;
 }
 interface Product {
   Name: string;

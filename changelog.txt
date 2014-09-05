@@ -1,4 +1,4 @@
-Version 0.9.5.1		(5. 9. 2014)
+Version 0.9.5.0		(5. 9. 2014)
 =====================================
 Fixed		#52 Support for using [TsEnum] without class
 Added		#60 DateTimeOffset generated as Date

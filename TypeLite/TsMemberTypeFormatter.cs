@@ -11,5 +11,5 @@ namespace TypeLite {
     /// <param name="memberTypeName">The type name to format</param>
     /// <param name="isMemberCollection">Indicates if member is collection</param>
 	/// <returns>The formatted type.</returns>
-	public delegate string TsMemberTypeFormatter(string memberTypeName, bool isMemberCollection);
+	public delegate string TsMemberTypeFormatter(string memberTypeName, bool isMemberCollection, int collectionDimension = 1);
 }

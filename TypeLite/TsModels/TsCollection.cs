@@ -17,12 +17,19 @@ namespace TypeLite.TsModels {
 		/// </remarks>
 		public TsType ItemsType { get; set; }
 
+        /// <summary>
+        /// Gets or sets the dimension of the collection.
+        /// </summary>
+        public int Dimension { get; set; }
+
 		/// <summary>
 		/// Initializes a new instance of the TsCollection class with the specific CLR type.
 		/// </summary>
 		/// <param name="clrType">The CLR collection represented by this instance of the TsCollection.</param>
 		public TsCollection(Type clrType)
 			: base(clrType) {
+            this.Dimension = 1;
+
 			var enumerableType = TsType.GetEnumerableType(this.ClrType);
 			if (enumerableType != null) {
 				this.ItemsType = new TsType(enumerableType);
@@ -31,6 +38,16 @@ namespace TypeLite.TsModels {
 			} else {
 				throw new ArgumentException(string.Format("The type '{0}' is not collection.", this.ClrType.FullName));
 			}
+
+            if (clrType.IsArray)
+            {
+                var elementType = clrType.GetElementType();
+                while (elementType.HasElementType)
+                {
+                    elementType = elementType.GetElementType();
+                    this.Dimension++;
+                }
+            }
 		}
 	}
 }

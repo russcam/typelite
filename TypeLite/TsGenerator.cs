@@ -48,7 +48,7 @@ namespace TypeLite {
             _convertor = new TypeConvertorCollection();
 
             _memberFormatter = (identifier) => identifier.Name;
-            _memberTypeFormatter = (typeName, isTypeCollection) => typeName + (isTypeCollection ? "[]" : "");
+            _memberTypeFormatter = (typeName, isTypeCollection, dimension) => typeName + (isTypeCollection ? string.Concat(Enumerable.Repeat("[]", dimension)) : "");
             _typeVisibilityFormatter = (typeName) => false;
             _moduleNameFormatter = (moduleName) => moduleName;
             _renamedModules = new Dictionary<string, string>();
@@ -324,7 +324,16 @@ namespace TypeLite {
         /// <param name="property">The property to get type of</param>
         /// <returns>type of the property</returns>
         private string GetPropertyType(TsProperty property) {
-            return _memberTypeFormatter(this.GetFullyQualifiedTypeName(property.PropertyType), property.PropertyType is TsCollection);
+            var asCollection = property.PropertyType as TsCollection;
+
+            if (asCollection == null)
+            {
+                return _memberTypeFormatter(this.GetFullyQualifiedTypeName(property.PropertyType), false);
+            }
+            else
+            {
+                return _memberTypeFormatter(this.GetFullyQualifiedTypeName(property.PropertyType), true, asCollection.Dimension);
+            }
         }
 
         /// <summary>

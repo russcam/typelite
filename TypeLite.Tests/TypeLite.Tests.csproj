@@ -72,6 +72,7 @@
     <Compile Include="RegressionTests\Issue43_EnumsWithDeclare.cs" />
     <Compile Include="RegressionTests\Issue45_EmptyNamespaceInEmuns.cs" />
     <Compile Include="RegressionTests\Issue48_ToModuleForEnums.cs" />
+    <Compile Include="RegressionTests\Issue51_ArrayOfArrayOutput.cs" />
     <Compile Include="RegressionTests\NullablesTests.cs" />
     <Compile Include="TestModels\Address.cs" />
     <Compile Include="TestModels\ContactType.cs" />

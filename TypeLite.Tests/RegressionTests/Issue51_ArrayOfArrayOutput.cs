@@ -23,19 +23,25 @@ namespace TypeLite.Tests.RegressionTests
             Assert.Contains("MyArray: string[];", result);
             Assert.Contains("MyJaggedArray: string[][];", result);
             Assert.Contains("MyVeryJaggedArray: string[][][];", result);
+            Assert.Contains("MyIEnumerableOfString: string[];", result);
+            Assert.Contains("MyListOfString: string[];", result);
 
-            Assert.Contains("MyListOfStringArray: string[][]", result);
-            Assert.Contains("MyListOfListOfString: string[][]", result);
+            Assert.Contains("MyListOfStringArrays: string[][];", result);
+            Assert.Contains("MyListOfIEnumerableOfString: string[][];", result);
+            Assert.Contains("MyListOfListOfStringArray: string[][][];", result);
         }
 
-        public class TestClass
+        class TestClass
         {
             public string MyStringProperty { get; set; }
             public string[] MyArray { get; set; }
             public string[][] MyJaggedArray { get; set; }
             public string[][][] MyVeryJaggedArray { get; set; }
+            public IEnumerable<string> MyIEnumerableOfString { get; set; }
+            public List<string> MyListOfString { get; set; }
             public List<string[]> MyListOfStringArrays { get; set; }
-            public List<List<string>> MyListOfListOfString { get; set; }
+            public List<IEnumerable<string>> MyListOfIEnumerableOfString { get; set; }
+            public List<List<string[]>> MyListOfListOfStringArray { get; set; }
         }
     }
 }

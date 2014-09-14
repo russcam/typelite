@@ -73,6 +73,7 @@
     <Compile Include="RegressionTests\Issue45_EmptyNamespaceInEmuns.cs" />
     <Compile Include="RegressionTests\Issue48_ToModuleForEnums.cs" />
     <Compile Include="RegressionTests\Issue51_ArrayOfArrayOutput.cs" />
+    <Compile Include="RegressionTests\Issue52_EnumsWithoutClass.cs" />
     <Compile Include="RegressionTests\NullablesTests.cs" />
     <Compile Include="TestModels\Address.cs" />
     <Compile Include="TestModels\ContactType.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="TestModels\CustomerKind.cs" />
     <Compile Include="TestModels\CustomTypeCollectionReference.cs" />
     <Compile Include="TestModels\Employee.cs" />
+    <Compile Include="TestModels\IShippingService.cs" />
     <Compile Include="TestModels\Item.cs" />
     <Compile Include="TestModels\Outer.cs" />
     <Compile Include="TestModels\Person.cs" />
@@ -105,6 +107,14 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TypeLite.Net4\TypeLite.Net4.csproj">
+      <Project>{0ad860b2-2aaa-47cc-acba-f2d97be19d66}</Project>
+      <Name>TypeLite.Net4</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TypeLite.Tests.AssemblyWithEnum\TypeLite.Tests.AssemblyWithEnum.csproj">
+      <Project>{7a0f2704-7880-4346-baec-b3872390f73b}</Project>
+      <Name>TypeLite.Tests.AssemblyWithEnum</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TypeLite\TypeLite.csproj">
       <Project>{43dcb624-f929-4572-97a3-6b14ac6ad158}</Project>
       <Name>TypeLite</Name>
@@ -120,6 +130,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>TsUtils.tt</DependentUpon>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="TestScripts\Enums.ts">
+      <DependentUpon>TsUtils.tt</DependentUpon>
+    </TypeScriptCompile>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

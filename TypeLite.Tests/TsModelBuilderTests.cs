@@ -90,6 +90,15 @@ namespace TypeLite.Tests {
 			Assert.Single(target.Classes.Values.Where(o => o.ClrType == typeof(Person)));
 		}
 
+        [Fact]
+        public void WhenInterfaceIsAdded_InterfaceIsAddedAsClass() {
+            var target = new TsModelBuilder();
+
+            target.Add<IShippingService>(true);
+
+            Assert.Single(target.Classes.Values.Where(o => o.ClrType == typeof(IShippingService)));
+        }
+
 		#endregion
 
 		#region Add(Assembly) tests
@@ -142,7 +151,11 @@ namespace TypeLite.Tests {
 			Assert.Same(addressClass, personClass.Properties.Where(p => p.Name == "PrimaryAddress").Single().PropertyType);
 			Assert.IsType<TsSystemType>(personClass.Properties.Where(p => p.Name == "Name").Single().PropertyType);
 			Assert.IsType<TsCollection>(personClass.Properties.Where(p => p.Name == "Addresses").Single().PropertyType);
-		}
+
+            Assert.IsType<TsSystemType>(personClass.Fields.Where(f => f.Name == "PhoneNumber").Single().PropertyType);
+
+            Assert.IsType<TsSystemType>(personClass.Constants.Where(c => c.Name == "MaxAddresses").Single().PropertyType);
+        }
 
 		[Fact]
 		public void WhenBuild_ModulesInModelAreResolved() {

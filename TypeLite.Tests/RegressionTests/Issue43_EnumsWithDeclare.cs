@@ -20,13 +20,66 @@ namespace TypeLite.Tests.RegressionTests {
         }
 
         [Fact]
-        public void WhenModuleIsGeneratedWithClassOnlyOption_ModuleHasDeclareKeyword() {
+        public void WhenModuleIsGeneratedWithConstantsOnlyOption_ModuleDoesntHaveDeclareKeyword()
+        {
             var builder = new TsModelBuilder();
             builder.Add<MyTestClass>();
 
             var generator = new TsGenerator();
             var model = builder.Build();
-            var result = generator.Generate(model, TsGeneratorOutput.Classes);
+            var result = generator.Generate(model, TsGeneratorOutput.Constants);
+
+            Assert.DoesNotContain("declare", result);
+        }
+
+        [Fact]
+        public void WhenModuleIsGeneratedWithConstantsAndProperties_ThrowsInvalidOperationException()
+        {
+            var builder = new TsModelBuilder();
+            builder.Add<MyTestClass>();
+
+            var generator = new TsGenerator();
+            var model = builder.Build();
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                generator.Generate(model, TsGeneratorOutput.Constants | TsGeneratorOutput.Properties);
+            });
+        }
+
+        [Fact]
+        public void WhenModuleIsGeneratedWithConstantsAndFields_ThrowsInvalidOperationException()
+        {
+            var builder = new TsModelBuilder();
+            builder.Add<MyTestClass>();
+
+            var generator = new TsGenerator();
+            var model = builder.Build();
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                generator.Generate(model, TsGeneratorOutput.Constants | TsGeneratorOutput.Fields);
+            });
+        }
+
+        [Fact]
+        public void WhenModuleIsGeneratedWithPropertiesOnlyOption_ModuleHasDeclareKeyword() {
+            var builder = new TsModelBuilder();
+            builder.Add<MyTestClass>();
+
+            var generator = new TsGenerator();
+            var model = builder.Build();
+            var result = generator.Generate(model, TsGeneratorOutput.Properties);
+
+            Assert.Contains("declare", result);
+        }
+
+        [Fact]
+        public void WhenModuleIsGeneratedWithFieldsOnlyOption_ModuleHasDeclareKeyword() {
+            var builder = new TsModelBuilder();
+            builder.Add<MyTestClass>();
+
+            var generator = new TsGenerator();
+            var model = builder.Build();
+            var result = generator.Generate(model, TsGeneratorOutput.Fields);
 
             Assert.Contains("declare", result);
         }

@@ -105,6 +105,20 @@ namespace TypeLite.Tests {
 		}
 
 		[Fact]
+		public void WhenRunVisitor_VisitPropertyIsCalledForFieldsOfModelClasses() {
+			var visitor = new Mock<TsModelVisitor>();
+			visitor.Setup(o => o.VisitProperty(It.Is<TsProperty>(p => p.Name == "PostalCode"))).Verifiable();
+
+			var builder = new TsModelBuilder();
+			builder.Add(typeof(Address), true);
+
+			var target = builder.Build();
+			target.RunVisitor(visitor.Object);
+
+			visitor.VerifyAll();
+		}
+
+		[Fact]
 		public void WhenRunVisitor_VisitEnumIsCalledForEnumsOfModel() {
 			var visitor = new Mock<TsModelVisitor>();
 			visitor.Setup(o => o.VisitEnum(It.Is<TsEnum>(c => c.ClrType == typeof(ContactType)))).Verifiable();

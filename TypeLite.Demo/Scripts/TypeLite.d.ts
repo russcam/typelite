@@ -18,6 +18,7 @@ interface Order {
   Products: Eshop.Product[];
   TotalPrice: number;
   Created: Date;
+  Shipped: Date;
 }
 interface Product {
   Name: string;
@@ -27,6 +28,11 @@ interface Product {
 }
 declare module System {
 interface Guid {
+}
+}
+declare module TypeLite.Demo.Models {
+interface IShippingService {
+  Price: number;
 }
 }
 declare module Library {

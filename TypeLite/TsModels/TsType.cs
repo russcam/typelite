@@ -46,7 +46,7 @@ namespace TypeLite.TsModels {
 			var isEnumerable = typeof(IEnumerable).IsAssignableFrom(type);
 
 			// surprisingly  Decimal isn't a primitive type
-			if (isString || type.IsPrimitive || type.FullName == "System.Decimal" || type.FullName == "System.DateTime") {
+            if (isString || type.IsPrimitive || type.FullName == "System.Decimal" || type.FullName == "System.DateTime" || type.FullName == "System.DateTimeOffset") {
 				return TsTypeFamily.System;
 			} else if (isEnumerable) {
 				return TsTypeFamily.Collection;
@@ -56,7 +56,7 @@ namespace TypeLite.TsModels {
 				return TsTypeFamily.Enum;
 			}
 
-			if ((type.IsClass && type.FullName != "System.Object") || type.IsValueType /* structures */) {
+			if ((type.IsClass && type.FullName != "System.Object") || type.IsValueType /* structures */ || type.IsInterface) {
 				return TsTypeFamily.Class;
 			}
 

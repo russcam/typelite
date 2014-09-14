@@ -17,10 +17,10 @@ namespace TypeLite.TsModels {
 		/// </remarks>
 		public TsType ItemsType { get; set; }
 
-        /// <summary>
-        /// Gets or sets the dimension of the collection.
-        /// </summary>
-        public int Dimension { get; set; }
+		/// <summary>
+		/// Gets or sets the dimension of the collection.
+		/// </summary>
+		public int Dimension { get; set; }
 
 		/// <summary>
 		/// Initializes a new instance of the TsCollection class with the specific CLR type.
@@ -29,7 +29,7 @@ namespace TypeLite.TsModels {
 		public TsCollection(Type clrType)
 			: base(clrType) {
 
-            var enumerableType = TsType.GetEnumerableType(this.ClrType);
+			var enumerableType = TsType.GetEnumerableType(this.ClrType);
 			if (enumerableType != null) {
 				this.ItemsType = new TsType(enumerableType);
 			} else if (typeof(IEnumerable).IsAssignableFrom(this.ClrType)) {
@@ -38,25 +38,25 @@ namespace TypeLite.TsModels {
 				throw new ArgumentException(string.Format("The type '{0}' is not collection.", this.ClrType.FullName));
 			}
 
-            this.Dimension = GetCollectionDimension(clrType);
+			this.Dimension = GetCollectionDimension(clrType);
 		}
 
-        private static int GetCollectionDimension(Type t)
-        {
-            Type enumerableUnderlying = null;
+		private static int GetCollectionDimension(Type t)
+		{
+			Type enumerableUnderlying = null;
 
-            if (t.IsArray)
-            {
-                return GetCollectionDimension(t.GetElementType()) + 1;
-            }
-            else if (t != typeof(string) && (enumerableUnderlying = GetEnumerableType(t)) != null)
-            {
-                return GetCollectionDimension(enumerableUnderlying) + 1;
-            }
-            else
-            {
-                return 0;
-            }
-        }
+			if (t.IsArray)
+			{
+				return GetCollectionDimension(t.GetElementType()) + 1;
+			}
+			else if (t != typeof(string) && (enumerableUnderlying = GetEnumerableType(t)) != null)
+			{
+				return GetCollectionDimension(enumerableUnderlying) + 1;
+			}
+			else
+			{
+				return 0;
+			}
+		}
 	}
 }

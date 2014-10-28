@@ -155,18 +155,27 @@ namespace TypeLite {
 				var propertyTypeFamily = TsType.GetTypeFamily(property.PropertyType.ClrType);
 				if (propertyTypeFamily == TsTypeFamily.Collection) {
 					var collectionItemType = TsType.GetEnumerableType(property.PropertyType.ClrType);
-					if (collectionItemType != null) {
-						var typeFamily = TsType.GetTypeFamily(collectionItemType);
+				    while (collectionItemType != null) {
+                        var typeFamily = TsType.GetTypeFamily(collectionItemType);
 
-						switch (typeFamily){
-							case TsTypeFamily.Class:
-								this.Add(collectionItemType);
-								break;
-							case TsTypeFamily.Enum:
-								this.AddEnum(new TsEnum(collectionItemType));
-								break;
-						}
-					}
+                        switch (typeFamily)
+                        {
+                            case TsTypeFamily.Class:
+                                this.Add(collectionItemType);
+                                collectionItemType = null;
+                                break;
+                            case TsTypeFamily.Enum:
+                                this.AddEnum(new TsEnum(collectionItemType));
+                                collectionItemType = null;
+                                break;
+                            case TsTypeFamily.Collection:
+                                collectionItemType = TsType.GetEnumerableType(collectionItemType);
+                                break;
+                            default:
+                                collectionItemType = null;
+                                break;
+                        }
+                    }
 				} else if (propertyTypeFamily == TsTypeFamily.Class) {
 					this.Add(property.PropertyType.ClrType);
 				}

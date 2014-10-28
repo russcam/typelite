@@ -58,18 +58,18 @@ namespace TypeLite.Tests
         }
 
 
-        [Fact(Skip = "Currently produces any[][]")]
+        [Fact]
         public void CanGenerateNestedGenericPropertiesForCustomTypes()
         {
             var builder = new TsModelBuilder();
-            builder.Add<HandleNestedGenericsCustomTypesTestClass>();
+            builder.Add<HandleNestedGenericsCollectionCustomTypesTestClass>();
             var model = builder.Build();
 
             var generator = new TsGenerator();
             var typeScript = generator.Generate(model);
             Console.WriteLine(typeScript);
 
-            Assert.Contains("NestedStringList: TypeLite.Tests.GenericsTests.GenerateSpecifyGenericTypesTestClass[][]", typeScript);
+            Assert.Contains("NestedCustomClassList: TypeLite.Tests.GenericsTests.GenerateSpecifyGenericTypesTestClass[][][][];", typeScript);
         }
 
         [Fact]
@@ -85,7 +85,7 @@ namespace TypeLite.Tests
 
             Assert.Contains("SomeGenericProperty: TType;", typeScript);
             Assert.Contains("SomeGenericArrayProperty: TType[];", typeScript);
-            Assert.Contains("interface DerivedGenericClass extends TypeLite.Tests.GenericsTests.BaseGeneric<string>", typeScript);
+            Assert.Contains("interface DerivedGenericClass extends TypeLite.Tests.GenericsTests.BaseGeneric<string> {", typeScript);
         }
 
         [Fact]
@@ -102,14 +102,27 @@ namespace TypeLite.Tests
             Assert.Contains("interface DerivedGenericClassWithArgInDifferentNamespace extends TypeLite.Tests.GenericsTests.BaseGeneric<DummyNamespace.Test>", typeScript);
         }
 
+        [Fact(Skip = "Cannot currently parse the nested generics args to the KeyValuePair")]
+        public void GeneratesComplicatedNestedGenericType() {
+            var builder = new TsModelBuilder();
+            builder.Add<DerivedGenericClassWithNestedGeneric>();
+            var model = builder.Build();
+
+            var generator = new TsGenerator();
+            var typeScript = generator.Generate(model);
+            Console.WriteLine(typeScript);
+
+            Assert.Contains("interface DerivedGenericClassWithNestedGeneric extends TypeLite.Tests.GenericsTests.BaseGeneric<System.Collections.Generic.KeyValuePair<string, number[]>> {", typeScript);
+        }
+
         private class HandleNestedGenericsSystemTypesTestClass
         {
             public List<List<string>> NestedStringList { get; set; }
         }
 
-        private class HandleNestedGenericsCustomTypesTestClass
+        private class HandleNestedGenericsCollectionCustomTypesTestClass
         {
-            public List<List<GenerateSpecifyGenericTypesTestClass>> NestedCustomClassList { get; set; }
+            public List<List<List<List<GenerateSpecifyGenericTypesTestClass>>>> NestedCustomClassList { get; set; }
         }
 
         private class GenerateSpecificCollectionsOfGenericTypesTestClass
@@ -134,6 +147,10 @@ namespace TypeLite.Tests
 
         private class DerivedGenericClassWithArgInDifferentNamespace : BaseGeneric<DummyNamespace.Test>
         {
+        }
+
+        private class DerivedGenericClassWithNestedGeneric : BaseGeneric<KeyValuePair<string, List<int>>> {
+            
         }
     }
 }

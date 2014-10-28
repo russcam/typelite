@@ -352,10 +352,7 @@ namespace TypeLite {
                 moduleName = memberType.Module != null ? memberType.Module.Name : string.Empty;
             } else if (type as TsCollection != null) {
                 var collectionType = (TsCollection)type;
-                if (collectionType.ItemsType as TsModuleMember != null && !_convertor.IsConvertorRegistered(collectionType.ItemsType.ClrType)) {
-                    if (!collectionType.ItemsType.ClrType.IsGenericParameter)
-                        moduleName = ((TsModuleMember)collectionType.ItemsType).Module != null ? ((TsModuleMember)collectionType.ItemsType).Module.Name : string.Empty;
-                }
+                moduleName = GetCollectionModuleName(collectionType, moduleName);
             }
 
             if (type.ClrType.IsGenericParameter) {
@@ -367,6 +364,23 @@ namespace TypeLite {
             }
 
             return this.GetTypeName(type);
+        }
+
+        /// <summary>
+        /// Recursively finds the module name for the underlaying ItemsType of a TsCollection.
+        /// </summary>
+        /// <param name="collectionType">The TsCollection object.</param>
+        /// <param name="moduleName">The module name.</param>
+        /// <returns></returns>
+        private string GetCollectionModuleName(TsCollection collectionType, string moduleName) {
+            if (collectionType.ItemsType as TsModuleMember != null && !_convertor.IsConvertorRegistered(collectionType.ItemsType.ClrType)) {
+                if (!collectionType.ItemsType.ClrType.IsGenericParameter)
+                    moduleName = ((TsModuleMember) collectionType.ItemsType).Module != null ? ((TsModuleMember) collectionType.ItemsType).Module.Name : string.Empty;
+            }
+            if (collectionType.ItemsType as TsCollection != null) {
+                moduleName = GetCollectionModuleName((TsCollection) collectionType.ItemsType, moduleName);
+            }
+            return moduleName;
         }
 
         /// <summary>

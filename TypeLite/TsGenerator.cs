@@ -42,7 +42,13 @@ namespace TypeLite {
             _formatter = new TsTypeFormatterCollection();
             _formatter.RegisterTypeFormatter<TsClass>((type, formatter) => ((TsClass)type).Name);
             _formatter.RegisterTypeFormatter<TsSystemType>((type, formatter) => ((TsSystemType)type).Kind.ToTypeScriptString());
-            _formatter.RegisterTypeFormatter<TsCollection>((type, formatter) => this.GetTypeName(((TsCollection)type).ItemsType));
+            _formatter.RegisterTypeFormatter<TsCollection>((type, formatter) =>
+            {
+                var itemType = ((TsCollection)type).ItemsType;
+                var itemTypeAsClass = itemType as TsClass;
+                if (itemTypeAsClass == null || !itemTypeAsClass.GenericArguments.Any()) return this.GetTypeName(itemType);
+                return this.GetTypeName(itemType) + "<" + string.Join(",", itemTypeAsClass.GenericArguments.Select(this.GetTypeName)) + ">";
+            });
             _formatter.RegisterTypeFormatter<TsEnum>((type, formatter) => ((TsEnum)type).Name);
 
             _convertor = new TypeConvertorCollection();
@@ -183,8 +189,8 @@ namespace TypeLite {
         }
 
         private void AppendModule(TsModule module, StringBuilder sb, TsGeneratorOutput generatorOutput) {
-            var classes = module.Classes.Where(c => !_convertor.IsConvertorRegistered(c.ClrType)).ToList();
-            var enums = module.Enums.Where(e => !_convertor.IsConvertorRegistered(e.ClrType)).ToList();
+            var classes = module.Classes.Where(c => !_convertor.IsConvertorRegistered(c.ClrType) && !c.IsIgnored).ToList();
+            var enums = module.Enums.Where(e => !_convertor.IsConvertorRegistered(e.ClrType) && !e.IsIgnored).ToList();
             if ((generatorOutput == TsGeneratorOutput.Enums && enums.Count == 0) ||
                 (generatorOutput == TsGeneratorOutput.Properties && classes.Count == 0) ||
                 (enums.Count == 0 && classes.Count == 0))
@@ -207,9 +213,6 @@ namespace TypeLite {
 
             if ((generatorOutput & TsGeneratorOutput.Enums) == TsGeneratorOutput.Enums) {
                 foreach (var enumModel in enums) {
-                    if (enumModel.IsIgnored) {
-                        continue;
-                    }
                     this.AppendEnumDefinition(enumModel, sb, generatorOutput);
                 }
             }
@@ -217,9 +220,6 @@ namespace TypeLite {
             if (((generatorOutput & TsGeneratorOutput.Properties) == TsGeneratorOutput.Properties)
                 || (generatorOutput & TsGeneratorOutput.Fields) == TsGeneratorOutput.Fields) {
                 foreach (var classModel in classes) {
-                    if (classModel.IsIgnored) {
-                        continue;
-                    }
 
                     this.AppendClassDefinition(classModel, sb, generatorOutput);
                 }
@@ -247,12 +247,19 @@ namespace TypeLite {
         private void AppendClassDefinition(TsClass classModel, StringBuilder sb, TsGeneratorOutput generatorOutput) {
             string typeName = this.GetTypeName(classModel);
             string visibility = this.GetTypeVisibility(typeName) ? "export " : "";
-            sb.AppendFormat("{0}interface {1} ", visibility, typeName);
+            sb.AppendFormat("{0}interface {1}", visibility, typeName);
+            if (classModel.GenericArguments.Any()) {
+                sb.AppendFormat("<{0}>", string.Join(",", classModel.GenericArguments.Select(arg => arg.ClrType.Name)));
+            }
             if (classModel.BaseType != null) {
-                sb.AppendFormat("extends {0} ", this.GetFullyQualifiedTypeName(classModel.BaseType));
+                sb.AppendFormat(" extends {0}", this.GetFullyQualifiedTypeName(classModel.BaseType, classModel.GenericArguments));
+                var baseClassModel = classModel.BaseType as TsClass;
+                if (baseClassModel != null && baseClassModel.GenericArguments != null && baseClassModel.GenericArguments.Any()) {
+                    sb.AppendFormat("<{0}>", string.Join(",", baseClassModel.GenericArguments.Select(arg => this.GetFullyQualifiedTypeName(arg, null))));
+                }
             }
 
-            sb.AppendLine("{");
+            sb.AppendLine(" {");
 
             var members = new List<TsProperty>();
             if ((generatorOutput & TsGeneratorOutput.Properties) == TsGeneratorOutput.Properties) {
@@ -267,8 +274,11 @@ namespace TypeLite {
                     continue;
                 }
 
-                sb.AppendFormat("  {0}: {1};", this.GetPropertyName(property), this.GetPropertyType(property));
-                sb.AppendLine();
+                sb.AppendFormat("  {0}: {1}", this.GetPropertyName(property), this.GetPropertyType(property));
+                if (!(property.PropertyType is TsCollection) && property.GenericArguments != null && property.GenericArguments.Any()) {
+                    sb.AppendFormat("<{0}>", string.Join(", ", property.GenericArguments.Select(this.GetTypeName)));
+                }
+                sb.Append(";"); sb.AppendLine();
             }
 
             sb.AppendLine("}");
@@ -332,8 +342,9 @@ namespace TypeLite {
         /// Gets fully qualified name of the type
         /// </summary>
         /// <param name="type">The type to get name of</param>
+        /// <param name="genericArguments"></param>
         /// <returns>Fully qualified name of the type</returns>
-        private string GetFullyQualifiedTypeName(TsType type) {
+        private string GetFullyQualifiedTypeName(TsType type, IList<TsType> genericArguments) {
             var moduleName = string.Empty;
 
             if (type as TsModuleMember != null && !_convertor.IsConvertorRegistered(type.ClrType)) {
@@ -342,12 +353,17 @@ namespace TypeLite {
             } else if (type as TsCollection != null) {
                 var collectionType = (TsCollection)type;
                 if (collectionType.ItemsType as TsModuleMember != null && !_convertor.IsConvertorRegistered(collectionType.ItemsType.ClrType)) {
-                    moduleName = ((TsModuleMember)collectionType.ItemsType).Module != null ? ((TsModuleMember)collectionType.ItemsType).Module.Name : string.Empty;
+                    if (!collectionType.ItemsType.ClrType.IsGenericParameter)
+                        moduleName = ((TsModuleMember)collectionType.ItemsType).Module != null ? ((TsModuleMember)collectionType.ItemsType).Module.Name : string.Empty;
                 }
             }
 
+            if (type.ClrType.IsGenericParameter) {
+                return this.GetTypeName(type);
+            }
             if (!string.IsNullOrEmpty(moduleName)) {
-                return moduleName + "." + this.GetTypeName(type);
+                var name = moduleName + "." + this.GetTypeName(type);
+                return name;
             }
 
             return this.GetTypeName(type);
@@ -390,11 +406,11 @@ namespace TypeLite {
 
             if (asCollection == null)
             {
-                return _memberTypeFormatter(this.GetFullyQualifiedTypeName(property.PropertyType), false);
+                return _memberTypeFormatter(this.GetFullyQualifiedTypeName(property.PropertyType, property.GenericArguments), false);
             }
             else
             {
-                return _memberTypeFormatter(this.GetFullyQualifiedTypeName(property.PropertyType), true, asCollection.Dimension);
+                return _memberTypeFormatter(this.GetFullyQualifiedTypeName(property.PropertyType, property.GenericArguments), true, asCollection.Dimension);
             }
         }
 

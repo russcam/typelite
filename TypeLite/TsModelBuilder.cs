@@ -76,11 +76,25 @@ namespace TypeLite {
                 return enumType;
             }
 
-			var effectiveType = clrType.IsGenericType ? clrType.GetGenericTypeDefinition() : clrType;
+		    if (clrType.IsGenericType) {
+		        if (!this.Classes.ContainsKey(clrType)) {
+		            var openGenericType = clrType.GetGenericTypeDefinition();
+		            var added = new TsClass(openGenericType);
+		            this.Classes[openGenericType] = added;
+		            if (includeReferences) {
+		                this.AddReferences(added);
 
-			if (!this.Classes.ContainsKey(effectiveType)) {
-				var added = new TsClass(effectiveType);
-				this.Classes[effectiveType] = added;
+		                foreach (var e in added.Properties.Where(p => p.PropertyType.ClrType.IsEnum))
+		                    this.AddEnum(e.PropertyType as TsEnum);
+		            }
+		        }
+		    }
+
+		    if (!this.Classes.ContainsKey(clrType)) {
+                var added = new TsClass(clrType);
+                this.Classes[clrType] = added;
+                if (clrType.IsGenericParameter) added.IsIgnored = true;
+                if (clrType.IsGenericType) added.IsIgnored = true;
 
 				if (added.BaseType != null) {
 					this.Add(added.BaseType.ClrType);
@@ -94,7 +108,7 @@ namespace TypeLite {
 
 				return added;
 			} else {
-				return this.Classes[effectiveType];
+				return this.Classes[clrType];
 			}
 		}
 
@@ -157,6 +171,27 @@ namespace TypeLite {
 					this.Add(property.PropertyType.ClrType);
 				}
 			}
+		    foreach (var genericArgument in classModel.GenericArguments) {
+		        var propertyTypeFamily = TsType.GetTypeFamily(genericArgument.ClrType);
+		        if (propertyTypeFamily == TsTypeFamily.Collection) {
+		            var collectionItemType = TsType.GetEnumerableType(genericArgument.ClrType);
+		            if (collectionItemType != null) {
+		                var typeFamily = TsType.GetTypeFamily(collectionItemType);
+
+		                switch (typeFamily) {
+		                    case TsTypeFamily.Class:
+		                        this.Add(collectionItemType);
+		                        break;
+		                    case TsTypeFamily.Enum:
+		                        this.AddEnum(new TsEnum(collectionItemType));
+		                        break;
+		                }
+		            }
+		        }
+		        else if (propertyTypeFamily == TsTypeFamily.Class) {
+		            this.Add(genericArgument.ClrType);
+		        }
+		    }
 		}
 	}
 

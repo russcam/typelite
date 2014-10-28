@@ -31,7 +31,7 @@ namespace TypeLite.TsModels {
 
 			var enumerableType = TsType.GetEnumerableType(this.ClrType);
 			if (enumerableType != null) {
-				this.ItemsType = new TsType(enumerableType);
+				this.ItemsType = TsType.Create(enumerableType);
 			} else if (typeof(IEnumerable).IsAssignableFrom(this.ClrType)) {
 				this.ItemsType = TsType.Any;
 			} else {

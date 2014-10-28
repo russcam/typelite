@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using TypeLite.Extensions;
@@ -9,8 +10,9 @@ namespace TypeLite.TsModels {
 	/// <summary>
 	/// Represents a type in the code model.
 	/// </summary>
-	public class TsType {
-		/// <summary>
+    [DebuggerDisplay("TsType - Type: {ClrType}")] 
+    public class TsType {
+    	/// <summary>
 		/// Gets the CLR type represented by this instance of the TsType.
 		/// </summary>
 		public Type ClrType { get; private set; }
@@ -62,6 +64,27 @@ namespace TypeLite.TsModels {
 
 			return TsTypeFamily.Type;
 		}
+
+        /// <summary>
+        /// Factory method so that the correct TsType can be created for a given CLR type.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        internal static TsType Create(System.Type type) {
+            var family = GetTypeFamily(type);
+            switch (family) {
+                case TsTypeFamily.System:
+                    return new TsSystemType(type);
+                case TsTypeFamily.Collection:
+                    return new TsCollection(type);
+                case TsTypeFamily.Class:
+                    return new TsClass(type);
+                case TsTypeFamily.Enum:
+                    return new TsEnum(type);
+                default:
+                    return new TsType(type);
+            }
+        }
 
 		/// <summary>
 		/// Gets type of items in generic version of IEnumerable.

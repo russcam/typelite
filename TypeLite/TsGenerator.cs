@@ -40,14 +40,18 @@ namespace TypeLite {
             _generatedEnums = new HashSet<TsEnum>();
 
             _formatter = new TsTypeFormatterCollection();
-            _formatter.RegisterTypeFormatter<TsClass>((type, formatter) => ((TsClass)type).Name);
+            _formatter.RegisterTypeFormatter<TsClass>((type, formatter) => {
+                var tsClass = ((TsClass) type);
+                if (!tsClass.GenericArguments.Any()) return tsClass.Name;
+                return tsClass.Name + "<" + string.Join(", ", tsClass.GenericArguments.Select(a => this.GetFullyQualifiedTypeName(a, null))) + ">";
+            });
             _formatter.RegisterTypeFormatter<TsSystemType>((type, formatter) => ((TsSystemType)type).Kind.ToTypeScriptString());
             _formatter.RegisterTypeFormatter<TsCollection>((type, formatter) =>
             {
                 var itemType = ((TsCollection)type).ItemsType;
                 var itemTypeAsClass = itemType as TsClass;
                 if (itemTypeAsClass == null || !itemTypeAsClass.GenericArguments.Any()) return this.GetTypeName(itemType);
-                return this.GetTypeName(itemType) + "<" + string.Join(",", itemTypeAsClass.GenericArguments.Select(this.GetTypeName)) + ">";
+                return this.GetTypeName(itemType);
             });
             _formatter.RegisterTypeFormatter<TsEnum>((type, formatter) => ((TsEnum)type).Name);
 
@@ -248,15 +252,8 @@ namespace TypeLite {
             string typeName = this.GetTypeName(classModel);
             string visibility = this.GetTypeVisibility(typeName) ? "export " : "";
             sb.AppendFormat("{0}interface {1}", visibility, typeName);
-            if (classModel.GenericArguments.Any()) {
-                sb.AppendFormat("<{0}>", string.Join(",", classModel.GenericArguments.Select(arg => arg.ClrType.Name)));
-            }
             if (classModel.BaseType != null) {
                 sb.AppendFormat(" extends {0}", this.GetFullyQualifiedTypeName(classModel.BaseType, classModel.GenericArguments));
-                var baseClassModel = classModel.BaseType as TsClass;
-                if (baseClassModel != null && baseClassModel.GenericArguments != null && baseClassModel.GenericArguments.Any()) {
-                    sb.AppendFormat("<{0}>", string.Join(",", baseClassModel.GenericArguments.Select(arg => this.GetFullyQualifiedTypeName(arg, null))));
-                }
             }
 
             sb.AppendLine(" {");
@@ -275,9 +272,6 @@ namespace TypeLite {
                 }
 
                 sb.AppendFormat("  {0}: {1}", this.GetPropertyName(property), this.GetPropertyType(property));
-                if (!(property.PropertyType is TsCollection) && property.GenericArguments != null && property.GenericArguments.Any()) {
-                    sb.AppendFormat("<{0}>", string.Join(", ", property.GenericArguments.Select(this.GetTypeName)));
-                }
                 sb.Append(";"); sb.AppendLine();
             }
 

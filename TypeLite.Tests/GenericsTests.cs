@@ -2,58 +2,52 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using TypeLite.Tests;
-using TypeLite.Tests.TestModels;
 using Xunit;
 
 namespace TypeLite.Tests
 {
     public class GenericsTests
     {
-        [Fact]
-        public void CanGenerateSpecificTypesForGenericProperties()
-        {
+        private string AddTypeAndGenerateTypeScript<TType>(Action<TsModel> modelAsserts = null) {
             var builder = new TsModelBuilder();
-            builder.Add<GenerateSpecifyGenericTypesTestClass>();
+            builder.Add<TType>();
             var model = builder.Build();
+            if (modelAsserts != null) {
+                modelAsserts(model);
+            }
+
             var typeScript = new TsGenerator().Generate(model);
             Console.WriteLine(typeScript);
+            return typeScript;
+        }
 
-            var kvpClass = model.Classes.Single(c => !c.IsIgnored && c.Name == "KeyValuePair");
-            Assert.NotNull(kvpClass);
-            Assert.Equal("TKey", kvpClass.Properties.Single(p => p.Name == "Key").PropertyType.ClrType.Name);
-            Assert.Equal("TValue", kvpClass.Properties.Single(p => p.Name == "Value").PropertyType.ClrType.Name);
+        [Fact]
+        public void CanGenerateSpecificTypesForGenericProperties() {
+            var typeScript = AddTypeAndGenerateTypeScript<GenerateSpecifyGenericTypesTestClass>(
+                model => {
+                    var kvpClass = model.Classes.Single(c => !c.IsIgnored && c.Name == "KeyValuePair");
+                    Assert.NotNull(kvpClass);
+                    Assert.Equal("TKey", kvpClass.Properties.Single(p => p.Name == "Key").PropertyType.ClrType.Name);
+                    Assert.Equal("TValue", kvpClass.Properties.Single(p => p.Name == "Value").PropertyType.ClrType.Name);
 
-            var classDefinition = model.Classes.Single(c => c.Name == typeof(GenerateSpecifyGenericTypesTestClass).Name);
-            Assert.NotNull(classDefinition);
-            Assert.True(((PropertyInfo)classDefinition.Properties.Single(p => p.Name == "StringToInt").ClrProperty).PropertyType == typeof(KeyValuePair<string, int>));
-
+                    var classDefinition = model.Classes.Single(c => c.Name == typeof (GenerateSpecifyGenericTypesTestClass).Name);
+                    Assert.NotNull(classDefinition);
+                    Assert.True(((PropertyInfo) classDefinition.Properties.Single(p => p.Name == "StringToInt").ClrProperty).PropertyType == typeof (KeyValuePair<string, int>));
+                });
             Assert.Contains("StringToInt: System.Collections.Generic.KeyValuePair<string, number>;", typeScript);
         }
 
         [Fact]
         public void CanGenerateSpecificTypesForCollectionsOfGenericClasses()
         {
-            var builder = new TsModelBuilder();
-            builder.Add<GenerateSpecificCollectionsOfGenericTypesTestClass>();
-            var model = builder.Build();
-            var typeScript = new TsGenerator().Generate(model);
-            Console.WriteLine(typeScript);
-
-            Assert.Contains("ListOfIntToString: System.Collections.Generic.KeyValuePair<number,string>[];", typeScript);
+            var typeScript = AddTypeAndGenerateTypeScript<GenerateSpecificCollectionsOfGenericTypesTestClass>();
+            Assert.Contains("ListOfIntToString: System.Collections.Generic.KeyValuePair<number, string>[];", typeScript);
         }
 
 
         [Fact]
-        public void CanGenerateNestedGenericPropertiesForSystemTypes()
-        {
-            var builder = new TsModelBuilder();
-            builder.Add<HandleNestedGenericsSystemTypesTestClass>();
-            var model = builder.Build();
-
-            var generator = new TsGenerator();
-            var typeScript = generator.Generate(model);
-
+        public void CanGenerateNestedGenericPropertiesForSystemTypes() {
+            var typeScript = AddTypeAndGenerateTypeScript<HandleNestedGenericsSystemTypesTestClass>();
             Assert.Contains("NestedStringList: string[][]", typeScript);
         }
 
@@ -61,28 +55,14 @@ namespace TypeLite.Tests
         [Fact]
         public void CanGenerateNestedGenericPropertiesForCustomTypes()
         {
-            var builder = new TsModelBuilder();
-            builder.Add<HandleNestedGenericsCollectionCustomTypesTestClass>();
-            var model = builder.Build();
-
-            var generator = new TsGenerator();
-            var typeScript = generator.Generate(model);
-            Console.WriteLine(typeScript);
-
+            var typeScript = AddTypeAndGenerateTypeScript<HandleNestedGenericsCollectionCustomTypesTestClass>();
             Assert.Contains("NestedCustomClassList: TypeLite.Tests.GenericsTests.GenerateSpecifyGenericTypesTestClass[][][][];", typeScript);
         }
 
         [Fact]
         public void CanHandleGenericArgsInBaseClass()
         {
-            var builder = new TsModelBuilder();
-            builder.Add<DerivedGenericClass>();
-            var model = builder.Build();
-
-            var generator = new TsGenerator();
-            var typeScript = generator.Generate(model);
-            Console.WriteLine(typeScript);
-
+            var typeScript = AddTypeAndGenerateTypeScript<DerivedGenericClass>();
             Assert.Contains("SomeGenericProperty: TType;", typeScript);
             Assert.Contains("SomeGenericArrayProperty: TType[];", typeScript);
             Assert.Contains("interface DerivedGenericClass extends TypeLite.Tests.GenericsTests.BaseGeneric<string> {", typeScript);
@@ -91,30 +71,25 @@ namespace TypeLite.Tests
         [Fact]
         public void GenericParameterTypeIsFullyQualified()
         {
-            var builder = new TsModelBuilder();
-            builder.Add<DerivedGenericClassWithArgInDifferentNamespace>();
-            var model = builder.Build();
-
-            var generator = new TsGenerator();
-            var typeScript = generator.Generate(model);
-            Console.WriteLine(typeScript);
-
+            var typeScript = AddTypeAndGenerateTypeScript<DerivedGenericClassWithArgInDifferentNamespace>();
             Assert.Contains("interface DerivedGenericClassWithArgInDifferentNamespace extends TypeLite.Tests.GenericsTests.BaseGeneric<DummyNamespace.Test>", typeScript);
         }
 
-        [Fact(Skip = "Cannot currently parse the nested generics args to the KeyValuePair")]
-        public void GeneratesComplicatedNestedGenericType() {
-            var builder = new TsModelBuilder();
-            builder.Add<DerivedGenericClassWithNestedGeneric>();
-            var model = builder.Build();
-
-            var generator = new TsGenerator();
-            var typeScript = generator.Generate(model);
-            Console.WriteLine(typeScript);
-
-            Assert.Contains("interface DerivedGenericClassWithNestedGeneric extends TypeLite.Tests.GenericsTests.BaseGeneric<System.Collections.Generic.KeyValuePair<string, number[]>> {", typeScript);
+        [Fact]
+        public void GeneratesComplicatedNestedGenericProperties() {
+            var typeScript = AddTypeAndGenerateTypeScript<ClassWithComplexNestedGenericProperty>();
+            Assert.Contains("GenericsHell: System.Tuple<System.Collections.Generic.KeyValuePair<number, string>, TypeLite.Tests.GenericsTests.BaseGeneric<string>, number, System.Collections.Generic.KeyValuePair<number, DummyNamespace.Test>>;", typeScript);
         }
 
+        [Fact]
+        public void DeepGenericClassInheritenceTreeIsGeneratedCorrectly() {
+            var typeScript = AddTypeAndGenerateTypeScript<DerivedGenericTwoLevelsDeep>();
+            Assert.Contains("interface DerivedGenericTwoLevelsDeep extends TypeLite.Tests.GenericsTests.DerivedGenericWithNewTypeArgument<string, DummyNamespace.Test> {", typeScript);
+            Assert.Contains("interface DerivedGenericWithNewTypeArgument<TNewType, TType> extends TypeLite.Tests.GenericsTests.BaseGeneric<TType> {", typeScript);
+            Assert.Contains("NewGenericProperty: TNewType;", typeScript);
+        }
+
+        #region Test classes
         private class HandleNestedGenericsSystemTypesTestClass
         {
             public List<List<string>> NestedStringList { get; set; }
@@ -141,17 +116,24 @@ namespace TypeLite.Tests
             public TType[] SomeGenericArrayProperty { get; set; }
         }
 
-        private class DerivedGenericClass : BaseGeneric<string>
-        {
+        private class DerivedGenericClass : BaseGeneric<string> {
         }
 
-        private class DerivedGenericClassWithArgInDifferentNamespace : BaseGeneric<DummyNamespace.Test>
-        {
+        private class DerivedGenericWithNewTypeArgument<TNewType, TType> : BaseGeneric<TType> {
+            public TNewType NewGenericProperty { get; set; }
         }
 
-        private class DerivedGenericClassWithNestedGeneric : BaseGeneric<KeyValuePair<string, List<int>>> {
-            
+        private class DerivedGenericTwoLevelsDeep : DerivedGenericWithNewTypeArgument<string, DummyNamespace.Test> {
+            public string NonGenericProperty { get; set; }
         }
+
+        private class DerivedGenericClassWithArgInDifferentNamespace : BaseGeneric<DummyNamespace.Test> {
+        }
+
+        private class ClassWithComplexNestedGenericProperty {
+            public Tuple<KeyValuePair<int, string>, BaseGeneric<string>, decimal, KeyValuePair<int, DummyNamespace.Test>> GenericsHell { get; set; }
+        }
+        #endregion
     }
 }
 

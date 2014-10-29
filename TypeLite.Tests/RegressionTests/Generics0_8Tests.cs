@@ -16,12 +16,13 @@ namespace TypeLite.Tests.RegressionTests {
 			var generator = new TsGenerator();
 			var model = builder.Build();
 			var result = generator.Generate(model);
+			Console.WriteLine(result);
 
-			Assert.Contains("interface ClassWithGenericArguments {", result);
+			Assert.Contains("interface ClassWithGenericArguments<T> {", result);
 		}
 
 		[Fact]
-		public void WhenClassHasGenericProperty_PropertyTypeIsResolvedToAny() {
+		public void WhenClassHasGenericProperty_PropertyTypeIsResolvedToTypeOfGenericArgument() {
 			var builder = new TsModelBuilder();
 			builder.Add<ClassWithGenericArguments<Address>>();
 
@@ -29,7 +30,7 @@ namespace TypeLite.Tests.RegressionTests {
 			var model = builder.Build();
 			var result = generator.Generate(model);
 
-			Assert.Contains("Property: any", result);
+			Assert.Contains("Property: T", result);
 		}
 	}
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -8,6 +9,7 @@ namespace TypeLite.TsModels {
 	/// <summary>
 	/// Represents a collection in the code model.
 	/// </summary>
+	[DebuggerDisplay("TsCollection - ItemsType={ItemsType}")]
 	public class TsCollection : TsType {
 		/// <summary>
 		/// Gets or sets type of the items in the collection.
@@ -31,7 +33,7 @@ namespace TypeLite.TsModels {
 
 			var enumerableType = TsType.GetEnumerableType(this.ClrType);
 			if (enumerableType != null) {
-				this.ItemsType = new TsType(enumerableType);
+				this.ItemsType = TsType.Create(enumerableType);
 			} else if (typeof(IEnumerable).IsAssignableFrom(this.ClrType)) {
 				this.ItemsType = TsType.Any;
 			} else {

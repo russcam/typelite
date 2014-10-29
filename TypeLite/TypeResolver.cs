@@ -67,7 +67,7 @@ namespace TypeLite {
 		/// </summary>
 		/// <param name="toResolve">The type to resolve.</param>
 		/// <returns></returns>
-		private TsType ResolveType(TsType toResolve) {
+		private TsType ResolveType(TsType toResolve, bool useOpenGenericDefinition = true) {
 			if (!(toResolve is TsType)) {
 				return toResolve;
 			}
@@ -75,7 +75,7 @@ namespace TypeLite {
 			if (_knownTypes.ContainsKey(toResolve.ClrType)) {
 				return _knownTypes[toResolve.ClrType];
 			}
-			else if (toResolve.ClrType.IsGenericType)
+			else if (toResolve.ClrType.IsGenericType && useOpenGenericDefinition)
 			{
 				// We stored its open type definition instead
 				TsType openType = null;
@@ -106,7 +106,7 @@ namespace TypeLite {
 		/// <returns></returns>
 		private TsCollection CreateCollectionType(TsType type) {
 			var resolved = new TsCollection(type.ClrType);
-			resolved.ItemsType = this.ResolveType(resolved.ItemsType);
+			resolved.ItemsType = this.ResolveType(resolved.ItemsType, false);
 			return resolved;
 		}
 

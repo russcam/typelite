@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Reflection;
@@ -9,6 +10,7 @@ namespace TypeLite.TsModels {
 	/// <summary>
 	/// Represents a class in the code model.
 	/// </summary>
+    [DebuggerDisplay("TsClass - Name: {Name}")]
 	public class TsClass : TsModuleMember {
 		/// <summary>
 		/// Gets collection of properties of the class.
@@ -19,6 +21,11 @@ namespace TypeLite.TsModels {
         /// Gets collection of fields of the class.
         /// </summary>
         public ICollection<TsProperty> Fields { get; private set; }
+
+        /// <summary>
+        /// Gets collection of GenericArguments for this class
+        /// </summary>
+        public IList<TsType> GenericArguments { get; private set; } 
 
         /// <summary>
         /// Gets collection of constants of the class.
@@ -67,8 +74,13 @@ namespace TypeLite.TsModels {
 
 			if (clrType.IsGenericType) {
 				this.Name = clrType.Name.Remove(clrType.Name.IndexOf('`'));
+			    this.GenericArguments = clrType
+			        .GetGenericArguments()
+			        .Select(TsType.Create)
+			        .ToList();
 			} else {
 				this.Name = clrType.Name;
+                this.GenericArguments = new TsType[0];
 			}
 
 			if (this.ClrType.BaseType != null && this.ClrType.BaseType != typeof(object) && this.ClrType.BaseType != typeof(ValueType)) {

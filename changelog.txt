@@ -1,3 +1,11 @@
+Version 1.0.0.0		(29. 10. 2014)
+=====================================
+Fixed		#57 Support for generics
+
+Version 0.9.6.0		(20. 10. 2014)
+=====================================
+Fixed		#51 Support for multidimensional arrays
+
 Version 0.9.5.0		(5. 9. 2014)
 =====================================
 Fixed		#52 Support for using [TsEnum] without class

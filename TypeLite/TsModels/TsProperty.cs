@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -9,10 +10,16 @@ namespace TypeLite.TsModels {
     /// <summary>
     /// Represents a property of the class in the code model.
     /// </summary>
-    public class TsProperty : IMemberIdentifier {
+    [DebuggerDisplay("Name: {Name}")]
+    public class TsProperty : IMemberIdentifier
+    {
         /// <summary>
-        /// Gets or sets name of the property.
+        /// ThreadStatic collection so that we can avoid adding the same types over and over until stackoverflow.com!
+        /// Would be nice to try and optimize to avoid the need for this.
         /// </summary>
+        [ThreadStatic]
+        private static HashSet<Type> _currentListOfTypes;
+
         public string Name { get; set; }
 
         /// <summary>
@@ -36,6 +43,11 @@ namespace TypeLite.TsModels {
         public bool IsOptional { get; set;}
 
         /// <summary>
+        /// Gets the GenericArguments for this property.
+        /// </summary>
+        public IList<TsType> GenericArguments { get; private set; }
+
+        /// <summary>
         /// Gets or sets the constant value of this property.
         /// </summary>
         public object ConstantValue { get; set; }
@@ -45,25 +57,21 @@ namespace TypeLite.TsModels {
         /// </summary>
         /// <param name="clrProperty">The CLR property represented by this instance of the TsProperty.</param>
         public TsProperty(PropertyInfo clrProperty) {
+            if (_currentListOfTypes == null) _currentListOfTypes = new HashSet<Type>();
+
             this.ClrProperty = clrProperty;
             this.Name = clrProperty.Name;
 
-            if (clrProperty.ReflectedType.IsGenericType) {
-                var definitionType = clrProperty.ReflectedType.GetGenericTypeDefinition();
-                var definitionTypeProperty = definitionType.GetProperty(clrProperty.Name);
-                if (definitionTypeProperty.PropertyType.IsGenericParameter) {
-                    this.PropertyType = TsType.Any;
-                } else {
-                    this.PropertyType = clrProperty.PropertyType.IsEnum ? new TsEnum(clrProperty.PropertyType) : new TsType(clrProperty.PropertyType);
-                }
-            } else {
-                var propertyType = clrProperty.PropertyType;
-                if (propertyType.IsNullable()) {
-                    propertyType = propertyType.GetNullableValueType();
-                }
-
-                this.PropertyType = propertyType.IsEnum ? new TsEnum(propertyType) : new TsType(propertyType);
+            var propertyType = clrProperty.PropertyType;
+            if (propertyType.IsNullable()) {
+                propertyType = propertyType.GetNullableValueType();
             }
+
+            this.GenericArguments = propertyType.IsGenericType && _currentListOfTypes.All(t => t != clrProperty.DeclaringType)
+                ? propertyType.GetGenericArguments().Select(TsType.Create).ToArray()
+                : new TsType[0];
+
+            this.PropertyType = propertyType.IsEnum ? new TsEnum(propertyType) : new TsType(propertyType);
 
             var attribute = clrProperty.GetCustomAttribute<TsPropertyAttribute>(false);
             if (attribute != null) {
@@ -78,6 +86,8 @@ namespace TypeLite.TsModels {
 
             // Only fields can be constants.
             this.ConstantValue = null;
+            
+            _currentListOfTypes.Add(clrProperty.DeclaringType);
         }
 
         /// <summary>

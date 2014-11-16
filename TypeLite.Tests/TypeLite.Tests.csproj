@@ -41,6 +41,10 @@
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Entity" />
@@ -75,6 +79,7 @@
     <Compile Include="RegressionTests\Issue48_ToModuleForEnums.cs" />
     <Compile Include="RegressionTests\Issue51_ArrayOfArrayOutput.cs" />
     <Compile Include="RegressionTests\Issue52_EnumsWithoutClass.cs" />
+    <Compile Include="RegressionTests\Issue56_JObject.cs" />
     <Compile Include="RegressionTests\NullablesTests.cs" />
     <Compile Include="ScriptBuilderTests.cs" />
     <Compile Include="TestModels\Address.cs" />

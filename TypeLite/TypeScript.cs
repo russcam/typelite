@@ -166,6 +166,15 @@ namespace TypeLite {
             return this;
         }
 
+        /// <summary>
+        /// Sets a string for single indentation level in the output
+        /// </summary>
+        /// <param name="indentationString">The string used for the single indentation level.</param>
+        /// <returns></returns>
+        public TypeScriptFluent WithIndentation(string indentationString) {
+            _scriptGenerator.IndentationString = indentationString;
+            return this;
+        }
 		/// <summary>
 		/// Generates TypeScript definitions for types included in this model builder.
 		/// </summary>

@@ -14,7 +14,8 @@
 
 <# var ts = TypeScript.Definitions()
 		.ForLoadedAssemblies()
-		.WithReference("Enums.ts");
+		.WithReference("Enums.ts")
+		.WithIndentation("  ");
 #>
 
 <#= ts.Generate(TsGeneratorOutput.Properties) #>

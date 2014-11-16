@@ -22,6 +22,7 @@ namespace TypeLite {
         private HashSet<TsEnum> _generatedEnums;
         private List<string> _references;
         private Dictionary<string, string> _renamedModules;
+        
         /// <summary>
         /// Gets collection of formatters for individual TsTypes
         /// </summary>
@@ -30,6 +31,11 @@ namespace TypeLite {
                 return new ReadOnlyDictionaryWrapper<Type, TsTypeFormatter>(_formatter._formatters);
             }
         }
+
+        /// <summary>
+        /// Gets or sets string for the single indentation level.
+        /// </summary>
+        public string IndentationString { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the TsGenerator class with the default formatters.
@@ -62,6 +68,8 @@ namespace TypeLite {
             _typeVisibilityFormatter = (typeName) => false;
             _moduleNameFormatter = (moduleName) => moduleName;
             _renamedModules = new Dictionary<string, string>();
+
+            this.IndentationString = "\t";
         }
 
         /// <summary>
@@ -153,7 +161,7 @@ namespace TypeLite {
         /// <param name="generatorOutput">The type of definitions to generate</param>
         /// <returns>TypeScript definitions for classes and/or enums in the model..</returns>
         public string Generate(TsModel model, TsGeneratorOutput generatorOutput) {
-            var sb = new StringBuilder();
+            var sb = new ScriptBuilder(this.IndentationString);
 
             if ((generatorOutput & TsGeneratorOutput.Properties) == TsGeneratorOutput.Properties
                 || (generatorOutput & TsGeneratorOutput.Fields) == TsGeneratorOutput.Fields) {
@@ -187,12 +195,12 @@ namespace TypeLite {
         /// </summary>
         /// <param name="reference">The reference file to generate reference for.</param>
         /// <param name="sb">The output</param>
-        private void AppendReference(string reference, StringBuilder sb) {
+        private void AppendReference(string reference, ScriptBuilder sb) {
             sb.AppendFormat("/// <reference path=\"{0}\" />", reference);
             sb.AppendLine();
         }
 
-        private void AppendModule(TsModule module, StringBuilder sb, TsGeneratorOutput generatorOutput) {
+        private void AppendModule(TsModule module, ScriptBuilder sb, TsGeneratorOutput generatorOutput) {
             var classes = module.Classes.Where(c => !_convertor.IsConvertorRegistered(c.ClrType) && !c.IsIgnored).ToList();
             var enums = module.Enums.Where(e => !_convertor.IsConvertorRegistered(e.ClrType) && !e.IsIgnored).ToList();
             if ((generatorOutput == TsGeneratorOutput.Enums && enums.Count == 0) ||
@@ -212,30 +220,30 @@ namespace TypeLite {
                 sb.Append("declare ");
             }
 
-            sb.AppendFormat("module {0} ", moduleName);
-            sb.AppendLine("{");
-
-            if ((generatorOutput & TsGeneratorOutput.Enums) == TsGeneratorOutput.Enums) {
-                foreach (var enumModel in enums) {
-                    this.AppendEnumDefinition(enumModel, sb, generatorOutput);
-                }
-            }
-
-            if (((generatorOutput & TsGeneratorOutput.Properties) == TsGeneratorOutput.Properties)
-                || (generatorOutput & TsGeneratorOutput.Fields) == TsGeneratorOutput.Fields) {
-                foreach (var classModel in classes) {
-
-                    this.AppendClassDefinition(classModel, sb, generatorOutput);
-                }
-            }
-
-            if ((generatorOutput & TsGeneratorOutput.Constants) == TsGeneratorOutput.Constants) {
-                foreach (var classModel in classes) {
-                    if (classModel.IsIgnored) {
-                        continue;
+            sb.AppendLine(string.Format("module {0} {{", moduleName));
+            using (sb.IncreaseIndentation()) {
+                if ((generatorOutput & TsGeneratorOutput.Enums) == TsGeneratorOutput.Enums) {
+                    foreach (var enumModel in enums) {
+                        this.AppendEnumDefinition(enumModel, sb, generatorOutput);
                     }
+                }
 
-                    this.AppendConstantModule(classModel, sb);
+                if (((generatorOutput & TsGeneratorOutput.Properties) == TsGeneratorOutput.Properties)
+                    || (generatorOutput & TsGeneratorOutput.Fields) == TsGeneratorOutput.Fields) {
+                    foreach (var classModel in classes) {
+
+                        this.AppendClassDefinition(classModel, sb, generatorOutput);
+                    }
+                }
+
+                if ((generatorOutput & TsGeneratorOutput.Constants) == TsGeneratorOutput.Constants) {
+                    foreach (var classModel in classes) {
+                        if (classModel.IsIgnored) {
+                            continue;
+                        }
+
+                        this.AppendConstantModule(classModel, sb);
+                    }
                 }
             }
 
@@ -248,10 +256,10 @@ namespace TypeLite {
         /// <param name="classModel">The class to generate definition for.</param>
         /// <param name="sb">The output.</param>
         /// <param name="generatorOutput"></param>
-        private void AppendClassDefinition(TsClass classModel, StringBuilder sb, TsGeneratorOutput generatorOutput) {
+        private void AppendClassDefinition(TsClass classModel, ScriptBuilder sb, TsGeneratorOutput generatorOutput) {
             string typeName = this.GetTypeName(classModel);
             string visibility = this.GetTypeVisibility(typeName) ? "export " : "";
-            sb.AppendFormat("{0}interface {1}", visibility, typeName);
+            sb.AppendFormatIndented("{0}interface {1}", visibility, typeName);
             if (classModel.BaseType != null) {
                 sb.AppendFormat(" extends {0}", this.GetFullyQualifiedTypeName(classModel.BaseType, classModel.GenericArguments));
             }
@@ -265,36 +273,36 @@ namespace TypeLite {
             if ((generatorOutput & TsGeneratorOutput.Fields) == TsGeneratorOutput.Fields) {
                 members.AddRange(classModel.Fields);
             }
+            using (sb.IncreaseIndentation()) {
+                foreach (var property in members) {
+                    if (property.IsIgnored) {
+                        continue;
+                    }
 
-            foreach (var property in members) {
-                if (property.IsIgnored) {
-                    continue;
+                    sb.AppendLineIndented(string.Format("{0}: {1};", this.GetPropertyName(property), this.GetPropertyType(property)));
                 }
-
-                sb.AppendFormat("  {0}: {1}", this.GetPropertyName(property), this.GetPropertyType(property));
-                sb.Append(";"); sb.AppendLine();
             }
 
-            sb.AppendLine("}");
+            sb.AppendLineIndented("}");
 
             _generatedClasses.Add(classModel);
         }
 
-        private void AppendEnumDefinition(TsEnum enumModel, StringBuilder sb, TsGeneratorOutput output) {
+        private void AppendEnumDefinition(TsEnum enumModel, ScriptBuilder sb, TsGeneratorOutput output) {
             string typeName = this.GetTypeName(enumModel);
             string visibility = output == TsGeneratorOutput.Enums || (output & TsGeneratorOutput.Constants) == TsGeneratorOutput.Constants ? "export " : "";
 
-            sb.AppendFormat("{0}enum {1} ", visibility, typeName);
-            sb.AppendLine("{");
+            sb.AppendLineIndented(string.Format("{0}enum {1} {{", visibility, typeName));
 
-            int i = 1;
-            foreach (var v in enumModel.Values) {
-                sb.AppendFormat(i < enumModel.Values.Count ? "  {0} = {1}," : "  {0} = {1}", v.Name, v.Value);
-                sb.AppendLine();
-                i++;
+            using (sb.IncreaseIndentation()) {
+                int i = 1;
+                foreach (var v in enumModel.Values) {
+                    sb.AppendLineIndented(string.Format(i < enumModel.Values.Count ? "{0} = {1}," : "{0} = {1}", v.Name, v.Value));
+                    i++;
+                }
             }
 
-            sb.AppendLine("}");
+            sb.AppendLineIndented("}");
 
             _generatedEnums.Add(enumModel);
         }
@@ -305,29 +313,27 @@ namespace TypeLite {
         /// <param name="classModel">The class to generate definition for.</param>
         /// <param name="sb">The output.</param>
         /// <param name="generatorOutput"></param>
-        private void AppendConstantModule(TsClass classModel, StringBuilder sb)
+        private void AppendConstantModule(TsClass classModel, ScriptBuilder sb)
         {
             if (!classModel.Constants.Any()) {
                 return;
             }
 
             string typeName = this.GetTypeName(classModel);
-            sb.AppendFormat("export module {0} ", typeName);
+            sb.AppendLineIndented(string.Format("export module {0} {{", typeName));
 
-            sb.AppendLine("{");
+            using (sb.IncreaseIndentation()) {
+                foreach (var property in classModel.Constants) {
+                    if (property.IsIgnored) {
+                        continue;
+                    }
 
-            foreach (var property in classModel.Constants)
-            {
-                if (property.IsIgnored)
-                {
-                    continue;
+                    sb.AppendFormatIndented("export var {0}: {1} = {2};", this.GetPropertyName(property), this.GetPropertyType(property), this.GetPropertyConstantValue(property));
+                    sb.AppendLine();
                 }
 
-                sb.AppendFormat("  export var {0}: {1} = {2};", this.GetPropertyName(property), this.GetPropertyType(property), this.GetPropertyConstantValue(property));
-                sb.AppendLine();
             }
-
-            sb.AppendLine("}");
+            sb.AppendLineIndented("}");
 
             _generatedClasses.Add(classModel);
         }

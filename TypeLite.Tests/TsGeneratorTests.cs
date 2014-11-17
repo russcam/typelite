@@ -8,6 +8,7 @@ using Xunit;
 
 using TypeLite;
 using TypeLite.Tests.TestModels;
+using System.IO;
 
 namespace TypeLite.Tests {
     public class TsGeneratorTests {
@@ -264,6 +265,27 @@ namespace TypeLite.Tests {
             Assert.Contains("Price", script);
         }
 
+        [Fact]
+        public void WhenGenerate_OutputIsFormated() {
+            var builder = new TsModelBuilder();
+            builder.Add<Address>();
+            var model = builder.Build();
+            
+            var target = new TsGenerator();
+            var script = target.Generate(model);
+
+            using (var reader = new StringReader(script)) {
+                var line = string.Empty;
+                while((line = reader.ReadLine()) != null) {
+                    if (line.Contains("interface Address {")) {
+                        Assert.True(line.StartsWith("\t"));
+                    }
+                    if (line.Contains("ID: Guid")) {
+                        Assert.True(line.StartsWith("\t\t"));
+                    }
+                }
+            }
+        }
         #endregion
     }
 }

@@ -22,7 +22,7 @@ namespace TypeLite {
         private HashSet<TsEnum> _generatedEnums;
         private List<string> _references;
         private Dictionary<string, string> _renamedModules;
-        
+
         /// <summary>
         /// Gets collection of formatters for individual TsTypes
         /// </summary>
@@ -47,13 +47,12 @@ namespace TypeLite {
 
             _formatter = new TsTypeFormatterCollection();
             _formatter.RegisterTypeFormatter<TsClass>((type, formatter) => {
-                var tsClass = ((TsClass) type);
+                var tsClass = ((TsClass)type);
                 if (!tsClass.GenericArguments.Any()) return tsClass.Name;
-                return tsClass.Name + "<" + string.Join(", ", tsClass.GenericArguments.Select(a => this.GetFullyQualifiedTypeName(a, null))) + ">";
+                return tsClass.Name + "<" + string.Join(", ", tsClass.GenericArguments.Select(a => a as TsCollection != null ? this.GetFullyQualifiedTypeName(a) + "[]" : this.GetFullyQualifiedTypeName(a))) + ">";
             });
             _formatter.RegisterTypeFormatter<TsSystemType>((type, formatter) => ((TsSystemType)type).Kind.ToTypeScriptString());
-            _formatter.RegisterTypeFormatter<TsCollection>((type, formatter) =>
-            {
+            _formatter.RegisterTypeFormatter<TsCollection>((type, formatter) => {
                 var itemType = ((TsCollection)type).ItemsType;
                 var itemTypeAsClass = itemType as TsClass;
                 if (itemTypeAsClass == null || !itemTypeAsClass.GenericArguments.Any()) return this.GetTypeName(itemType);
@@ -205,8 +204,7 @@ namespace TypeLite {
             var enums = module.Enums.Where(e => !_convertor.IsConvertorRegistered(e.ClrType) && !e.IsIgnored).ToList();
             if ((generatorOutput == TsGeneratorOutput.Enums && enums.Count == 0) ||
                 (generatorOutput == TsGeneratorOutput.Properties && classes.Count == 0) ||
-                (enums.Count == 0 && classes.Count == 0))
-            {
+                (enums.Count == 0 && classes.Count == 0)) {
                 return;
             }
 
@@ -261,7 +259,7 @@ namespace TypeLite {
             string visibility = this.GetTypeVisibility(typeName) ? "export " : "";
             sb.AppendFormatIndented("{0}interface {1}", visibility, typeName);
             if (classModel.BaseType != null) {
-                sb.AppendFormat(" extends {0}", this.GetFullyQualifiedTypeName(classModel.BaseType, classModel.GenericArguments));
+                sb.AppendFormat(" extends {0}", this.GetFullyQualifiedTypeName(classModel.BaseType));
             }
 
             sb.AppendLine(" {");
@@ -313,8 +311,7 @@ namespace TypeLite {
         /// <param name="classModel">The class to generate definition for.</param>
         /// <param name="sb">The output.</param>
         /// <param name="generatorOutput"></param>
-        private void AppendConstantModule(TsClass classModel, ScriptBuilder sb)
-        {
+        private void AppendConstantModule(TsClass classModel, ScriptBuilder sb) {
             if (!classModel.Constants.Any()) {
                 return;
             }
@@ -342,9 +339,8 @@ namespace TypeLite {
         /// Gets fully qualified name of the type
         /// </summary>
         /// <param name="type">The type to get name of</param>
-        /// <param name="genericArguments"></param>
         /// <returns>Fully qualified name of the type</returns>
-        private string GetFullyQualifiedTypeName(TsType type, IList<TsType> genericArguments) {
+        private string GetFullyQualifiedTypeName(TsType type) {
             var moduleName = string.Empty;
 
             if (type as TsModuleMember != null && !_convertor.IsConvertorRegistered(type.ClrType)) {
@@ -375,10 +371,10 @@ namespace TypeLite {
         private string GetCollectionModuleName(TsCollection collectionType, string moduleName) {
             if (collectionType.ItemsType as TsModuleMember != null && !_convertor.IsConvertorRegistered(collectionType.ItemsType.ClrType)) {
                 if (!collectionType.ItemsType.ClrType.IsGenericParameter)
-                    moduleName = ((TsModuleMember) collectionType.ItemsType).Module != null ? ((TsModuleMember) collectionType.ItemsType).Module.Name : string.Empty;
+                    moduleName = ((TsModuleMember)collectionType.ItemsType).Module != null ? ((TsModuleMember)collectionType.ItemsType).Module.Name : string.Empty;
             }
             if (collectionType.ItemsType as TsCollection != null) {
-                moduleName = GetCollectionModuleName((TsCollection) collectionType.ItemsType, moduleName);
+                moduleName = GetCollectionModuleName((TsCollection)collectionType.ItemsType, moduleName);
             }
             return moduleName;
         }
@@ -418,13 +414,10 @@ namespace TypeLite {
         private string GetPropertyType(TsProperty property) {
             var asCollection = property.PropertyType as TsCollection;
 
-            if (asCollection == null)
-            {
-                return _memberTypeFormatter(this.GetFullyQualifiedTypeName(property.PropertyType, property.GenericArguments), false);
-            }
-            else
-            {
-                return _memberTypeFormatter(this.GetFullyQualifiedTypeName(property.PropertyType, property.GenericArguments), true, asCollection.Dimension);
+            if (asCollection == null) {
+                return _memberTypeFormatter(this.GetFullyQualifiedTypeName(property.PropertyType), false);
+            } else {
+                return _memberTypeFormatter(this.GetFullyQualifiedTypeName(property.PropertyType), true, asCollection.Dimension);
             }
         }
 
@@ -434,7 +427,7 @@ namespace TypeLite {
         /// <param name="property">The property to get constant value of</param>
         /// <returns>constant value of the property</returns>
         private string GetPropertyConstantValue(TsProperty property) {
-            var quote = property.PropertyType.ClrType == typeof (string) ? "\"" : "";
+            var quote = property.PropertyType.ClrType == typeof(string) ? "\"" : "";
             return quote + property.ConstantValue.ToString() + quote;
         }
 

@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AlternateGenerators\TsBackboneModelGenerator.cs" />
     <Compile Include="Extensions\SystemTypeKindExtensions.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="Extensions\MemberInfoExtensions.cs" />

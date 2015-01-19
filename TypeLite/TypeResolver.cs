@@ -40,7 +40,7 @@ namespace TypeLite {
             }
 
             if (classModel.BaseType != null && classModel.BaseType != TsType.Any) {
-                classModel.BaseType = this.ResolveType(classModel.BaseType);
+                classModel.BaseType = this.ResolveType(classModel.BaseType, false);
             }
         }
 
@@ -85,6 +85,11 @@ namespace TypeLite {
                 if (_knownTypes.TryGetValue(toResolve.ClrType.GetGenericTypeDefinition(), out openType)) {
                     return openType;
                 }
+            }
+            else if (toResolve.ClrType.IsGenericType) {
+                var genericType = TsType.Create(toResolve.ClrType);
+                _knownTypes[toResolve.ClrType] = genericType;
+                return genericType;
             }
 
             var typeFamily = TsType.GetTypeFamily(toResolve.ClrType);

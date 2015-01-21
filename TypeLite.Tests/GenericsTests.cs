@@ -92,6 +92,9 @@ namespace TypeLite.Tests {
         [Fact]
         public void DerivedClassWithNewNameForGenericParameter() {
             var typescript = AddTypeAndGenerateTypeScript<DerivedClassWithNameGenericParameterName<int, string>>();
+
+            Assert.Contains("DerivedClassWithNameGenericParameterName<TNewParam, TSomethingNew> extends TypeLite.Tests.GenericsTests.BaseGeneric<TSomethingNew>", typescript);
+            Assert.Contains("interface BaseGeneric<TType>", typescript);
         }
 
         #region Test classes

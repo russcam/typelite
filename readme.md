@@ -14,6 +14,9 @@ The library is distributed under MIT license.
 
 ## Changelog
 
+### Version 1.0.2.0		(17. 11. 2014)
+Fixed		#47 Fixed problem with derived generics
+
 ### Version 1.0.1.0		(17. 11. 2014)
 Fixed		#64 Incorrect definition for KeyValuePair<int, List<string>>
 Fixed		#65 Generic porperty referencin containing type causes StackOverflowException

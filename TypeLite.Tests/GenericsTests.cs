@@ -89,6 +89,13 @@ namespace TypeLite.Tests {
             Assert.Contains("NewGenericProperty: TNewType;", typeScript);
         }
 
+        [Fact]
+        public void DerivedClassWithNewNameForGenericParameter() {
+            var typescript = AddTypeAndGenerateTypeScript<DerivedClassWithNameGenericParameterName<int, string>>();
+
+            Assert.Contains("DerivedClassWithNameGenericParameterName<TNewParam, TSomethingNew> extends TypeLite.Tests.GenericsTests.BaseGeneric<TSomethingNew>", typescript);
+            Assert.Contains("interface BaseGeneric<TType>", typescript);
+        }
 
         #region Test classes
         private class HandleNestedGenericsSystemTypesTestClass {
@@ -133,6 +140,11 @@ namespace TypeLite.Tests {
         private class ClassWithComplexNestedGenericProperty {
             public Tuple<KeyValuePair<int, string>, BaseGeneric<string>, decimal, KeyValuePair<int, DummyNamespace.Test>> GenericsHell { get; set; }
         }
+
+        private class DerivedClassWithNameGenericParameterName<TNewParam, TSomethingNew> : BaseGeneric<TSomethingNew> {
+            public TNewParam SomeProperty { get; set; }
+        }
+
         #endregion
     }
 }

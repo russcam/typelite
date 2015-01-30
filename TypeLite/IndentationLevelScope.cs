@@ -7,7 +7,7 @@ namespace TypeLite {
     /// <summary>
     /// Represents a scope of indentation level in the ScriptBuilder
     /// </summary>
-    internal class IndentationLevelScope : IDisposable {
+    public class IndentationLevelScope : IDisposable {
         private ScriptBuilder _sb;
 
         /// <summary>

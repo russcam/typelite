@@ -8,7 +8,7 @@ namespace TypeLite {
 	/// <summary>
 	/// Manages collection of TsTypeFormatters
 	/// </summary>
-	internal class TsTypeFormatterCollection : ITsTypeFormatter {
+	public class TsTypeFormatterCollection : ITsTypeFormatter {
 		internal Dictionary<Type, TsTypeFormatter> _formatters;
 		
 		/// <summary>

@@ -7,7 +7,7 @@ namespace TypeLite {
     /// <summary>
     /// Creates outptut script in memory 
     /// </summary>
-    internal class ScriptBuilder {
+    public class ScriptBuilder {
         private StringBuilder _internalBuilder;
 
         /// <summary>

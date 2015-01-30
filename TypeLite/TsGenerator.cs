@@ -12,16 +12,16 @@ namespace TypeLite {
     /// Generates TypeScript definitions form the code model.
     /// </summary>
     public class TsGenerator {
-        private TsTypeFormatterCollection _formatter;
-        private TypeConvertorCollection _convertor;
-        private TsMemberIdentifierFormatter _memberFormatter;
-        private TsMemberTypeFormatter _memberTypeFormatter;
-        private TsTypeVisibilityFormatter _typeVisibilityFormatter;
-        private TsModuleNameFormatter _moduleNameFormatter;
-        private HashSet<TsClass> _generatedClasses;
-        private HashSet<TsEnum> _generatedEnums;
-        private List<string> _references;
-        private Dictionary<string, string> _renamedModules;
+        protected TsTypeFormatterCollection _formatter;
+        protected TypeConvertorCollection _convertor;
+        protected TsMemberIdentifierFormatter _memberFormatter;
+        protected TsMemberTypeFormatter _memberTypeFormatter;
+        protected TsTypeVisibilityFormatter _typeVisibilityFormatter;
+        protected TsModuleNameFormatter _moduleNameFormatter;
+        protected HashSet<TsClass> _generatedClasses;
+        protected HashSet<TsEnum> _generatedEnums;
+        protected List<string> _references;
+        protected Dictionary<string, string> _renamedModules;
 
         /// <summary>
         /// Gets collection of formatters for individual TsTypes
@@ -286,7 +286,7 @@ namespace TypeLite {
             _generatedClasses.Add(classModel);
         }
 
-        private void AppendEnumDefinition(TsEnum enumModel, ScriptBuilder sb, TsGeneratorOutput output) {
+        protected void AppendEnumDefinition(TsEnum enumModel, ScriptBuilder sb, TsGeneratorOutput output) {
             string typeName = this.GetTypeName(enumModel);
             string visibility = output == TsGeneratorOutput.Enums || (output & TsGeneratorOutput.Constants) == TsGeneratorOutput.Constants ? "export " : "";
 
@@ -384,7 +384,7 @@ namespace TypeLite {
         /// </summary>
         /// <param name="type">The type to get name of</param>
         /// <returns>name of the type</returns>
-        private string GetTypeName(TsType type) {
+        protected string GetTypeName(TsType type) {
             if (_convertor.IsConvertorRegistered(type.ClrType)) {
                 return _convertor.ConvertType(type.ClrType);
             }
@@ -445,7 +445,7 @@ namespace TypeLite {
         /// </summary>
         /// <param name="moduleName">The module name to be formatted</param>
         /// <returns>The module name after formatting.</returns>
-        private string GetModuleName(string moduleName) {
+        protected string GetModuleName(string moduleName) {
             return _moduleNameFormatter(moduleName);
         }
 

@@ -28,15 +28,15 @@ namespace TypeLite.Tests.TsModels {
 		public void WhenInitialized_PropertiesAreCreated() {
 			var target = new TsClass(typeof(Address));
 
-			Assert.Single(target.Properties.Where(o => o.ClrProperty == typeof(Address).GetProperty("Street")));
-			Assert.Single(target.Properties.Where(o => o.ClrProperty == typeof(Address).GetProperty("Town")));
+			Assert.Single(target.Properties.Where(o => o.MemberInfo == typeof(Address).GetProperty("Street")));
+			Assert.Single(target.Properties.Where(o => o.MemberInfo == typeof(Address).GetProperty("Town")));
 		}
 
 		[Fact]
 		public void WhenInitialized_FieldsAreCreated() {
 			var target = new TsClass(typeof(Address));
 
-			Assert.Single(target.Fields.Where(o => o.ClrProperty == typeof(Address).GetField("PostalCode")));
+			Assert.Single(target.Fields.Where(o => o.MemberInfo == typeof(Address).GetField("PostalCode")));
 		}
 
         [Fact]
@@ -44,7 +44,7 @@ namespace TypeLite.Tests.TsModels {
         {
             var target = new TsClass(typeof(Person));
 
-            Assert.Single(target.Constants.Where(o => o.ClrProperty == typeof(Person).GetField("MaxAddresses")));
+            Assert.Single(target.Constants.Where(o => o.MemberInfo == typeof(Person).GetField("MaxAddresses")));
         }
 
         [Fact]
@@ -52,7 +52,7 @@ namespace TypeLite.Tests.TsModels {
         {
             var target = new TsClass(typeof(Person));
 
-            var maxAddresses = target.Constants.Single(o => o.ClrProperty == typeof(Person).GetField("MaxAddresses"));
+            var maxAddresses = target.Constants.Single(o => o.MemberInfo == typeof(Person).GetField("MaxAddresses"));
             Assert.Equal(Person.MaxAddresses, maxAddresses.ConstantValue);
         }
         
@@ -75,10 +75,10 @@ namespace TypeLite.Tests.TsModels {
 		public void WhenInitializedWithClassThatHasBaseClass_OnlyPropertiesDefinedInDerivedClassAreCreated() {
 			var target = new TsClass(typeof(Employee));
 
-			Assert.Single(target.Properties.Where(o => o.ClrProperty == typeof(Employee).GetProperty("Salary")));
+			Assert.Single(target.Properties.Where(o => o.MemberInfo == typeof(Employee).GetProperty("Salary")));
 
-			Assert.Empty(target.Properties.Where(o => o.ClrProperty == typeof(Employee).GetProperty("Street")));
-			Assert.Empty(target.Properties.Where(o => o.ClrProperty == typeof(Employee).GetProperty("Street")));
+			Assert.Empty(target.Properties.Where(o => o.MemberInfo == typeof(Employee).GetProperty("Street")));
+			Assert.Empty(target.Properties.Where(o => o.MemberInfo == typeof(Employee).GetProperty("Street")));
 		}
 
 		[Fact]
@@ -139,9 +139,9 @@ namespace TypeLite.Tests.TsModels {
 		public void WhenInitializedWithClassWithEnum_PropertiesCreated() {
 			var target = new TsClass(typeof(Item));
 
-			Assert.Single(target.Properties.Where(o => o.ClrProperty == typeof(Item).GetProperty("Type")));
-			Assert.Single(target.Properties.Where(o => o.ClrProperty == typeof(Item).GetProperty("Id")));
-			Assert.Single(target.Properties.Where(o => o.ClrProperty == typeof(Item).GetProperty("Name")));
+			Assert.Single(target.Properties.Where(o => o.MemberInfo == typeof(Item).GetProperty("Type")));
+			Assert.Single(target.Properties.Where(o => o.MemberInfo == typeof(Item).GetProperty("Id")));
+			Assert.Single(target.Properties.Where(o => o.MemberInfo == typeof(Item).GetProperty("Name")));
 
 			Assert.Null(target.BaseType);
 		}
@@ -150,8 +150,8 @@ namespace TypeLite.Tests.TsModels {
 		public void WhenInitializedWithClassWithEnum_EnumPropertyCreated() {
 			var target = new TsClass(typeof(Item));
 
-			Assert.Single(target.Properties.Where(o => o.ClrProperty == typeof(Item).GetProperty("Type")));
-			var property = target.Properties.Single(o => o.ClrProperty == typeof(Item).GetProperty("Type"));
+			Assert.Single(target.Properties.Where(o => o.MemberInfo == typeof(Item).GetProperty("Type")));
+			var property = target.Properties.Single(o => o.MemberInfo == typeof(Item).GetProperty("Type"));
 			Assert.True(property.PropertyType.GetType() == typeof(TsEnum));
 			var enumtype = property.PropertyType as TsEnum;
 			Assert.NotNull(enumtype);

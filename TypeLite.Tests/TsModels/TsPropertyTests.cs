@@ -15,7 +15,7 @@ namespace TypeLite.Tests.TsModels {
 
 			var target = new TsProperty(propertyInfo);
 
-			Assert.Same(propertyInfo, target.ClrProperty);
+			Assert.Same(propertyInfo, target.MemberInfo);
 		}
 
 		[Fact]

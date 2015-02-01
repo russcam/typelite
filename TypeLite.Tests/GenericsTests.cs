@@ -30,7 +30,7 @@ namespace TypeLite.Tests {
 
                     var classDefinition = model.Classes.Single(c => c.Name == typeof(GenerateSpecifyGenericTypesTestClass).Name);
                     Assert.NotNull(classDefinition);
-                    Assert.True(((PropertyInfo)classDefinition.Properties.Single(p => p.Name == "StringToInt").ClrProperty).PropertyType == typeof(KeyValuePair<string, int>));
+                    Assert.True(((PropertyInfo)classDefinition.Properties.Single(p => p.Name == "StringToInt").MemberInfo).PropertyType == typeof(KeyValuePair<string, int>));
                 });
             Assert.Contains("StringToInt: System.Collections.Generic.KeyValuePair<string, number>;", typeScript);
         }

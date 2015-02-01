@@ -90,7 +90,7 @@ namespace TypeLite {
 		/// <typeparam name="TFor">The type to register the formatter for. TFor is restricted to TsType and derived classes.</typeparam>
 		/// <param name="formatter">The formatter to register</param>
 		/// <returns>Instance of the TypeScriptFluent that enables fluent configuration.</returns>
-		public TypeScriptFluent WithFormatter<TFor>(TsTypeFormatter formatter) where TFor : TsType {
+		public TypeScriptFluent WithTypeFormatter<TFor>(TsTypeFormatter formatter) where TFor : TsType {
 			_scriptGenerator.RegisterTypeFormatter<TFor>(formatter);
 			return this;
 		}
@@ -100,7 +100,7 @@ namespace TypeLite {
 		/// </summary>
 		/// <param name="formatter">The formatter to register</param>
 		/// <returns>Instance of the TypeScriptFluent that enables fluent configuration.</returns>
-		public TypeScriptFluent WithFormatter(TsTypeFormatter formatter) {
+		public TypeScriptFluent WithTypeFormatter(TsTypeFormatter formatter) {
 			_scriptGenerator.RegisterTypeFormatter(formatter);
 			return this;
 		}
@@ -110,7 +110,7 @@ namespace TypeLite {
 		/// </summary>
 		/// <param name="formatter">The formatter to register</param>
 		/// <returns>Instance of the TypeScriptFluent that enables fluent configuration.</returns>
-		public TypeScriptFluent WithFormatter(TsMemberIdentifierFormatter formatter) {
+		public TypeScriptFluent WithMemberFormatter(TsMemberIdentifierFormatter formatter) {
 			_scriptGenerator.RegisterIdentifierFormatter(formatter);
 			return this;
 		}
@@ -120,7 +120,7 @@ namespace TypeLite {
         /// </summary>
         /// <param name="formatter">The formatter to register</param>
         /// <returns>Instance of the TypeScriptFluent that enables fluent configuration.</returns>
-        public TypeScriptFluent WithFormatter(TsMemberTypeFormatter formatter) {
+        public TypeScriptFluent WithMemberTypeFormatter(TsMemberTypeFormatter formatter) {
             _scriptGenerator.RegisterMemberTypeFormatter(formatter);
             return this;
         }
@@ -130,7 +130,7 @@ namespace TypeLite {
         /// </summary>
         /// <param name="formatter">The formatter to register</param>
         /// <returns>Instance of the TypeScriptFluent that enables fluent configuration.</returns>
-        public TypeScriptFluent WithFormatter(TsModuleNameFormatter formatter) {
+        public TypeScriptFluent WithModuleNameFormatter(TsModuleNameFormatter formatter) {
             _scriptGenerator.RegisterModuleNameFormatter(formatter);
             return this;
         }

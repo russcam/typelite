@@ -12,8 +12,8 @@ namespace TypeLite {
     /// Generates TypeScript definitions form the code model.
     /// </summary>
     public class TsGenerator {
-        protected TsTypeFormatterCollection _formatter;
-        protected TypeConvertorCollection _convertor;
+        protected TsTypeFormatterCollection _typeFormatters;
+        protected TypeConvertorCollection _typeConvertors;
         protected TsMemberIdentifierFormatter _memberFormatter;
         protected TsMemberTypeFormatter _memberTypeFormatter;
         protected TsTypeVisibilityFormatter _typeVisibilityFormatter;
@@ -28,7 +28,7 @@ namespace TypeLite {
         /// </summary>
         public IReadOnlyDictionary<Type, TsTypeFormatter> Formaters {
             get {
-                return new ReadOnlyDictionaryWrapper<Type, TsTypeFormatter>(_formatter._formatters);
+                return new ReadOnlyDictionaryWrapper<Type, TsTypeFormatter>(_typeFormatters._formatters);
             }
         }
 
@@ -45,22 +45,22 @@ namespace TypeLite {
             _generatedClasses = new HashSet<TsClass>();
             _generatedEnums = new HashSet<TsEnum>();
 
-            _formatter = new TsTypeFormatterCollection();
-            _formatter.RegisterTypeFormatter<TsClass>((type, formatter) => {
+            _typeFormatters = new TsTypeFormatterCollection();
+            _typeFormatters.RegisterTypeFormatter<TsClass>((type, formatter) => {
                 var tsClass = ((TsClass)type);
                 if (!tsClass.GenericArguments.Any()) return tsClass.Name;
                 return tsClass.Name + "<" + string.Join(", ", tsClass.GenericArguments.Select(a => a as TsCollection != null ? this.GetFullyQualifiedTypeName(a) + "[]" : this.GetFullyQualifiedTypeName(a))) + ">";
             });
-            _formatter.RegisterTypeFormatter<TsSystemType>((type, formatter) => ((TsSystemType)type).Kind.ToTypeScriptString());
-            _formatter.RegisterTypeFormatter<TsCollection>((type, formatter) => {
+            _typeFormatters.RegisterTypeFormatter<TsSystemType>((type, formatter) => ((TsSystemType)type).Kind.ToTypeScriptString());
+            _typeFormatters.RegisterTypeFormatter<TsCollection>((type, formatter) => {
                 var itemType = ((TsCollection)type).ItemsType;
                 var itemTypeAsClass = itemType as TsClass;
                 if (itemTypeAsClass == null || !itemTypeAsClass.GenericArguments.Any()) return this.GetTypeName(itemType);
                 return this.GetTypeName(itemType);
             });
-            _formatter.RegisterTypeFormatter<TsEnum>((type, formatter) => ((TsEnum)type).Name);
+            _typeFormatters.RegisterTypeFormatter<TsEnum>((type, formatter) => ((TsEnum)type).Name);
 
-            _convertor = new TypeConvertorCollection();
+            _typeConvertors = new TypeConvertorCollection();
 
             _memberFormatter = (identifier) => identifier.Name;
             _memberTypeFormatter = (typeName, isTypeCollection, dimension) => typeName + (isTypeCollection ? string.Concat(Enumerable.Repeat("[]", dimension)) : "");
@@ -80,7 +80,7 @@ namespace TypeLite {
         /// If a formatter for the type is already registered, it is overwritten with the new value.
         /// </remarks>
         public void RegisterTypeFormatter<TFor>(TsTypeFormatter formatter) where TFor : TsType {
-            _formatter.RegisterTypeFormatter<TFor>(formatter);
+            _typeFormatters.RegisterTypeFormatter<TFor>(formatter);
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace TypeLite {
         /// </summary>
         /// <param name="formatter">The formatter to register.</param>
         public void RegisterTypeFormatter(TsTypeFormatter formatter) {
-            _formatter.RegisterTypeFormatter<TsClass>(formatter);
+            _typeFormatters.RegisterTypeFormatter<TsClass>(formatter);
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace TypeLite {
         /// If a converter for the type is already registered, it is overwritten with the new value.
         /// </remarks>
         public void RegisterTypeConvertor<TFor>(TypeConvertor convertor) {
-            _convertor.RegisterTypeConverter<TFor>(convertor);
+            _typeConvertors.RegisterTypeConverter<TFor>(convertor);
         }
 
         /// <summary>
@@ -200,8 +200,8 @@ namespace TypeLite {
         }
 
         private void AppendModule(TsModule module, ScriptBuilder sb, TsGeneratorOutput generatorOutput) {
-            var classes = module.Classes.Where(c => !_convertor.IsConvertorRegistered(c.Type) && !c.IsIgnored).ToList();
-            var enums = module.Enums.Where(e => !_convertor.IsConvertorRegistered(e.Type) && !e.IsIgnored).ToList();
+            var classes = module.Classes.Where(c => !_typeConvertors.IsConvertorRegistered(c.Type) && !c.IsIgnored).ToList();
+            var enums = module.Enums.Where(e => !_typeConvertors.IsConvertorRegistered(e.Type) && !e.IsIgnored).ToList();
             if ((generatorOutput == TsGeneratorOutput.Enums && enums.Count == 0) ||
                 (generatorOutput == TsGeneratorOutput.Properties && classes.Count == 0) ||
                 (enums.Count == 0 && classes.Count == 0)) {
@@ -343,7 +343,7 @@ namespace TypeLite {
         private string GetFullyQualifiedTypeName(TsType type) {
             var moduleName = string.Empty;
 
-            if (type as TsModuleMember != null && !_convertor.IsConvertorRegistered(type.Type)) {
+            if (type as TsModuleMember != null && !_typeConvertors.IsConvertorRegistered(type.Type)) {
                 var memberType = (TsModuleMember)type;
                 moduleName = memberType.Module != null ? memberType.Module.Name : string.Empty;
             } else if (type as TsCollection != null) {
@@ -369,7 +369,7 @@ namespace TypeLite {
         /// <param name="moduleName">The module name.</param>
         /// <returns></returns>
         private string GetCollectionModuleName(TsCollection collectionType, string moduleName) {
-            if (collectionType.ItemsType as TsModuleMember != null && !_convertor.IsConvertorRegistered(collectionType.ItemsType.Type)) {
+            if (collectionType.ItemsType as TsModuleMember != null && !_typeConvertors.IsConvertorRegistered(collectionType.ItemsType.Type)) {
                 if (!collectionType.ItemsType.Type.IsGenericParameter)
                     moduleName = ((TsModuleMember)collectionType.ItemsType).Module != null ? ((TsModuleMember)collectionType.ItemsType).Module.Name : string.Empty;
             }
@@ -385,11 +385,11 @@ namespace TypeLite {
         /// <param name="type">The type to get name of</param>
         /// <returns>name of the type</returns>
         protected string GetTypeName(TsType type) {
-            if (_convertor.IsConvertorRegistered(type.Type)) {
-                return _convertor.ConvertType(type.Type);
+            if (_typeConvertors.IsConvertorRegistered(type.Type)) {
+                return _typeConvertors.ConvertType(type.Type);
             }
 
-            return _formatter.FormatType(type);
+            return _typeFormatters.FormatType(type);
         }
 
         /// <summary>

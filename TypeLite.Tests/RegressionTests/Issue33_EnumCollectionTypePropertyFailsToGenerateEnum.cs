@@ -20,7 +20,7 @@ namespace TypeLite.Tests.RegressionTests
             var result = generator.Generate(model);
 
             Assert.True(model.Enums.Count == 1);
-            Assert.True(model.Enums.Single().ClrType == typeof(AuthenticationError));
+            Assert.True(model.Enums.Single().Type == typeof(AuthenticationError));
         }
 
         [TsClass]

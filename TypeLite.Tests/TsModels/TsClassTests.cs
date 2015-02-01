@@ -68,7 +68,7 @@ namespace TypeLite.Tests.TsModels {
 			var target = new TsClass(typeof(Employee));
 
 			Assert.NotNull(target.BaseType);
-			Assert.Equal(typeof(Person), target.BaseType.ClrType);
+			Assert.Equal(typeof(Person), target.BaseType.Type);
 		}
 
 		[Fact]

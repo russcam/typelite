@@ -26,7 +26,7 @@ namespace TypeLite {
             _knownTypes = new Dictionary<Type, TsType>();
 
             foreach (var classModel in model.Classes) {
-                _knownTypes[classModel.ClrType] = classModel;
+                _knownTypes[classModel.Type] = classModel;
             }
         }
 
@@ -77,32 +77,32 @@ namespace TypeLite {
                 return toResolve;
             }
 
-            if (_knownTypes.ContainsKey(toResolve.ClrType)) {
-                return _knownTypes[toResolve.ClrType];
-            } else if (toResolve.ClrType.IsGenericType && useOpenGenericDefinition) {
+            if (_knownTypes.ContainsKey(toResolve.Type)) {
+                return _knownTypes[toResolve.Type];
+            } else if (toResolve.Type.IsGenericType && useOpenGenericDefinition) {
                 // We stored its open type definition instead
                 TsType openType = null;
-                if (_knownTypes.TryGetValue(toResolve.ClrType.GetGenericTypeDefinition(), out openType)) {
+                if (_knownTypes.TryGetValue(toResolve.Type.GetGenericTypeDefinition(), out openType)) {
                     return openType;
                 }
             }
-            else if (toResolve.ClrType.IsGenericType) {
-                var genericType = TsType.Create(toResolve.ClrType);
-                _knownTypes[toResolve.ClrType] = genericType;
+            else if (toResolve.Type.IsGenericType) {
+                var genericType = TsType.Create(toResolve.Type);
+                _knownTypes[toResolve.Type] = genericType;
                 return genericType;
             }
 
-            var typeFamily = TsType.GetTypeFamily(toResolve.ClrType);
+            var typeFamily = TsType.GetTypeFamily(toResolve.Type);
             TsType type = null;
 
             switch (typeFamily) {
-                case TsTypeFamily.System: type = new TsSystemType(toResolve.ClrType); break;
+                case TsTypeFamily.System: type = new TsSystemType(toResolve.Type); break;
                 case TsTypeFamily.Collection: type = this.CreateCollectionType(toResolve); break;
-                case TsTypeFamily.Enum: type = new TsEnum(toResolve.ClrType); break;
+                case TsTypeFamily.Enum: type = new TsEnum(toResolve.Type); break;
                 default: type = TsType.Any; break;
             }
 
-            _knownTypes[toResolve.ClrType] = type;
+            _knownTypes[toResolve.Type] = type;
             return type;
         }
 
@@ -112,7 +112,7 @@ namespace TypeLite {
         /// <param name="type"></param>
         /// <returns></returns>
         private TsCollection CreateCollectionType(TsType type) {
-            var resolved = new TsCollection(type.ClrType);
+            var resolved = new TsCollection(type.Type);
             resolved.ItemsType = this.ResolveType(resolved.ItemsType, false);
             return resolved;
         }

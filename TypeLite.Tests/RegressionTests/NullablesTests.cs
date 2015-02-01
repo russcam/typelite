@@ -31,7 +31,7 @@ namespace TypeLite.Tests.RegressionTests {
 			var generator = new TsGenerator();
 			var model = builder.Build();
 
-			Assert.Single(model.Classes.Where(o => o.ClrType == typeof(Structure1)));
+			Assert.Single(model.Classes.Where(o => o.Type == typeof(Structure1)));
 		}
 	}
 

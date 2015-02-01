@@ -15,18 +15,18 @@ namespace TypeLite.TsModels {
     	/// <summary>
 		/// Gets the CLR type represented by this instance of the TsType.
 		/// </summary>
-		public Type ClrType { get; private set; }
+		public Type Type { get; private set; }
 
 		/// <summary>
 		/// Initializes a new instance of the TsType class with the specific CLR type.
 		/// </summary>
-		/// <param name="clrType">The CLR type represented by this instance of the TsType.</param>
-		public TsType(Type clrType) {
-			if (clrType.IsNullable()) {
-				clrType = clrType.GetNullableValueType();
+		/// <param name="type">The CLR type represented by this instance of the TsType.</param>
+		public TsType(Type type) {
+			if (type.IsNullable()) {
+				type = type.GetNullableValueType();
 			}
 
-			this.ClrType = clrType;
+			this.Type = type;
 		}
 
 		/// <summary>

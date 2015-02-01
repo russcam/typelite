@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace TypeLite.TsModels {
@@ -11,14 +12,16 @@ namespace TypeLite.TsModels {
 		/// <summary>
 		/// Gets or sets name of the enum value
 		/// </summary>
-		public string Name { get; set; }
+		public string Name { get; private set; }
 
 		/// <summary>
 		/// Gets or sets value of the enum
 		/// </summary>
-		public string Value { get; set; }
+		public string Value { get; private set; }
 
-		/// <summary>
+        public FieldInfo Field { get; private set; }
+        
+        /// <summary>
 		/// Initializes a new instance of the TsEnumValue class.
 		/// </summary>
 		public TsEnumValue() {
@@ -29,10 +32,13 @@ namespace TypeLite.TsModels {
 		/// </summary>
 		/// <param name="name">The name of the enum value.</param>
 		/// <param name="value">The value of the enum value.</param>
-		public TsEnumValue(string name, object value) {
-			this.Name = name;
+        public TsEnumValue(FieldInfo field) {
+            this.Field = field;
+            this.Name = field.Name;
+		    
+            var value = field.GetValue(null);
 
-			var valueType = Enum.GetUnderlyingType(value.GetType());
+		    var valueType = Enum.GetUnderlyingType(value.GetType());
 			if (valueType == typeof(byte)) {
 				this.Value = ((byte)value).ToString();
 			}

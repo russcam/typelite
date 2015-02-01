@@ -84,7 +84,7 @@ namespace TypeLite {
 		            if (includeReferences) {
 		                this.AddReferences(added);
 
-		                foreach (var e in added.Properties.Where(p => p.PropertyType.ClrType.IsEnum))
+		                foreach (var e in added.Properties.Where(p => p.PropertyType.Type.IsEnum))
 		                    this.AddEnum(e.PropertyType as TsEnum);
 		            }
 		        }
@@ -97,12 +97,12 @@ namespace TypeLite {
                 if (clrType.IsGenericType) added.IsIgnored = true;
 
 				if (added.BaseType != null) {
-					this.Add(added.BaseType.ClrType);
+					this.Add(added.BaseType.Type);
 				}
 				if (includeReferences) {
 					this.AddReferences(added);
 
-					foreach (var e in added.Properties.Where(p => p.PropertyType.ClrType.IsEnum))
+					foreach (var e in added.Properties.Where(p => p.PropertyType.Type.IsEnum))
 						this.AddEnum(e.PropertyType as TsEnum);
 				}
 
@@ -117,8 +117,8 @@ namespace TypeLite {
 		/// </summary>
 		/// <param name="tsEnum">The enum to add</param>
 		private void AddEnum(TsEnum tsEnum) {
-            if (!this.Enums.ContainsKey(tsEnum.ClrType)) {
-                this.Enums[tsEnum.ClrType] = tsEnum;
+            if (!this.Enums.ContainsKey(tsEnum.Type)) {
+                this.Enums[tsEnum.Type] = tsEnum;
             }
 		}
 
@@ -152,9 +152,9 @@ namespace TypeLite {
 		/// <param name="classModel"></param>
 		private void AddReferences(TsClass classModel) {
 			foreach (var property in classModel.Properties.Where(model => !model.IsIgnored)) {
-				var propertyTypeFamily = TsType.GetTypeFamily(property.PropertyType.ClrType);
+				var propertyTypeFamily = TsType.GetTypeFamily(property.PropertyType.Type);
 				if (propertyTypeFamily == TsTypeFamily.Collection) {
-					var collectionItemType = TsType.GetEnumerableType(property.PropertyType.ClrType);
+					var collectionItemType = TsType.GetEnumerableType(property.PropertyType.Type);
 				    while (collectionItemType != null) {
                         var typeFamily = TsType.GetTypeFamily(collectionItemType);
 
@@ -177,13 +177,13 @@ namespace TypeLite {
                         }
                     }
 				} else if (propertyTypeFamily == TsTypeFamily.Class) {
-					this.Add(property.PropertyType.ClrType);
+					this.Add(property.PropertyType.Type);
 				}
 			}
 		    foreach (var genericArgument in classModel.GenericArguments) {
-		        var propertyTypeFamily = TsType.GetTypeFamily(genericArgument.ClrType);
+		        var propertyTypeFamily = TsType.GetTypeFamily(genericArgument.Type);
 		        if (propertyTypeFamily == TsTypeFamily.Collection) {
-		            var collectionItemType = TsType.GetEnumerableType(genericArgument.ClrType);
+		            var collectionItemType = TsType.GetEnumerableType(genericArgument.Type);
 		            if (collectionItemType != null) {
 		                var typeFamily = TsType.GetTypeFamily(collectionItemType);
 
@@ -198,7 +198,7 @@ namespace TypeLite {
 		            }
 		        }
 		        else if (propertyTypeFamily == TsTypeFamily.Class) {
-		            this.Add(genericArgument.ClrType);
+		            this.Add(genericArgument.Type);
 		        }
 		    }
 		}

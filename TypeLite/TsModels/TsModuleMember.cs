@@ -36,17 +36,17 @@ namespace TypeLite.TsModels {
         /// <summary>
         /// Initializes TsModuleMember class with the specific CLR type.
         /// </summary>
-        /// <param name="clrType">The CLR type represented by this instance of the ModuleMember</param>
-        public TsModuleMember(Type clrType)
-            : base(clrType) {
+        /// <param name="type">The CLR type represented by this instance of the ModuleMember</param>
+        protected TsModuleMember(Type type)
+            : base(type) {
 
-            var moduleName = this.ClrType.Namespace;
-            if (clrType.DeclaringType != null) {
-                moduleName += "." + clrType.DeclaringType.Name;
+            var moduleName = this.Type.Namespace;
+            if (type.DeclaringType != null) {
+                moduleName += "." + type.DeclaringType.Name;
             }
 
             this.Module = new TsModule(moduleName);
-            this.Name = this.ClrType.Name;
+            this.Name = this.Type.Name;
         }
     }
 }

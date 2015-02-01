@@ -51,7 +51,7 @@ namespace TypeLite.Tests.TsModels {
 
 			var target = new TsProperty(propertyInfo);
 
-			Assert.Equal(propertyInfo.PropertyType, target.PropertyType.ClrType);
+			Assert.Equal(propertyInfo.PropertyType, target.PropertyType.Type);
 		}
 
 		[Fact]

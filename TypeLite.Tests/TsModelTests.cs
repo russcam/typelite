@@ -77,8 +77,8 @@ namespace TypeLite.Tests {
 		[Fact]
 		public void WhenRunVisitor_VisitClassIsCalledForClassesOfModel() {
 			var visitor = new Mock<TsModelVisitor>();
-			visitor.Setup(o => o.VisitClass(It.Is<TsClass>(c => c.ClrType == typeof(Person)))).Verifiable();
-			visitor.Setup(o => o.VisitClass(It.Is<TsClass>(c => c.ClrType == typeof(Address)))).Verifiable();
+			visitor.Setup(o => o.VisitClass(It.Is<TsClass>(c => c.Type == typeof(Person)))).Verifiable();
+			visitor.Setup(o => o.VisitClass(It.Is<TsClass>(c => c.Type == typeof(Address)))).Verifiable();
 
 			var builder = new TsModelBuilder();
 			builder.Add(typeof(Person), true);
@@ -121,7 +121,7 @@ namespace TypeLite.Tests {
 		[Fact]
 		public void WhenRunVisitor_VisitEnumIsCalledForEnumsOfModel() {
 			var visitor = new Mock<TsModelVisitor>();
-			visitor.Setup(o => o.VisitEnum(It.Is<TsEnum>(c => c.ClrType == typeof(ContactType)))).Verifiable();
+			visitor.Setup(o => o.VisitEnum(It.Is<TsEnum>(c => c.Type == typeof(ContactType)))).Verifiable();
 
 			var builder = new TsModelBuilder();
 			builder.Add(typeof(Address), true);

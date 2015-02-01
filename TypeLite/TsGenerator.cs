@@ -200,8 +200,8 @@ namespace TypeLite {
         }
 
         private void AppendModule(TsModule module, ScriptBuilder sb, TsGeneratorOutput generatorOutput) {
-            var classes = module.Classes.Where(c => !_convertor.IsConvertorRegistered(c.ClrType) && !c.IsIgnored).ToList();
-            var enums = module.Enums.Where(e => !_convertor.IsConvertorRegistered(e.ClrType) && !e.IsIgnored).ToList();
+            var classes = module.Classes.Where(c => !_convertor.IsConvertorRegistered(c.Type) && !c.IsIgnored).ToList();
+            var enums = module.Enums.Where(e => !_convertor.IsConvertorRegistered(e.Type) && !e.IsIgnored).ToList();
             if ((generatorOutput == TsGeneratorOutput.Enums && enums.Count == 0) ||
                 (generatorOutput == TsGeneratorOutput.Properties && classes.Count == 0) ||
                 (enums.Count == 0 && classes.Count == 0)) {
@@ -343,7 +343,7 @@ namespace TypeLite {
         private string GetFullyQualifiedTypeName(TsType type) {
             var moduleName = string.Empty;
 
-            if (type as TsModuleMember != null && !_convertor.IsConvertorRegistered(type.ClrType)) {
+            if (type as TsModuleMember != null && !_convertor.IsConvertorRegistered(type.Type)) {
                 var memberType = (TsModuleMember)type;
                 moduleName = memberType.Module != null ? memberType.Module.Name : string.Empty;
             } else if (type as TsCollection != null) {
@@ -351,7 +351,7 @@ namespace TypeLite {
                 moduleName = GetCollectionModuleName(collectionType, moduleName);
             }
 
-            if (type.ClrType.IsGenericParameter) {
+            if (type.Type.IsGenericParameter) {
                 return this.GetTypeName(type);
             }
             if (!string.IsNullOrEmpty(moduleName)) {
@@ -369,8 +369,8 @@ namespace TypeLite {
         /// <param name="moduleName">The module name.</param>
         /// <returns></returns>
         private string GetCollectionModuleName(TsCollection collectionType, string moduleName) {
-            if (collectionType.ItemsType as TsModuleMember != null && !_convertor.IsConvertorRegistered(collectionType.ItemsType.ClrType)) {
-                if (!collectionType.ItemsType.ClrType.IsGenericParameter)
+            if (collectionType.ItemsType as TsModuleMember != null && !_convertor.IsConvertorRegistered(collectionType.ItemsType.Type)) {
+                if (!collectionType.ItemsType.Type.IsGenericParameter)
                     moduleName = ((TsModuleMember)collectionType.ItemsType).Module != null ? ((TsModuleMember)collectionType.ItemsType).Module.Name : string.Empty;
             }
             if (collectionType.ItemsType as TsCollection != null) {
@@ -385,8 +385,8 @@ namespace TypeLite {
         /// <param name="type">The type to get name of</param>
         /// <returns>name of the type</returns>
         protected string GetTypeName(TsType type) {
-            if (_convertor.IsConvertorRegistered(type.ClrType)) {
-                return _convertor.ConvertType(type.ClrType);
+            if (_convertor.IsConvertorRegistered(type.Type)) {
+                return _convertor.ConvertType(type.Type);
             }
 
             return _formatter.FormatType(type);
@@ -427,7 +427,7 @@ namespace TypeLite {
         /// <param name="property">The property to get constant value of</param>
         /// <returns>constant value of the property</returns>
         private string GetPropertyConstantValue(TsProperty property) {
-            var quote = property.PropertyType.ClrType == typeof(string) ? "\"" : "";
+            var quote = property.PropertyType.Type == typeof(string) ? "\"" : "";
             return quote + property.ConstantValue.ToString() + quote;
         }
 

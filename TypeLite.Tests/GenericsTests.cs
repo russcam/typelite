@@ -25,8 +25,8 @@ namespace TypeLite.Tests {
                 model => {
                     var kvpClass = model.Classes.Single(c => !c.IsIgnored && c.Name == "KeyValuePair");
                     Assert.NotNull(kvpClass);
-                    Assert.Equal("TKey", kvpClass.Properties.Single(p => p.Name == "Key").PropertyType.ClrType.Name);
-                    Assert.Equal("TValue", kvpClass.Properties.Single(p => p.Name == "Value").PropertyType.ClrType.Name);
+                    Assert.Equal("TKey", kvpClass.Properties.Single(p => p.Name == "Key").PropertyType.Type.Name);
+                    Assert.Equal("TValue", kvpClass.Properties.Single(p => p.Name == "Value").PropertyType.Type.Name);
 
                     var classDefinition = model.Classes.Single(c => c.Name == typeof(GenerateSpecifyGenericTypesTestClass).Name);
                     Assert.NotNull(classDefinition);

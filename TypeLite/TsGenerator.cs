@@ -128,34 +128,34 @@ namespace TypeLite {
         }
 
         /// <summary>
-        /// Registers a formatter for class member identifiers.
+        /// Sets the formatter for class member identifiers.
         /// </summary>
         /// <param name="formatter">The formatter to register.</param>
-        public void RegisterIdentifierFormatter(TsMemberIdentifierFormatter formatter) {
+        public void SetIdentifierFormatter(TsMemberIdentifierFormatter formatter) {
             _memberFormatter = formatter;
         }
 
         /// <summary>
-        /// Registers a formatter for class member types.
+        /// Sets the formatter for class member types.
         /// </summary>
         /// <param name="formatter">The formatter to register.</param>
-        public void RegisterMemberTypeFormatter(TsMemberTypeFormatter formatter) {
+        public void SetMemberTypeFormatter(TsMemberTypeFormatter formatter) {
             _memberTypeFormatter = formatter;
         }
 
         /// <summary>
-        /// Registers a formatter for class member types.
+        /// Sets the formatter for class member types.
         /// </summary>
         /// <param name="formatter">The formatter to register.</param>
-        public void RegisterTypeVisibilityFormatter(TsTypeVisibilityFormatter formatter) {
+        public void SetTypeVisibilityFormatter(TsTypeVisibilityFormatter formatter) {
             _typeVisibilityFormatter = formatter;
         }
 
         /// <summary>
-        /// Registers a formatter for module names.
+        /// Sets the formatter for module names.
         /// </summary>
         /// <param name="formatter">The formatter to register.</param>
-        public void RegisterModuleNameFormatter(TsModuleNameFormatter formatter) {
+        public void SetModuleNameFormatter(TsModuleNameFormatter formatter) {
             _moduleNameFormatter = formatter;
         }
 

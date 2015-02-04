@@ -63,12 +63,21 @@ namespace TypeLite {
             _typeConvertors = new TypeConvertorCollection();
 
             _memberFormatter = (identifier) => identifier.Name;
-            _memberTypeFormatter = (typeName, isTypeCollection, dimension) => typeName + (isTypeCollection ? string.Concat(Enumerable.Repeat("[]", dimension)) : "");
+            _memberTypeFormatter = DefaultMemberTypeFormatter;
             _typeVisibilityFormatter = (typeName) => false;
             _moduleNameFormatter = (moduleName) => moduleName;
             _renamedModules = new Dictionary<string, string>();
 
             this.IndentationString = "\t";
+        }
+
+        public string DefaultMemberTypeFormatter(TsProperty tsProperty)
+        {
+            var asCollection = tsProperty.PropertyType as TsCollection;
+            var isCollection = asCollection != null;
+            var fullyQualifiedTypeName = GetFullyQualifiedTypeName(tsProperty.PropertyType);
+
+            return fullyQualifiedTypeName + (isCollection ? string.Concat(Enumerable.Repeat("[]", asCollection.Dimension)) : "");
         }
 
         /// <summary>
@@ -340,7 +349,7 @@ namespace TypeLite {
         /// </summary>
         /// <param name="type">The type to get name of</param>
         /// <returns>Fully qualified name of the type</returns>
-        private string GetFullyQualifiedTypeName(TsType type) {
+        public string GetFullyQualifiedTypeName(TsType type) {
             var moduleName = string.Empty;
 
             if (type as TsModuleMember != null && !_typeConvertors.IsConvertorRegistered(type.Type)) {
@@ -411,14 +420,9 @@ namespace TypeLite {
         /// </summary>
         /// <param name="property">The property to get type of</param>
         /// <returns>type of the property</returns>
-        private string GetPropertyType(TsProperty property) {
-            var asCollection = property.PropertyType as TsCollection;
-
-            if (asCollection == null) {
-                return _memberTypeFormatter(this.GetFullyQualifiedTypeName(property.PropertyType), false);
-            } else {
-                return _memberTypeFormatter(this.GetFullyQualifiedTypeName(property.PropertyType), true, asCollection.Dimension);
-            }
+        private string GetPropertyType(TsProperty property)
+        {
+            return _memberTypeFormatter(property);
         }
 
         /// <summary>

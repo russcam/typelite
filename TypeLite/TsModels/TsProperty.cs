@@ -22,7 +22,7 @@ namespace TypeLite.TsModels {
         /// <summary>
         /// Gets the CLR property represented by this TsProperty.
         /// </summary>
-        public MemberInfo MemberInfo { get; private set; }
+        public MemberInfo MemberInfo { get; set; }
 
         /// <summary>
         /// Gets or sets bool value indicating whether this property will be ignored by TsGenerator.

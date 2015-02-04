@@ -124,6 +124,29 @@ namespace TypeLite {
             _scriptGenerator.RegisterMemberTypeFormatter(formatter);
             return this;
         }
+        
+        /// <summary>
+        /// Registers a formatter for member types
+        /// </summary>
+        /// <param name="formatter">The formatter to register</param>
+        /// <returns>Instance of the TypeScriptFluent that enables fluent configuration.</returns>
+        [Obsolete]
+        public TypeScriptFluent WithMemberTypeFormatter(TsSimpleMemberTypeFormatter formatter)
+        {
+            _scriptGenerator.RegisterMemberTypeFormatter(tsProperty =>
+            {
+                var fullyQualifiedTypeName = _scriptGenerator.GetFullyQualifiedTypeName(tsProperty.PropertyType);
+
+                var asCollection = tsProperty.PropertyType as TsCollection;
+                var isCollection = asCollection != null;
+
+                return isCollection 
+                    ? formatter(fullyQualifiedTypeName, true, asCollection.Dimension) 
+                    : formatter(fullyQualifiedTypeName, false);
+            });
+
+            return this;
+        }
 
         /// <summary>
         /// Registers a formatter for module names

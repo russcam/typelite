@@ -65,10 +65,15 @@ namespace TypeLite {
             _memberFormatter = DefaultMemberFormatter;
             _memberTypeFormatter = DefaultMemberTypeFormatter;
             _typeVisibilityFormatter = (typeName) => false;
-            _moduleNameFormatter = (moduleName) => moduleName;
+            _moduleNameFormatter = DefaultModuleNameFormatter;
             _renamedModules = new Dictionary<string, string>();
 
             this.IndentationString = "\t";
+        }
+
+        private string DefaultModuleNameFormatter(TsModule module)
+        {
+            return module.Name;
         }
 
         private string DefaultMemberFormatter(TsProperty identifier)
@@ -76,7 +81,7 @@ namespace TypeLite {
             return identifier.Name;
         }
 
-        public string DefaultMemberTypeFormatter(TsProperty tsProperty)
+        private string DefaultMemberTypeFormatter(TsProperty tsProperty)
         {
             var asCollection = tsProperty.PropertyType as TsCollection;
             var isCollection = asCollection != null;
@@ -140,7 +145,6 @@ namespace TypeLite {
         public void RegisterTypeVisibilityFormatter(TsTypeVisibilityFormatter formatter) {
             _typeVisibilityFormatter = formatter;
         }
-
 
         /// <summary>
         /// Registers a formatter for module names.
@@ -222,7 +226,7 @@ namespace TypeLite {
                 return;
             }
 
-            string moduleName = GetModuleName(module.Name);
+            string moduleName = GetModuleName(module);
             if (moduleName != module.Name) {
                 _renamedModules.Add(module.Name, moduleName);
             }
@@ -452,10 +456,10 @@ namespace TypeLite {
         /// <summary>
         /// Formats a module name
         /// </summary>
-        /// <param name="moduleName">The module name to be formatted</param>
+        /// <param name="module">The module to be formatted</param>
         /// <returns>The module name after formatting.</returns>
-        protected string GetModuleName(string moduleName) {
-            return _moduleNameFormatter(moduleName);
+        protected string GetModuleName(TsModule module) {
+            return _moduleNameFormatter(module);
         }
 
     }

@@ -84,18 +84,39 @@ namespace TypeLite {
 			return this;
 		}
 
-		/// <summary>
+	    /// <summary>
 		/// Registers a formatter for the specific type
 		/// </summary>
 		/// <typeparam name="TFor">The type to register the formatter for. TFor is restricted to TsType and derived classes.</typeparam>
 		/// <param name="formatter">The formatter to register</param>
 		/// <returns>Instance of the TypeScriptFluent that enables fluent configuration.</returns>
-		public TypeScriptFluent WithTypeFormatter<TFor>(TsTypeFormatter formatter) where TFor : TsType {
-			_scriptGenerator.RegisterTypeFormatter<TFor>(formatter);
-			return this;
+		[Obsolete]
+		public TypeScriptFluent WithFormatter<TFor>(TsTypeFormatter formatter) where TFor : TsType {
+			return WithTypeFormatter<TFor>(formatter);
 		}
 
-		/// <summary>
+	    /// <summary>
+	    /// Registers a formatter for the specific type
+	    /// </summary>
+	    /// <typeparam name="TFor">The type to register the formatter for. TFor is restricted to TsType and derived classes.</typeparam>
+	    /// <param name="formatter">The formatter to register</param>
+	    /// <returns>Instance of the TypeScriptFluent that enables fluent configuration.</returns>
+	    public TypeScriptFluent WithTypeFormatter<TFor>(TsTypeFormatter formatter) where TFor : TsType {
+	        _scriptGenerator.RegisterTypeFormatter<TFor>(formatter);
+	        return this;
+	    }
+
+	    /// <summary>
+		/// Registers a formatter for the the TsClass type.
+		/// </summary>
+		/// <param name="formatter">The formatter to register</param>
+		/// <returns>Instance of the TypeScriptFluent that enables fluent configuration.</returns>
+		[Obsolete]
+        public TypeScriptFluent WithFormatter(TsTypeFormatter formatter) {
+	        return WithTypeFormatter(formatter);
+	    }
+
+	    /// <summary>
 		/// Registers a formatter for the the TsClass type.
 		/// </summary>
 		/// <param name="formatter">The formatter to register</param>
@@ -110,22 +131,32 @@ namespace TypeLite {
 		/// </summary>
 		/// <param name="formatter">The formatter to register</param>
 		/// <returns>Instance of the TypeScriptFluent that enables fluent configuration.</returns>
+		[Obsolete]
+        public TypeScriptFluent WithFormatter(TsMemberIdentifierFormatter formatter) {
+            return WithMemberFormatter(formatter);
+		}
+
+		/// <summary>
+		/// Registers a formatter for member identifiers
+		/// </summary>
+		/// <param name="formatter">The formatter to register</param>
+		/// <returns>Instance of the TypeScriptFluent that enables fluent configuration.</returns>
 		public TypeScriptFluent WithMemberFormatter(TsMemberIdentifierFormatter formatter) {
 			_scriptGenerator.SetIdentifierFormatter(formatter);
 			return this;
 		}
 
-        /// <summary>
-        /// Registers a formatter for member types
-        /// </summary>
-        /// <param name="formatter">The formatter to register</param>
-        /// <returns>Instance of the TypeScriptFluent that enables fluent configuration.</returns>
-        public TypeScriptFluent WithMemberTypeFormatter(TsMemberTypeFormatter formatter) {
-            _scriptGenerator.SetMemberTypeFormatter(formatter);
-            return this;
-        }
-        
-        /// <summary>
+	    /// <summary>
+	    /// Registers a formatter for member types
+	    /// </summary>
+	    /// <param name="formatter">The formatter to register</param>
+	    /// <returns>Instance of the TypeScriptFluent that enables fluent configuration.</returns>
+	    [Obsolete]
+	    public TypeScriptFluent WithFormatter(TsSimpleMemberTypeFormatter formatter) {
+	        return WithMemberTypeFormatter(formatter);
+	    }
+
+	    /// <summary>
         /// Registers a formatter for member types
         /// </summary>
         /// <param name="formatter">The formatter to register</param>
@@ -148,7 +179,38 @@ namespace TypeLite {
             return this;
         }
 
-        /// <summary>
+	    /// <summary>
+	    /// Registers a formatter for member types
+	    /// </summary>
+	    /// <param name="formatter">The formatter to register</param>
+	    /// <returns>Instance of the TypeScriptFluent that enables fluent configuration.</returns>
+	    public TypeScriptFluent WithMemberTypeFormatter(TsMemberTypeFormatter formatter) {
+	        _scriptGenerator.SetMemberTypeFormatter(formatter);
+	        return this;
+	    }
+
+	    /// <summary>
+	    /// Registers a formatter for module names
+	    /// </summary>
+	    /// <param name="formatter">The formatter to register</param>
+	    /// <returns>Instance of the TypeScriptFluent that enables fluent configuration.</returns>
+	    [Obsolete]
+	    public TypeScriptFluent WithFormatter(TsSimplifiedModuleNameFormatter formatter) {
+	        return WithModuleNameFormatter(formatter);
+	    }
+
+	    /// <summary>
+	    /// Registers a formatter for module names
+	    /// </summary>
+	    /// <param name="formatter">The formatter to register</param>
+	    /// <returns>Instance of the TypeScriptFluent that enables fluent configuration.</returns>
+	    [Obsolete]
+	    public TypeScriptFluent WithModuleNameFormatter(TsSimplifiedModuleNameFormatter formatter) {
+	        _scriptGenerator.SetModuleNameFormatter(module => formatter(module.Name));
+	        return this;
+	    }
+
+	    /// <summary>
         /// Registers a formatter for module names
         /// </summary>
         /// <param name="formatter">The formatter to register</param>
@@ -158,29 +220,7 @@ namespace TypeLite {
             return this;
         }
 
-        /// <summary>
-        /// Registers a formatter for module names
-        /// </summary>
-        /// <param name="formatter">The formatter to register</param>
-        /// <returns>Instance of the TypeScriptFluent that enables fluent configuration.</returns>
-        [Obsolete]
-        public TypeScriptFluent WithModuleNameFormatter(TsSimplifiedModuleNameFormatter formatter)
-        {
-            _scriptGenerator.SetModuleNameFormatter(module => formatter(module.Name));
-            return this;
-        }
-
-        /// <summary>
-        /// Registers a formatter for type visibility
-        /// </summary>
-        /// <param name="formatter">The formatter to register</param>
-        /// <returns>Instance of the TypeScriptFluent that enables fluent configuration.</returns>
-        public TypeScriptFluent WithVisibility(TsTypeVisibilityFormatter formatter) {
-            _scriptGenerator.SetTypeVisibilityFormatter(formatter);
-            return this;
-        }
-
-        /// <summary>
+	    /// <summary>
         /// Registers a formatter for type visibility
         /// </summary>
         /// <param name="formatter">The formatter to register</param>
@@ -191,7 +231,17 @@ namespace TypeLite {
             return this;
         }
 
-        /// <summary>
+	    /// <summary>
+	    /// Registers a formatter for type visibility
+	    /// </summary>
+	    /// <param name="formatter">The formatter to register</param>
+	    /// <returns>Instance of the TypeScriptFluent that enables fluent configuration.</returns>
+	    public TypeScriptFluent WithVisibility(TsTypeVisibilityFormatter formatter) {
+	        _scriptGenerator.SetTypeVisibilityFormatter(formatter);
+	        return this;
+	    }
+
+	    /// <summary>
 		/// Registers a converter for the specific type
 		/// </summary>
 		/// <typeparam name="TFor">The type to register the converter for.</typeparam>

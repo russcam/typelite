@@ -64,11 +64,16 @@ namespace TypeLite {
 
             _memberFormatter = DefaultMemberFormatter;
             _memberTypeFormatter = DefaultMemberTypeFormatter;
-            _typeVisibilityFormatter = (typeName) => false;
+            _typeVisibilityFormatter = DefaultTypeVisibilityFormatter;
             _moduleNameFormatter = DefaultModuleNameFormatter;
             _renamedModules = new Dictionary<string, string>();
 
             this.IndentationString = "\t";
+        }
+
+        private bool DefaultTypeVisibilityFormatter(TsClass tsClass, string typeName)
+        {
+            return false;
         }
 
         private string DefaultModuleNameFormatter(TsModule module)
@@ -274,7 +279,7 @@ namespace TypeLite {
         /// <param name="generatorOutput"></param>
         private void AppendClassDefinition(TsClass classModel, ScriptBuilder sb, TsGeneratorOutput generatorOutput) {
             string typeName = this.GetTypeName(classModel);
-            string visibility = this.GetTypeVisibility(typeName) ? "export " : "";
+            string visibility = this.GetTypeVisibility(classModel, typeName) ? "export " : "";
             sb.AppendFormatIndented("{0}interface {1}", visibility, typeName);
             if (classModel.BaseType != null) {
                 sb.AppendFormat(" extends {0}", this.GetFullyQualifiedTypeName(classModel.BaseType));
@@ -447,10 +452,11 @@ namespace TypeLite {
         /// <summary>
         /// Gets whether a type should be marked with "Export" keyword in TypeScript
         /// </summary>
+        /// <param name="tsClass"></param>
         /// <param name="typeName">The type to get the visibility of</param>
         /// <returns>bool indicating if type should be marked weith keyword "Export"</returns>
-        private bool GetTypeVisibility(string typeName) {
-            return _typeVisibilityFormatter(typeName);
+        private bool GetTypeVisibility(TsClass tsClass, string typeName) {
+            return _typeVisibilityFormatter(tsClass, typeName);
         }
 
         /// <summary>

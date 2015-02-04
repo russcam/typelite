@@ -71,22 +71,22 @@ namespace TypeLite {
             this.IndentationString = "\t";
         }
 
-        private bool DefaultTypeVisibilityFormatter(TsClass tsClass, string typeName)
+        public bool DefaultTypeVisibilityFormatter(TsClass tsClass, string typeName)
         {
             return false;
         }
 
-        private string DefaultModuleNameFormatter(TsModule module)
+        public string DefaultModuleNameFormatter(TsModule module)
         {
             return module.Name;
         }
 
-        private string DefaultMemberFormatter(TsProperty identifier)
+        public string DefaultMemberFormatter(TsProperty identifier)
         {
             return identifier.Name;
         }
 
-        private string DefaultMemberTypeFormatter(TsProperty tsProperty)
+        public string DefaultMemberTypeFormatter(TsProperty tsProperty)
         {
             var asCollection = tsProperty.PropertyType as TsCollection;
             var isCollection = asCollection != null;
@@ -309,7 +309,7 @@ namespace TypeLite {
             _generatedClasses.Add(classModel);
         }
 
-        protected void AppendEnumDefinition(TsEnum enumModel, ScriptBuilder sb, TsGeneratorOutput output) {
+        private void AppendEnumDefinition(TsEnum enumModel, ScriptBuilder sb, TsGeneratorOutput output) {
             string typeName = this.GetTypeName(enumModel);
             string visibility = output == TsGeneratorOutput.Enums || (output & TsGeneratorOutput.Constants) == TsGeneratorOutput.Constants ? "export " : "";
 
@@ -391,7 +391,7 @@ namespace TypeLite {
         /// <param name="collectionType">The TsCollection object.</param>
         /// <param name="moduleName">The module name.</param>
         /// <returns></returns>
-        private string GetCollectionModuleName(TsCollection collectionType, string moduleName) {
+        public string GetCollectionModuleName(TsCollection collectionType, string moduleName) {
             if (collectionType.ItemsType as TsModuleMember != null && !_typeConvertors.IsConvertorRegistered(collectionType.ItemsType.Type)) {
                 if (!collectionType.ItemsType.Type.IsGenericParameter)
                     moduleName = ((TsModuleMember)collectionType.ItemsType).Module != null ? ((TsModuleMember)collectionType.ItemsType).Module.Name : string.Empty;
@@ -407,7 +407,7 @@ namespace TypeLite {
         /// </summary>
         /// <param name="type">The type to get name of</param>
         /// <returns>name of the type</returns>
-        protected string GetTypeName(TsType type) {
+        public string GetTypeName(TsType type) {
             if (_typeConvertors.IsConvertorRegistered(type.Type)) {
                 return _typeConvertors.ConvertType(type.Type);
             }
@@ -420,7 +420,7 @@ namespace TypeLite {
         /// </summary>
         /// <param name="property">The property to get name of</param>
         /// <returns>name of the property</returns>
-        private string GetPropertyName(TsProperty property) {
+        public string GetPropertyName(TsProperty property) {
             var name = _memberFormatter(property);
             if (property.IsOptional) {
                 name += "?";
@@ -434,8 +434,7 @@ namespace TypeLite {
         /// </summary>
         /// <param name="property">The property to get type of</param>
         /// <returns>type of the property</returns>
-        private string GetPropertyType(TsProperty property)
-        {
+        public string GetPropertyType(TsProperty property) {
             return _memberTypeFormatter(property);
         }
 
@@ -444,7 +443,7 @@ namespace TypeLite {
         /// </summary>
         /// <param name="property">The property to get constant value of</param>
         /// <returns>constant value of the property</returns>
-        private string GetPropertyConstantValue(TsProperty property) {
+        public string GetPropertyConstantValue(TsProperty property) {
             var quote = property.PropertyType.Type == typeof(string) ? "\"" : "";
             return quote + property.ConstantValue.ToString() + quote;
         }
@@ -455,7 +454,7 @@ namespace TypeLite {
         /// <param name="tsClass"></param>
         /// <param name="typeName">The type to get the visibility of</param>
         /// <returns>bool indicating if type should be marked weith keyword "Export"</returns>
-        private bool GetTypeVisibility(TsClass tsClass, string typeName) {
+        public bool GetTypeVisibility(TsClass tsClass, string typeName) {
             return _typeVisibilityFormatter(tsClass, typeName);
         }
 
@@ -464,7 +463,7 @@ namespace TypeLite {
         /// </summary>
         /// <param name="module">The module to be formatted</param>
         /// <returns>The module name after formatting.</returns>
-        protected string GetModuleName(TsModule module) {
+        public string GetModuleName(TsModule module) {
             return _moduleNameFormatter(module);
         }
 

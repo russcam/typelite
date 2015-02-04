@@ -62,13 +62,18 @@ namespace TypeLite {
 
             _typeConvertors = new TypeConvertorCollection();
 
-            _memberFormatter = (identifier) => identifier.Name;
+            _memberFormatter = DefaultMemberFormatter;
             _memberTypeFormatter = DefaultMemberTypeFormatter;
             _typeVisibilityFormatter = (typeName) => false;
             _moduleNameFormatter = (moduleName) => moduleName;
             _renamedModules = new Dictionary<string, string>();
 
             this.IndentationString = "\t";
+        }
+
+        private string DefaultMemberFormatter(TsProperty identifier)
+        {
+            return identifier.Name;
         }
 
         public string DefaultMemberTypeFormatter(TsProperty tsProperty)

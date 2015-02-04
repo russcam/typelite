@@ -11,7 +11,7 @@ namespace TypeLite.TsModels {
     /// Represents a property of the class in the code model.
     /// </summary>
     [DebuggerDisplay("Name: {Name}")]
-    public class TsProperty : IMemberIdentifier {
+    public class TsProperty {
          public string Name { get; set; }
 
         /// <summary>

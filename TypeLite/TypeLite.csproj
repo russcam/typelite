@@ -70,7 +70,6 @@
     <Compile Include="TsMemberTypeFormatter.cs" />
     <Compile Include="TsModuleNameFormatter.cs" />
     <Compile Include="TsTypeVisibilityFormatter.cs" />
-    <Compile Include="TsModels\IMemberIdentifier.cs" />
     <Compile Include="TsModels\SystemTypeKind.cs" />
     <Compile Include="TsMemberIdentifierFormatter.cs" />
     <Compile Include="TsModels\TsEnum.cs" />

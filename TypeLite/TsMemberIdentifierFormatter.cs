@@ -10,5 +10,5 @@ namespace TypeLite {
 	/// </summary>
 	/// <param name="identifier">The identifier to format</param>
 	/// <returns>The formatted identifier.</returns>
-	public delegate string TsMemberIdentifierFormatter(IMemberIdentifier identifier);
+    public delegate string TsMemberIdentifierFormatter(TsProperty identifier);
 }

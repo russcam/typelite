@@ -176,15 +176,13 @@ namespace TypeLite {
 		[Obsolete]
 		public TypeScriptFluent WithFormatter(TsSimpleMemberTypeFormatter formatter) {
 			TsMemberTypeFormatter tsMemberTypeFormatter =
-				tsProperty => {
-					var fullyQualifiedTypeName = _scriptGenerator.GetFullyQualifiedTypeName(tsProperty.PropertyType);
-
+				(tsProperty, memberTypeName) => {
 					var asCollection = tsProperty.PropertyType as TsCollection;
 					var isCollection = asCollection != null;
 
 					return isCollection
-						? formatter(fullyQualifiedTypeName, true, asCollection.Dimension)
-						: formatter(fullyQualifiedTypeName, false);
+						? formatter(memberTypeName, true, asCollection.Dimension)
+						: formatter(memberTypeName, false);
 				};
 
 			_scriptGenerator.SetMemberTypeFormatter(tsMemberTypeFormatter);

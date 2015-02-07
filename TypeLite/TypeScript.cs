@@ -18,6 +18,15 @@ namespace TypeLite {
 		public static TypeScriptFluent Definitions() {
 			return new TypeScriptFluent();
 		}
+
+	    /// <summary>
+	    /// Creates an instance of the FluentTsModelBuider for use in T4 templates.
+	    /// </summary>
+	    /// <param name="scriptGenerator">The script generator you want it constructed with</param>
+	    /// <returns>An instance of the FluentTsModelBuider</returns>
+	    public static TypeScriptFluent Definitions(TsGenerator scriptGenerator) {
+			return new TypeScriptFluent(scriptGenerator);
+		}
 	}
 
 	/// <summary>
@@ -35,11 +44,26 @@ namespace TypeLite {
 		}
 
 		/// <summary>
+		/// Gets the ModelBuilder being configured with fluent configuration.
+		/// </summary>
+        public TsGenerator ScriptGenerator {
+            get { return _scriptGenerator; }
+		}
+
+		/// <summary>
 		/// Initializes a new instance of the TypeScriptFluent class
 		/// </summary>
 		public TypeScriptFluent() {
 			_modelBuilder = new TsModelBuilder();
 			_scriptGenerator = new TsGenerator();
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the TypeScriptFluent class
+		/// </summary>
+		public TypeScriptFluent(TsGenerator scriptGenerator) {
+			_modelBuilder = new TsModelBuilder();
+		    _scriptGenerator = scriptGenerator;
 		}
 
 		/// <summary>

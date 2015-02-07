@@ -19,12 +19,12 @@ namespace TypeLite {
 			return new TypeScriptFluent();
 		}
 
-	    /// <summary>
-	    /// Creates an instance of the FluentTsModelBuider for use in T4 templates.
-	    /// </summary>
-	    /// <param name="scriptGenerator">The script generator you want it constructed with</param>
-	    /// <returns>An instance of the FluentTsModelBuider</returns>
-	    public static TypeScriptFluent Definitions(TsGenerator scriptGenerator) {
+		/// <summary>
+		/// Creates an instance of the FluentTsModelBuider for use in T4 templates.
+		/// </summary>
+		/// <param name="scriptGenerator">The script generator you want it constructed with</param>
+		/// <returns>An instance of the FluentTsModelBuider</returns>
+		public static TypeScriptFluent Definitions(TsGenerator scriptGenerator) {
 			return new TypeScriptFluent(scriptGenerator);
 		}
 	}
@@ -46,8 +46,8 @@ namespace TypeLite {
 		/// <summary>
 		/// Gets the ModelBuilder being configured with fluent configuration.
 		/// </summary>
-        public TsGenerator ScriptGenerator {
-            get { return _scriptGenerator; }
+		public TsGenerator ScriptGenerator {
+			get { return _scriptGenerator; }
 		}
 
 		/// <summary>
@@ -63,7 +63,7 @@ namespace TypeLite {
 		/// </summary>
 		public TypeScriptFluent(TsGenerator scriptGenerator) {
 			_modelBuilder = new TsModelBuilder();
-		    _scriptGenerator = scriptGenerator;
+			_scriptGenerator = scriptGenerator;
 		}
 
 		/// <summary>
@@ -175,26 +175,19 @@ namespace TypeLite {
 		/// <returns>Instance of the TypeScriptFluent that enables fluent configuration.</returns>
 		[Obsolete]
 		public TypeScriptFluent WithFormatter(TsSimpleMemberTypeFormatter formatter) {
-			return WithMemberTypeFormatter(formatter);
-		}
+			TsMemberTypeFormatter tsMemberTypeFormatter =
+				tsProperty => {
+					var fullyQualifiedTypeName = _scriptGenerator.GetFullyQualifiedTypeName(tsProperty.PropertyType);
 
-		/// <summary>
-		/// Registers a formatter for member types
-		/// </summary>
-		/// <param name="formatter">The formatter to register</param>
-		/// <returns>Instance of the TypeScriptFluent that enables fluent configuration.</returns>
-		[Obsolete]
-		public TypeScriptFluent WithMemberTypeFormatter(TsSimpleMemberTypeFormatter formatter) {
-			_scriptGenerator.SetMemberTypeFormatter(tsProperty => {
-				var fullyQualifiedTypeName = _scriptGenerator.GetFullyQualifiedTypeName(tsProperty.PropertyType);
+					var asCollection = tsProperty.PropertyType as TsCollection;
+					var isCollection = asCollection != null;
 
-				var asCollection = tsProperty.PropertyType as TsCollection;
-				var isCollection = asCollection != null;
+					return isCollection
+						? formatter(fullyQualifiedTypeName, true, asCollection.Dimension)
+						: formatter(fullyQualifiedTypeName, false);
+				};
 
-				return isCollection
-					? formatter(fullyQualifiedTypeName, true, asCollection.Dimension)
-					: formatter(fullyQualifiedTypeName, false);
-			});
+			_scriptGenerator.SetMemberTypeFormatter(tsMemberTypeFormatter);
 
 			return this;
 		}
@@ -216,16 +209,6 @@ namespace TypeLite {
 		/// <returns>Instance of the TypeScriptFluent that enables fluent configuration.</returns>
 		[Obsolete]
 		public TypeScriptFluent WithFormatter(TsSimplifiedModuleNameFormatter formatter) {
-			return WithModuleNameFormatter(formatter);
-		}
-
-		/// <summary>
-		/// Registers a formatter for module names
-		/// </summary>
-		/// <param name="formatter">The formatter to register</param>
-		/// <returns>Instance of the TypeScriptFluent that enables fluent configuration.</returns>
-		[Obsolete]
-		public TypeScriptFluent WithModuleNameFormatter(TsSimplifiedModuleNameFormatter formatter) {
 			_scriptGenerator.SetModuleNameFormatter(module => formatter(module.Name));
 			return this;
 		}

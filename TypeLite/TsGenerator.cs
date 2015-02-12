@@ -216,12 +216,12 @@ namespace TypeLite {
 		/// </summary>
 		/// <param name="reference">The reference file to generate reference for.</param>
 		/// <param name="sb">The output</param>
-		private void AppendReference(string reference, ScriptBuilder sb) {
+		protected virtual void AppendReference(string reference, ScriptBuilder sb) {
 			sb.AppendFormat("/// <reference path=\"{0}\" />", reference);
 			sb.AppendLine();
 		}
 
-		private void AppendModule(TsModule module, ScriptBuilder sb, TsGeneratorOutput generatorOutput) {
+        protected virtual void AppendModule(TsModule module, ScriptBuilder sb, TsGeneratorOutput generatorOutput) {
 			var classes = module.Classes.Where(c => !_typeConvertors.IsConvertorRegistered(c.Type) && !c.IsIgnored).ToList();
 			var enums = module.Enums.Where(e => !_typeConvertors.IsConvertorRegistered(e.Type) && !e.IsIgnored).ToList();
 			if ((generatorOutput == TsGeneratorOutput.Enums && enums.Count == 0) ||
@@ -276,7 +276,7 @@ namespace TypeLite {
 		/// <param name="classModel">The class to generate definition for.</param>
 		/// <param name="sb">The output.</param>
 		/// <param name="generatorOutput"></param>
-		private void AppendClassDefinition(TsClass classModel, ScriptBuilder sb, TsGeneratorOutput generatorOutput) {
+        protected virtual void AppendClassDefinition(TsClass classModel, ScriptBuilder sb, TsGeneratorOutput generatorOutput) {
 			string typeName = this.GetTypeName(classModel);
 			string visibility = this.GetTypeVisibility(classModel, typeName) ? "export " : "";
 			sb.AppendFormatIndented("{0}interface {1}", visibility, typeName);
@@ -308,7 +308,7 @@ namespace TypeLite {
 			_generatedClasses.Add(classModel);
 		}
 
-		private void AppendEnumDefinition(TsEnum enumModel, ScriptBuilder sb, TsGeneratorOutput output) {
+        protected virtual void AppendEnumDefinition(TsEnum enumModel, ScriptBuilder sb, TsGeneratorOutput output) {
 			string typeName = this.GetTypeName(enumModel);
 			string visibility = output == TsGeneratorOutput.Enums || (output & TsGeneratorOutput.Constants) == TsGeneratorOutput.Constants ? "export " : "";
 
@@ -333,7 +333,7 @@ namespace TypeLite {
 		/// <param name="classModel">The class to generate definition for.</param>
 		/// <param name="sb">The output.</param>
 		/// <param name="generatorOutput"></param>
-		private void AppendConstantModule(TsClass classModel, ScriptBuilder sb) {
+        protected virtual void AppendConstantModule(TsClass classModel, ScriptBuilder sb) {
 			if (!classModel.Constants.Any()) {
 				return;
 			}

@@ -48,46 +48,46 @@ namespace TypeLite.TsModels {
 		/// <summary>
 		/// Initializes a new instance of the TsClass class with the specific CLR type.
 		/// </summary>
-		/// <param name="clrType">The CLR type represented by this instance of the TsClass</param>
-		public TsClass(Type clrType)
-			: base(clrType) {
+		/// <param name="type">The CLR type represented by this instance of the TsClass</param>
+		public TsClass(Type type)
+			: base(type) {
 
-			this.Properties = this.ClrType
+			this.Properties = this.Type
 				.GetProperties()
-				.Where(pi => pi.DeclaringType == this.ClrType)
+				.Where(pi => pi.DeclaringType == this.Type)
 				.Select(pi => new TsProperty(pi))
 				.ToList();
 
-            this.Fields = this.ClrType
+            this.Fields = this.Type
                 .GetFields()
-                .Where(fi => fi.DeclaringType == this.ClrType 
+                .Where(fi => fi.DeclaringType == this.Type 
                     && !(fi.IsLiteral && !fi.IsInitOnly)) // skip constants
                 .Select(fi => new TsProperty(fi))
                 .ToList();
 
-            this.Constants = this.ClrType
+            this.Constants = this.Type
                 .GetFields()
-                .Where(fi => fi.DeclaringType == this.ClrType
+                .Where(fi => fi.DeclaringType == this.Type
                     && fi.IsLiteral && !fi.IsInitOnly) // constants only
                 .Select(fi => new TsProperty(fi))
                 .ToList();
 
-			if (clrType.IsGenericType) {
-				this.Name = clrType.Name.Remove(clrType.Name.IndexOf('`'));
-			    this.GenericArguments = clrType
+			if (type.IsGenericType) {
+				this.Name = type.Name.Remove(type.Name.IndexOf('`'));
+			    this.GenericArguments = type
 			        .GetGenericArguments()
 			        .Select(TsType.Create)
 			        .ToList();
 			} else {
-				this.Name = clrType.Name;
+				this.Name = type.Name;
                 this.GenericArguments = new TsType[0];
 			}
 
-			if (this.ClrType.BaseType != null && this.ClrType.BaseType != typeof(object) && this.ClrType.BaseType != typeof(ValueType)) {
-				this.BaseType = new TsType(this.ClrType.BaseType);
+			if (this.Type.BaseType != null && this.Type.BaseType != typeof(object) && this.Type.BaseType != typeof(ValueType)) {
+				this.BaseType = new TsType(this.Type.BaseType);
 			}
 
-			var attribute = this.ClrType.GetCustomAttribute<TsClassAttribute>(false);
+			var attribute = this.Type.GetCustomAttribute<TsClassAttribute>(false);
 			if (attribute != null) {
 				if (!string.IsNullOrEmpty(attribute.Name)) {
 					this.Name = attribute.Name;

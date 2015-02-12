@@ -27,20 +27,20 @@ namespace TypeLite.TsModels {
 		/// <summary>
 		/// Initializes a new instance of the TsCollection class with the specific CLR type.
 		/// </summary>
-		/// <param name="clrType">The CLR collection represented by this instance of the TsCollection.</param>
-		public TsCollection(Type clrType)
-			: base(clrType) {
+		/// <param name="type">The CLR collection represented by this instance of the TsCollection.</param>
+		public TsCollection(Type type)
+			: base(type) {
 
-			var enumerableType = TsType.GetEnumerableType(this.ClrType);
+			var enumerableType = TsType.GetEnumerableType(this.Type);
 			if (enumerableType != null) {
 				this.ItemsType = TsType.Create(enumerableType);
-			} else if (typeof(IEnumerable).IsAssignableFrom(this.ClrType)) {
+			} else if (typeof(IEnumerable).IsAssignableFrom(this.Type)) {
 				this.ItemsType = TsType.Any;
 			} else {
-				throw new ArgumentException(string.Format("The type '{0}' is not collection.", this.ClrType.FullName));
+				throw new ArgumentException(string.Format("The type '{0}' is not collection.", this.Type.FullName));
 			}
 
-			this.Dimension = GetCollectionDimension(clrType);
+			this.Dimension = GetCollectionDimension(type);
 		}
 
 		private static int GetCollectionDimension(Type t)

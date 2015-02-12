@@ -23,16 +23,16 @@ namespace TypeLite.TsModels {
 		/// <summary>
 		/// Initializes a new instance of the TsEnum class with the specific CLR enum.
 		/// </summary>
-		/// <param name="clrType">The CLR enum represented by this instance of the TsEnum.</param>
-		public TsEnum(Type clrType)
-			: base(clrType) {
-			if (!this.ClrType.IsEnum) {
+		/// <param name="type">The CLR enum represented by this instance of the TsEnum.</param>
+		public TsEnum(Type type)
+			: base(type) {
+			if (!this.Type.IsEnum) {
 				throw new ArgumentException("ClrType isn't enum.");
 			}
 
-			this.Values = new List<TsEnumValue>(this.GetEnumValues(clrType));
+			this.Values = new List<TsEnumValue>(this.GetEnumValues(type));
 
-			var attribute = this.ClrType.GetCustomAttribute<TsEnumAttribute>(false);
+			var attribute = this.Type.GetCustomAttribute<TsEnumAttribute>(false);
 			if (attribute != null) {
 				if (!string.IsNullOrEmpty(attribute.Name)) {
 					this.Name = attribute.Name;
@@ -47,12 +47,12 @@ namespace TypeLite.TsModels {
 		/// <summary>
 		/// Retrieves a collection of possible value of the enum.
 		/// </summary>
-		/// <param name="clrType">The type of the enum.</param>
+		/// <param name="enumType">The type of the enum.</param>
 		/// <returns>collection of all enum values.</returns>
-		protected IEnumerable<TsEnumValue> GetEnumValues(Type clrType) {
-			return clrType.GetFields()
-				.Where(field => field.IsLiteral && !string.IsNullOrEmpty(field.Name))
-				.Select(field => new TsEnumValue(field.Name, field.GetValue(null)));
+		protected IEnumerable<TsEnumValue> GetEnumValues(Type enumType) {
+			return enumType.GetFields()
+				.Where(fieldInfo => fieldInfo.IsLiteral && !string.IsNullOrEmpty(fieldInfo.Name))
+				.Select(fieldInfo => new TsEnumValue(fieldInfo));
 		}
 	}
 }

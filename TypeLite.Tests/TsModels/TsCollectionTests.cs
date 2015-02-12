@@ -15,14 +15,14 @@ namespace TypeLite.Tests.TsModels {
 		public void WhenInitializedWithTypedArray_ItemsTypeIsSetToGenericParameter() {
 			var target = new TsCollection(typeof(Address[]));
 
-			Assert.Equal(typeof(Address), target.ItemsType.ClrType);
+			Assert.Equal(typeof(Address), target.ItemsType.Type);
 		}
 
 		[Fact]
 		public void WhenInitializedWithTypedCollection_ItemsTypeIsSetToGenericParameter() {
 			var target = new TsCollection(typeof(List<Address>));
 
-			Assert.Equal(typeof(Address), target.ItemsType.ClrType);
+			Assert.Equal(typeof(Address), target.ItemsType.Type);
 		}
 
 		[Fact]

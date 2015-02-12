@@ -17,11 +17,11 @@ namespace TypeLite.TsModels {
 		/// <summary>
 		/// Initializes a new instance of the TsSystemType with the specific CLR type.
 		/// </summary>
-		/// <param name="clrType">The CLR type represented by this instance of the TsSystemType.</param>
-		public TsSystemType(Type clrType)
-			: base(clrType) {
+		/// <param name="type">The CLR type represented by this instance of the TsSystemType.</param>
+		public TsSystemType(Type type)
+			: base(type) {
 
-			switch (this.ClrType.Name) {
+			switch (this.Type.Name) {
 				case "Boolean": this.Kind = SystemTypeKind.Bool; break;
 				case "String":
 				case "Char":
@@ -43,7 +43,7 @@ namespace TypeLite.TsModels {
                 case "DateTimeOffset":
 					this.Kind = SystemTypeKind.Date; break;
 				default:
-					throw new ArgumentException(string.Format("The type '{0}' is not supported system type.", clrType.FullName));
+					throw new ArgumentException(string.Format("The type '{0}' is not supported system type.", type.FullName));
 			}
 		}
 	}

@@ -15,7 +15,7 @@ namespace TypeLite.Tests.TsModels {
 
 			var target = new TsType(type);
 
-			Assert.Equal(type, target.ClrType);
+			Assert.Equal(type, target.Type);
 		}
 
 		#region GetTypeFamily tests

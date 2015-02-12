@@ -11,7 +11,7 @@ namespace TypeLite.TsModels {
     /// Represents a property of the class in the code model.
     /// </summary>
     [DebuggerDisplay("Name: {Name}")]
-    public class TsProperty : IMemberIdentifier {
+    public class TsProperty {
          public string Name { get; set; }
 
         /// <summary>
@@ -22,7 +22,7 @@ namespace TypeLite.TsModels {
         /// <summary>
         /// Gets the CLR property represented by this TsProperty.
         /// </summary>
-        public MemberInfo ClrProperty { get; private set; }
+        public MemberInfo MemberInfo { get; set; }
 
         /// <summary>
         /// Gets or sets bool value indicating whether this property will be ignored by TsGenerator.
@@ -47,12 +47,12 @@ namespace TypeLite.TsModels {
         /// <summary>
         /// Initializes a new instance of the TsProperty class with the specific CLR property.
         /// </summary>
-        /// <param name="clrProperty">The CLR property represented by this instance of the TsProperty.</param>
-        public TsProperty(PropertyInfo clrProperty) {
-            this.ClrProperty = clrProperty;
-            this.Name = clrProperty.Name;
+        /// <param name="memberInfo">The CLR property represented by this instance of the TsProperty.</param>
+        public TsProperty(PropertyInfo memberInfo) {
+            this.MemberInfo = memberInfo;
+            this.Name = memberInfo.Name;
 
-            var propertyType = clrProperty.PropertyType;
+            var propertyType = memberInfo.PropertyType;
             if (propertyType.IsNullable()) {
                 propertyType = propertyType.GetNullableValueType();
             }
@@ -61,7 +61,7 @@ namespace TypeLite.TsModels {
 
             this.PropertyType = propertyType.IsEnum ? new TsEnum(propertyType) : new TsType(propertyType);
 
-            var attribute = clrProperty.GetCustomAttribute<TsPropertyAttribute>(false);
+            var attribute = memberInfo.GetCustomAttribute<TsPropertyAttribute>(false);
             if (attribute != null) {
                 if (!string.IsNullOrEmpty(attribute.Name)) {
                     this.Name = attribute.Name;
@@ -70,7 +70,7 @@ namespace TypeLite.TsModels {
                 this.IsOptional = attribute.IsOptional;
             }
 
-            this.IsIgnored = (clrProperty.GetCustomAttribute<TsIgnoreAttribute>(false) != null);
+            this.IsIgnored = (memberInfo.GetCustomAttribute<TsIgnoreAttribute>(false) != null);
 
             // Only fields can be constants.
             this.ConstantValue = null;
@@ -79,21 +79,21 @@ namespace TypeLite.TsModels {
         /// <summary>
         /// Initializes a new instance of the TsProperty class with the specific CLR field.
         /// </summary>
-        /// <param name="clrProperty">The CLR field represented by this instance of the TsProperty.</param>
-        public TsProperty(FieldInfo clrProperty) {
-            this.ClrProperty = clrProperty;
-            this.Name = clrProperty.Name;
+        /// <param name="memberInfo">The CLR field represented by this instance of the TsProperty.</param>
+        public TsProperty(FieldInfo memberInfo) {
+            this.MemberInfo = memberInfo;
+            this.Name = memberInfo.Name;
 
-            if (clrProperty.ReflectedType.IsGenericType) {
-                var definitionType = clrProperty.ReflectedType.GetGenericTypeDefinition();
-                var definitionTypeProperty = definitionType.GetProperty(clrProperty.Name);
+            if (memberInfo.ReflectedType.IsGenericType) {
+                var definitionType = memberInfo.ReflectedType.GetGenericTypeDefinition();
+                var definitionTypeProperty = definitionType.GetProperty(memberInfo.Name);
                 if (definitionTypeProperty.PropertyType.IsGenericParameter) {
                     this.PropertyType = TsType.Any;
                 } else {
-                    this.PropertyType = clrProperty.FieldType.IsEnum ? new TsEnum(clrProperty.FieldType) : new TsType(clrProperty.FieldType);
+                    this.PropertyType = memberInfo.FieldType.IsEnum ? new TsEnum(memberInfo.FieldType) : new TsType(memberInfo.FieldType);
                 }
             } else {
-                var propertyType = clrProperty.FieldType;
+                var propertyType = memberInfo.FieldType;
                 if (propertyType.IsNullable()) {
                     propertyType = propertyType.GetNullableValueType();
                 }
@@ -101,7 +101,7 @@ namespace TypeLite.TsModels {
                 this.PropertyType = propertyType.IsEnum ? new TsEnum(propertyType) : new TsType(propertyType);
             }
 
-            var attribute = clrProperty.GetCustomAttribute<TsPropertyAttribute>(false);
+            var attribute = memberInfo.GetCustomAttribute<TsPropertyAttribute>(false);
             if (attribute != null) {
                 if (!string.IsNullOrEmpty(attribute.Name)) {
                     this.Name = attribute.Name;
@@ -110,11 +110,11 @@ namespace TypeLite.TsModels {
                 this.IsOptional = attribute.IsOptional;
             }
 
-            this.IsIgnored = (clrProperty.GetCustomAttribute<TsIgnoreAttribute>(false) != null);
+            this.IsIgnored = (memberInfo.GetCustomAttribute<TsIgnoreAttribute>(false) != null);
 
-            if (clrProperty.IsLiteral && !clrProperty.IsInitOnly) {
+            if (memberInfo.IsLiteral && !memberInfo.IsInitOnly) {
                 // it's a constant
-                this.ConstantValue = clrProperty.GetValue(null);
+                this.ConstantValue = memberInfo.GetValue(null);
             } else {
                 // not a constant
                 this.ConstantValue = null;

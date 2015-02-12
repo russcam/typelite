@@ -28,7 +28,7 @@ namespace TypeLite.Tests {
             var target = new TsModelBuilder();
             target.Add(typeof(CustomerKind));
 
-            Assert.Single(target.Enums.Values.Where(o => o.ClrType == typeof(CustomerKind)));
+            Assert.Single(target.Enums.Values.Where(o => o.Type == typeof(CustomerKind)));
         }
 
 		[Fact]
@@ -37,7 +37,7 @@ namespace TypeLite.Tests {
 
 			target.Add(typeof(Address), true);
 
-			Assert.Single(target.Classes.Values.Where(o => o.ClrType == typeof(Address)));
+			Assert.Single(target.Classes.Values.Where(o => o.Type == typeof(Address)));
 		}
 
 		[Fact]
@@ -46,8 +46,8 @@ namespace TypeLite.Tests {
 
 			target.Add(typeof(Person), false);
 
-			Assert.Single(target.Classes.Values.Where(o => o.ClrType == typeof(Person)));
-			Assert.Empty(target.Classes.Values.Where(o => o.ClrType == typeof(Address)));
+			Assert.Single(target.Classes.Values.Where(o => o.Type == typeof(Person)));
+			Assert.Empty(target.Classes.Values.Where(o => o.Type == typeof(Address)));
 		}
 
 		[Fact]
@@ -56,8 +56,8 @@ namespace TypeLite.Tests {
 
 			target.Add(typeof(Person), true);
 
-			Assert.Single(target.Classes.Values.Where(o => o.ClrType == typeof(Person)));
-			Assert.Single(target.Classes.Values.Where(o => o.ClrType == typeof(Address)));
+			Assert.Single(target.Classes.Values.Where(o => o.Type == typeof(Person)));
+			Assert.Single(target.Classes.Values.Where(o => o.Type == typeof(Address)));
 		}
 
 		[Fact]
@@ -66,8 +66,8 @@ namespace TypeLite.Tests {
 
 			target.Add(typeof(Employee), false);
 
-			Assert.Single(target.Classes.Values.Where(o => o.ClrType == typeof(Employee)));
-			Assert.Single(target.Classes.Values.Where(o => o.ClrType == typeof(Person)));
+			Assert.Single(target.Classes.Values.Where(o => o.Type == typeof(Employee)));
+			Assert.Single(target.Classes.Values.Where(o => o.Type == typeof(Person)));
 		}
 
 		[Fact]
@@ -76,8 +76,8 @@ namespace TypeLite.Tests {
 
 			target.Add<CustomTypeCollectionReference>(true);
 
-			Assert.Single(target.Classes.Values.Where(o => o.ClrType == typeof(CustomTypeCollectionReference)));
-			Assert.Single(target.Classes.Values.Where(o => o.ClrType == typeof(Product)));
+			Assert.Single(target.Classes.Values.Where(o => o.Type == typeof(CustomTypeCollectionReference)));
+			Assert.Single(target.Classes.Values.Where(o => o.Type == typeof(Product)));
 		}
 
 		[Fact]
@@ -86,8 +86,8 @@ namespace TypeLite.Tests {
 
 			target.Add<CustomTypeCollectionReference>(true);
 
-			Assert.Single(target.Classes.Values.Where(o => o.ClrType == typeof(CustomTypeCollectionReference)));
-			Assert.Single(target.Classes.Values.Where(o => o.ClrType == typeof(Person)));
+			Assert.Single(target.Classes.Values.Where(o => o.Type == typeof(CustomTypeCollectionReference)));
+			Assert.Single(target.Classes.Values.Where(o => o.Type == typeof(Person)));
 		}
 
         [Fact]
@@ -96,7 +96,7 @@ namespace TypeLite.Tests {
 
             target.Add<IShippingService>(true);
 
-            Assert.Single(target.Classes.Values.Where(o => o.ClrType == typeof(IShippingService)));
+            Assert.Single(target.Classes.Values.Where(o => o.Type == typeof(IShippingService)));
         }
 
 		#endregion
@@ -108,7 +108,7 @@ namespace TypeLite.Tests {
 			var target = new TsModelBuilder();
 			target.Add(typeof(Product).Assembly);
 
-			Assert.Single(target.Classes.Values.Where(o => o.ClrType == typeof(Product)));
+			Assert.Single(target.Classes.Values.Where(o => o.Type == typeof(Product)));
 		}
 
 		#endregion
@@ -133,7 +133,7 @@ namespace TypeLite.Tests {
 			var model = target.Build();
 
 			var module = model.Modules.Where(m => m.Name == "TypeLite.Tests.TestModels").Single();
-			var personClass = model.Classes.Where(o => o.ClrType == typeof(Person)).Single();
+			var personClass = model.Classes.Where(o => o.Type == typeof(Person)).Single();
 
 			Assert.Same(personClass.Module, module);
 		}
@@ -145,8 +145,8 @@ namespace TypeLite.Tests {
 
 			var model = target.Build();
 
-			var personClass = model.Classes.Where(o => o.ClrType == typeof(Person)).Single();
-			var addressClass = model.Classes.Where(o => o.ClrType == typeof(Address)).Single();
+			var personClass = model.Classes.Where(o => o.Type == typeof(Person)).Single();
+			var addressClass = model.Classes.Where(o => o.Type == typeof(Address)).Single();
 
 			Assert.Same(addressClass, personClass.Properties.Where(p => p.Name == "PrimaryAddress").Single().PropertyType);
 			Assert.IsType<TsSystemType>(personClass.Properties.Where(p => p.Name == "Name").Single().PropertyType);
@@ -164,8 +164,8 @@ namespace TypeLite.Tests {
 
 			var model = target.Build();
 
-			var personClass = model.Classes.Where(o => o.ClrType == typeof(Person)).Single();
-			var addressClass = model.Classes.Where(o => o.ClrType == typeof(Address)).Single();
+			var personClass = model.Classes.Where(o => o.Type == typeof(Person)).Single();
+			var addressClass = model.Classes.Where(o => o.Type == typeof(Address)).Single();
 
 			Assert.Same(personClass.Module, addressClass.Module);
 		}

@@ -232,7 +232,7 @@ namespace TypeLite {
 
 			string moduleName = GetModuleName(module);
 			if (moduleName != module.Name) {
-				_renamedModules.Add(module.Name, moduleName);
+                _renamedModules[module.Name] = moduleName;
 			}
 
 			if (generatorOutput != TsGeneratorOutput.Enums

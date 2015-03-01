@@ -14,9 +14,11 @@ The library is distributed under MIT license.
 
 ## Changelog
 
+### Version 1.1.1.0		(1. 3. 2015)
+Fixed		#76 Error when renaming modules
+
 ### Version 1.1.0.0		(12. 2. 2015)
 Added		Better extensibility of TsGenerator, better extensibility of formaters
-
 
 ### Version 1.0.2.0		(17. 11. 2014)
 Fixed		#47 Fixed problem with derived generics

@@ -80,6 +80,7 @@
     <Compile Include="RegressionTests\Issue51_ArrayOfArrayOutput.cs" />
     <Compile Include="RegressionTests\Issue52_EnumsWithoutClass.cs" />
     <Compile Include="RegressionTests\Issue65_GenericReferencingContainingType.cs" />
+    <Compile Include="RegressionTests\ModuleNameFormatterTests.cs" />
     <Compile Include="RegressionTests\NullablesTests.cs" />
     <Compile Include="ScriptBuilderTests.cs" />
     <Compile Include="TestModels\Address.cs" />

@@ -28,6 +28,10 @@ namespace TypeLite {
             foreach (var classModel in model.Classes) {
                 _knownTypes[classModel.Type] = classModel;
             }
+
+            foreach (var enumModel in model.Enums) {
+                _knownTypes[enumModel.Type] = enumModel;
+            }
         }
 
         /// <summary>

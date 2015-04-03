@@ -21,7 +21,6 @@ namespace TypeLite {
 		protected HashSet<TsClass> _generatedClasses;
 		protected HashSet<TsEnum> _generatedEnums;
 		protected List<string> _references;
-		protected Dictionary<string, string> _renamedModules;
 
 		/// <summary>
 		/// Gets collection of formatters for individual TsTypes
@@ -65,8 +64,7 @@ namespace TypeLite {
 			_memberFormatter = DefaultMemberFormatter;
 			_memberTypeFormatter = DefaultMemberTypeFormatter;
 			_typeVisibilityFormatter = DefaultTypeVisibilityFormatter;
-			_moduleNameFormatter = DefaultModuleNameFormatter;
-			_renamedModules = new Dictionary<string, string>();
+			_moduleNameFormatter = DefaultModuleNameFormatter;			
 
 			this.IndentationString = "\t";
 		}
@@ -202,13 +200,7 @@ namespace TypeLite {
 				this.AppendModule(module, sb, generatorOutput);
 			}
 
-			string result = sb.ToString();
-
-			foreach (KeyValuePair<string, string> _renamedModule in _renamedModules) {
-				result = result.Replace(_renamedModule.Key, _renamedModule.Value);
-			}
-
-			return result;
+			return sb.ToString();            
 		}
 
 		/// <summary>
@@ -230,10 +222,7 @@ namespace TypeLite {
 				return;
 			}
 
-			string moduleName = GetModuleName(module);
-			if (moduleName != module.Name) {
-                _renamedModules[module.Name] = moduleName;
-			}
+			var moduleName = GetModuleName(module);            
 
 			if (generatorOutput != TsGeneratorOutput.Enums
 				&& (generatorOutput & TsGeneratorOutput.Constants) != TsGeneratorOutput.Constants) {
@@ -364,10 +353,10 @@ namespace TypeLite {
 		/// <returns>Fully qualified name of the type</returns>
 		public string GetFullyQualifiedTypeName(TsType type) {
 			var moduleName = string.Empty;
-
+            
 			if (type as TsModuleMember != null && !_typeConvertors.IsConvertorRegistered(type.Type)) {
 				var memberType = (TsModuleMember)type;
-				moduleName = memberType.Module != null ? memberType.Module.Name : string.Empty;
+                moduleName = memberType.Module != null ? GetModuleName(memberType.Module) : string.Empty;
 			} else if (type as TsCollection != null) {
 				var collectionType = (TsCollection)type;
 				moduleName = GetCollectionModuleName(collectionType, moduleName);
@@ -393,7 +382,7 @@ namespace TypeLite {
 		public string GetCollectionModuleName(TsCollection collectionType, string moduleName) {
 			if (collectionType.ItemsType as TsModuleMember != null && !_typeConvertors.IsConvertorRegistered(collectionType.ItemsType.Type)) {
 				if (!collectionType.ItemsType.Type.IsGenericParameter)
-					moduleName = ((TsModuleMember)collectionType.ItemsType).Module != null ? ((TsModuleMember)collectionType.ItemsType).Module.Name : string.Empty;
+					moduleName = ((TsModuleMember)collectionType.ItemsType).Module != null ? GetModuleName(((TsModuleMember)collectionType.ItemsType).Module) : string.Empty;
 			}
 			if (collectionType.ItemsType as TsCollection != null) {
 				moduleName = GetCollectionModuleName((TsCollection)collectionType.ItemsType, moduleName);

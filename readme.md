@@ -14,6 +14,10 @@ The library is distributed under MIT license.
 
 ## Changelog
 
+### Version 1.1.2.0		(3. 4. 2015)
+Fixed		#85 Unable to reuse enums
+Fixed       #84 Module name formatter doesn't work for nested namespaces
+
 ### Version 1.1.1.0		(1. 3. 2015)
 Fixed		#76 Error when renaming modules
 

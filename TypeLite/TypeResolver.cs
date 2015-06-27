@@ -127,6 +127,8 @@ namespace TypeLite {
         /// <param name="name">The name of the module</param>
         /// <returns></returns>
         private TsModule ResolveModule(string name) {
+            name = name ?? string.Empty;
+
             if (_modules.ContainsKey(name)) {
                 return _modules[name];
             }

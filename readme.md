@@ -14,6 +14,10 @@ The library is distributed under MIT license.
 
 ## Changelog
 
+### Version 1.2.0       (27. 6. 2015)
+Added       #86 Support for classes outside modules. A TS class is generated outside module if the source .NET class isn't in a namespace or if  [TsClass(Module = "")] attribute is used.
+
+
 ### Version 1.1.2.0		(3. 4. 2015)
 Fixed		#85 Unable to reuse enums
 Fixed       #84 Module name formatter doesn't work for nested namespaces
@@ -31,7 +35,6 @@ Fixed		#47 Fixed problem with derived generics
 Fixed		#64 Incorrect definition for KeyValuePair<int, List<string>>
 Fixed		#65 Generic porperty referencin containing type causes StackOverflowException
 Added		#49 Better output formating
-
 
 ### Version 1.0.0.0		(29. 10. 2014)
 Fixed		#57 Support for generics

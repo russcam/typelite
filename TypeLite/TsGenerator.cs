@@ -222,14 +222,18 @@ namespace TypeLite {
 				return;
 			}
 
-			var moduleName = GetModuleName(module);            
+			var moduleName = GetModuleName(module);
+            var generateModuleHeader = moduleName != string.Empty;
 
-			if (generatorOutput != TsGeneratorOutput.Enums
-				&& (generatorOutput & TsGeneratorOutput.Constants) != TsGeneratorOutput.Constants) {
-				sb.Append("declare ");
-			}
+            if (generateModuleHeader) {
+                if (generatorOutput != TsGeneratorOutput.Enums &&
+                    (generatorOutput & TsGeneratorOutput.Constants) != TsGeneratorOutput.Constants) {
+                    sb.Append("declare ");
+                }
 
-			sb.AppendLine(string.Format("module {0} {{", moduleName));
+                sb.AppendLine(string.Format("module {0} {{", moduleName));
+            }
+
 			using (sb.IncreaseIndentation()) {
 				if ((generatorOutput & TsGeneratorOutput.Enums) == TsGeneratorOutput.Enums) {
 					foreach (var enumModel in enums) {
@@ -255,8 +259,9 @@ namespace TypeLite {
 					}
 				}
 			}
-
-			sb.AppendLine("}");
+            if (generateModuleHeader) {
+                sb.AppendLine("}");
+            }
 		}
 
 		/// <summary>

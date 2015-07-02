@@ -19,5 +19,15 @@ namespace TypeLite.Net4 {
 
 			return ts;
 		}
+
+		/// <summary>
+		/// Register a document appender.
+		/// </summary>
+		/// <returns>Instance of the TypeScriptFluent that enables fluent documentation.</returns>
+		public static TypeScriptFluent WithDoc( this TypeScriptFluent ts )
+		{
+			ts.ScriptGenerator.SetDocAppender( new DocAppender() );
+			return ts;
+		}
 	}
 }

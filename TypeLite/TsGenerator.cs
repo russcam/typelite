@@ -18,6 +18,7 @@ namespace TypeLite {
 		protected TsMemberTypeFormatter _memberTypeFormatter;
 		protected TsTypeVisibilityFormatter _typeVisibilityFormatter;
 		protected TsModuleNameFormatter _moduleNameFormatter;
+		protected IDocAppender _docAppender;
 		protected HashSet<TsClass> _generatedClasses;
 		protected HashSet<TsEnum> _generatedEnums;
 		protected List<string> _references;
@@ -60,6 +61,8 @@ namespace TypeLite {
 			_typeFormatters.RegisterTypeFormatter<TsEnum>((type, formatter) => ((TsEnum)type).Name);
 
 			_typeConvertors = new TypeConvertorCollection();
+
+			_docAppender = new NullDocAppender();
 
 			_memberFormatter = DefaultMemberFormatter;
 			_memberTypeFormatter = DefaultMemberTypeFormatter;
@@ -154,6 +157,15 @@ namespace TypeLite {
 		/// <param name="formatter">The formatter to register.</param>
 		public void SetModuleNameFormatter(TsModuleNameFormatter formatter) {
 			_moduleNameFormatter = formatter;
+		}
+
+		/// <summary>
+		/// Sets the document appender.
+		/// </summary>
+		/// <param name="appender">The ducument appender.</param>
+		public void SetDocAppender( IDocAppender appender )
+		{
+			_docAppender = appender;
 		}
 
 		/// <summary>
@@ -273,7 +285,8 @@ namespace TypeLite {
         protected virtual void AppendClassDefinition(TsClass classModel, ScriptBuilder sb, TsGeneratorOutput generatorOutput) {
 			string typeName = this.GetTypeName(classModel);
 			string visibility = this.GetTypeVisibility(classModel, typeName) ? "export " : "";
-			sb.AppendFormatIndented("{0}interface {1}", visibility, typeName);
+			_docAppender.AppendClassDoc( sb, classModel, typeName );
+			sb.AppendFormatIndented( "{0}interface {1}", visibility, typeName );
 			if (classModel.BaseType != null) {
 				sb.AppendFormat(" extends {0}", this.GetFullyQualifiedTypeName(classModel.BaseType));
 			}
@@ -293,6 +306,7 @@ namespace TypeLite {
 						continue;
 					}
 
+					_docAppender.AppendPropertyDoc( sb, property, this.GetPropertyName( property ), this.GetPropertyType( property ) );
 					sb.AppendLineIndented(string.Format("{0}: {1};", this.GetPropertyName(property), this.GetPropertyType(property)));
 				}
 			}
@@ -306,11 +320,13 @@ namespace TypeLite {
 			string typeName = this.GetTypeName(enumModel);
 			string visibility = output == TsGeneratorOutput.Enums || (output & TsGeneratorOutput.Constants) == TsGeneratorOutput.Constants ? "export " : "";
 
-			sb.AppendLineIndented(string.Format("{0}enum {1} {{", visibility, typeName));
+			_docAppender.AppendEnumDoc( sb, enumModel, typeName );
+			sb.AppendLineIndented( string.Format( "{0}enum {1} {{", visibility, typeName ) );
 
 			using (sb.IncreaseIndentation()) {
 				int i = 1;
 				foreach (var v in enumModel.Values) {
+					_docAppender.AppendEnumValueDoc( sb, v );
 					sb.AppendLineIndented(string.Format(i < enumModel.Values.Count ? "{0} = {1}," : "{0} = {1}", v.Name, v.Value));
 					i++;
 				}
@@ -341,6 +357,7 @@ namespace TypeLite {
 						continue;
 					}
 
+					_docAppender.AppendConstantModuleDoc( sb, property, this.GetPropertyName( property ), this.GetPropertyType( property ) );
 					sb.AppendFormatIndented("export var {0}: {1} = {2};", this.GetPropertyName(property), this.GetPropertyType(property), this.GetPropertyConstantValue(property));
 					sb.AppendLine();
 				}

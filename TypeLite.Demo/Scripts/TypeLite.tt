@@ -14,6 +14,7 @@
 
 <# var ts = TypeScript.Definitions()
 		.ForLoadedAssemblies()
+		.WithDoc()
 		.WithReference("Enums.ts")
 		.WithIndentation("  ");
 #>

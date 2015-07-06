@@ -81,6 +81,7 @@
     <Compile Include="RegressionTests\Issue52_EnumsWithoutClass.cs" />
     <Compile Include="RegressionTests\Issue65_GenericReferencingContainingType.cs" />
     <Compile Include="RegressionTests\Issue79_ModuleNameFormatterIsnNotUsed.cs" />
+    <Compile Include="RegressionTests\Issue88_TypeformatterAppliedToOpenGenericsParameters.cs" />
     <Compile Include="RegressionTests\ModuleNameFormatterTests.cs" />
     <Compile Include="RegressionTests\Issue85_ReUseTheModifiedTsEnum.cs" />
     <Compile Include="RegressionTests\NullablesTests.cs" />

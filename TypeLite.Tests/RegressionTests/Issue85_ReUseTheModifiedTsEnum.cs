@@ -16,7 +16,6 @@ namespace TypeLite.Tests.RegressionTests
                 .For<MyTestEnum>().ToModule("Foo")
                 .For<MyClass>()
                 .Generate();
-            Console.WriteLine(ts);
             Assert.Contains("MyTest: Foo.MyTestEnum;", ts);
         }
 

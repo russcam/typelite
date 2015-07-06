@@ -14,6 +14,10 @@ The library is distributed under MIT license.
 
 ## Changelog
 
+### Version 1.2.1       (1. 7. 2015)
+Added       #89 Added support for Windows Phone 8.1 as target platform
+Fixed       #79 ModuleNameForrmater not called in certain cases
+
 ### Version 1.2.0       (1. 7. 2015)
 Added       #86 Support for classes outside modules. A TS class is generated outside module if the source .NET class isn't in a namespace or if  [TsClass(Module = "")] attribute is used.
 Fixed       #79 ModuleNameForrmater not called in certain cases

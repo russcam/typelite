@@ -1,12 +1,15 @@
 module Eshop {
+
   /**
    * Customer Kind
    */
   export enum CustomerKind {
+
     /**
      * Corporate customer
      */
     Corporate = 1,
+
     /**
      * Individual customer
      */
@@ -14,14 +17,17 @@ module Eshop {
   }
 }
 module Library {
+
   /**
    * genre definitions
    */
   export enum Genre {
+
     /**
      * science fiction
      */
     Scifi = 1,
+
     /**
      * course book
      */

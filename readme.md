@@ -16,6 +16,7 @@ The library is distributed under MIT license.
 
 ### Version 1.3.0       (6. 7. 2015)
 Added       #89 Added support for Windows Phone 8.1 as target platform
+
 Added       #73 Added support for generating JSDoc comments from XML odcumentation. Works only in .NET 4, needs XML Doc files. Use .WithJSDoc()
 
 ### Version 1.2.0       (1. 7. 2015)
@@ -118,4 +119,4 @@ Fixed		#6: Properties with System.Guid type result in invalid typescript code
 ### Version 0.8.2		(8. 4. 2013)
 Fixed		#2: TsIgnore-attribute doesn't work with properties
 Added		Support for nullable value types
-Added		Support for .NET 4		 
+Added		Support for .NET 4

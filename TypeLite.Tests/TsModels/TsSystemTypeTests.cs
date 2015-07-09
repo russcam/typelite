@@ -24,7 +24,13 @@ namespace TypeLite.Tests.TsModels {
 			Assert.Equal(SystemTypeKind.Number, target.Kind);
 		}
 
-		[Fact]
+        public void WhenInitializedWithFloat_KindIsSetToNumber() {
+            var target = new TsSystemType(typeof(float));
+
+            Assert.Equal(SystemTypeKind.Number, target.Kind);
+        }
+
+        [Fact]
 		public void WhenInitializedWithDouble_KindIsSetToNumber() {
 			var target = new TsSystemType(typeof(double));
 
@@ -52,7 +58,13 @@ namespace TypeLite.Tests.TsModels {
 			Assert.Equal(SystemTypeKind.Date, target.Kind);
 		}
 
-		[Fact]
+        public void WhenInitializedWithDateTimeOffset_KindIsSetToDate() {
+            var target = new TsSystemType(typeof(DateTimeOffset));
+
+            Assert.Equal(SystemTypeKind.Date, target.Kind);
+        }
+
+        [Fact]
 		public void WhenInitializedWithNullableType_KindIsSetAccordingToUnderlayingType() {
 			var target = new TsSystemType(typeof(int?));
 
@@ -63,5 +75,8 @@ namespace TypeLite.Tests.TsModels {
 		public void WhenInitializedWithUnsupportedType_ExceptionIsThrown() {
 			Assert.Throws<ArgumentException>(() => new TsSystemType(typeof(Address)));
 		}
+
+        [Fact]
+        public void WhenInitializedWithSpecificKind_KindIsUsedRegarless
 	}
 }

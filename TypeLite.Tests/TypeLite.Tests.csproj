@@ -62,30 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\TypeExtensionsTests.cs" />
-    <Compile Include="GenericsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RegressionTests\DateTimeTests.cs" />
-    <Compile Include="RegressionTests\DbGeometryIgnoreTests.cs" />
-    <Compile Include="RegressionTests\Generics0_8Tests.cs" />
-    <Compile Include="RegressionTests\Issue14_IgnoreAttributeIsNotWorking.cs" />
-    <Compile Include="RegressionTests\Issue15_ConvertSystemType.cs" />
-    <Compile Include="RegressionTests\Issue24_NullableEnumProperty.cs" />
-    <Compile Include="RegressionTests\Issue33_EnumCollectionTypePropertyFailsToGenerateEnum.cs" />
-    <Compile Include="RegressionTests\Issue32_DuplicateInterfacesForClosedGenericPropertyTypes.cs" />
-    <Compile Include="RegressionTests\Issue41_EnumsInGenericClasses.cs" />
-    <Compile Include="RegressionTests\Issue44_EnumsWithExport.cs" />
-    <Compile Include="RegressionTests\Issue43_EnumsWithDeclare.cs" />
-    <Compile Include="RegressionTests\Issue45_EmptyNamespaceInEmuns.cs" />
-    <Compile Include="RegressionTests\Issue48_ToModuleForEnums.cs" />
-    <Compile Include="RegressionTests\Issue51_ArrayOfArrayOutput.cs" />
-    <Compile Include="RegressionTests\Issue52_EnumsWithoutClass.cs" />
-    <Compile Include="RegressionTests\Issue65_GenericReferencingContainingType.cs" />
-    <Compile Include="RegressionTests\Issue79_ModuleNameFormatterIsnNotUsed.cs" />
-    <Compile Include="RegressionTests\Issue88_TypeformatterAppliedToOpenGenericsParameters.cs" />
-    <Compile Include="RegressionTests\ModuleNameFormatterTests.cs" />
-    <Compile Include="RegressionTests\Issue85_ReUseTheModifiedTsEnum.cs" />
-    <Compile Include="RegressionTests\NullablesTests.cs" />
-    <Compile Include="ScriptBuilderTests.cs" />
     <Compile Include="TestModels\Address.cs" />
     <Compile Include="TestModels\ContactType.cs" />
     <Compile Include="TestModels\CustomClassName.cs" />
@@ -98,8 +75,6 @@
     <Compile Include="TestModels\Person.cs" />
     <Compile Include="TestModels\PointStruct.cs" />
     <Compile Include="TestModels\Product.cs" />
-    <Compile Include="TsGeneratorTests.cs" />
-    <Compile Include="TsModelBuilderTests.cs" />
     <Compile Include="TsModels\TsClassTests.cs" />
     <Compile Include="TsModels\TsCollectionTests.cs" />
     <Compile Include="TsModels\TsEnumTests.cs" />
@@ -107,8 +82,6 @@
     <Compile Include="TsModels\TsPropertyTests.cs" />
     <Compile Include="TsModels\TsSystemTypeTests.cs" />
     <Compile Include="TsModels\TsTypeTests.cs" />
-    <Compile Include="TsModelTests.cs" />
-    <Compile Include="TypeConvertorCollectionTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

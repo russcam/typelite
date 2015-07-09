@@ -24,6 +24,12 @@
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
     <TypeScriptToolsVersion>1.0</TypeScriptToolsVersion>
+    <MvcProjectUpgradeChecked>true</MvcProjectUpgradeChecked>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>4.0</OldToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -144,7 +150,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="Scripts\Manager.ttinclude">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Manager1.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>

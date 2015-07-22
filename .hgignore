@@ -8,3 +8,4 @@ packages/*
 *.orig
 TypeLite.Demo/Scripts/Enums.js*
 TypeLite.Demo/Scripts/TypeLiteTests.js*
+TestResults/*

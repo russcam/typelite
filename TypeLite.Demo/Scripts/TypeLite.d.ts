@@ -87,10 +87,6 @@ declare module Eshop {
   }
 }
 declare module System {
-
-  /**
-   * Represents a globally unique identifier (GUID).
-   */
   interface Guid {
   }
 }

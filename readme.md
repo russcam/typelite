@@ -14,6 +14,9 @@ The library is distributed under MIT license.
 
 ## Changelog
 
+### Version 1.3.1       (22. 7. 2015)
+Fixed       #90 export const enum for compatibility with TypeScript 1.5
+
 ### Version 1.3.0       (6. 7. 2015)
 Added       #89 Added support for Windows Phone 8.1 as target platform
 

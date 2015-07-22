@@ -321,7 +321,7 @@ namespace TypeLite {
 			string visibility = output == TsGeneratorOutput.Enums || (output & TsGeneratorOutput.Constants) == TsGeneratorOutput.Constants ? "export " : "";
 
 			_docAppender.AppendEnumDoc( sb, enumModel, typeName );
-			sb.AppendLineIndented( string.Format( "{0}enum {1} {{", visibility, typeName ) );
+			sb.AppendLineIndented( string.Format( "{0}const enum {1} {{", visibility, typeName ) );
 
 			using (sb.IncreaseIndentation()) {
 				int i = 1;

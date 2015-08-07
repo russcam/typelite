@@ -16,7 +16,8 @@
 		.ForLoadedAssemblies()
 		.WithJSDoc()
 		.WithReference("Enums.ts")
-		.WithIndentation("  ");
+		.WithIndentation("  ")
+		.AsConstEnums(false);
 #>
 
 <#= ts.Generate(TsGeneratorOutput.Properties) #>

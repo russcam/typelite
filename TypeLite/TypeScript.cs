@@ -273,6 +273,16 @@ namespace TypeLite {
 			return this;
 		}
 
+        /// <summary>
+        /// Sets format of generated enums.
+        /// </summary>
+        /// <param name="value">Boolean value indicating whether the enums should be generated as 'const enum'</param>
+        /// <returns>Instance of the TypeScriptFluent that enables fluent configuration.</returns>
+        public TypeScriptFluent AsConstEnums(bool value = true) {
+            _scriptGenerator.GenerateConstEnums = value;
+            return this;
+        }
+
 		/// <summary>
 		/// Generates TypeScript definitions for types included in this model builder.
 		/// </summary>

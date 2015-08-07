@@ -37,7 +37,12 @@ namespace TypeLite {
 		/// </summary>
 		public string IndentationString { get; set; }
 
-		/// <summary>
+        /// <summary>
+        /// Gets or sets bool value indicating whether enums should be generated as 'const enum'. Default value is true.
+        /// </summary>
+        public bool GenerateConstEnums { get; set; }
+		
+        /// <summary>
 		/// Initializes a new instance of the TsGenerator class with the default formatters.
 		/// </summary>
 		public TsGenerator() {
@@ -70,6 +75,7 @@ namespace TypeLite {
 			_moduleNameFormatter = DefaultModuleNameFormatter;			
 
 			this.IndentationString = "\t";
+            this.GenerateConstEnums = true;
 		}
 
 		public bool DefaultTypeVisibilityFormatter(TsClass tsClass, string typeName)
@@ -318,10 +324,12 @@ namespace TypeLite {
 
         protected virtual void AppendEnumDefinition(TsEnum enumModel, ScriptBuilder sb, TsGeneratorOutput output) {
 			string typeName = this.GetTypeName(enumModel);
-			string visibility = output == TsGeneratorOutput.Enums || (output & TsGeneratorOutput.Constants) == TsGeneratorOutput.Constants ? "export " : "";
+			string visibility = (output & TsGeneratorOutput.Enums) == TsGeneratorOutput.Enums || (output & TsGeneratorOutput.Constants) == TsGeneratorOutput.Constants ? "export " : "";
 
 			_docAppender.AppendEnumDoc( sb, enumModel, typeName );
-			sb.AppendLineIndented( string.Format( "{0}const enum {1} {{", visibility, typeName ) );
+
+            string constSpecifier = this.GenerateConstEnums ? "const " : string.Empty;
+			sb.AppendLineIndented( string.Format( "{0}{2}enum {1} {{", visibility, typeName, constSpecifier ) );
 
 			using (sb.IncreaseIndentation()) {
 				int i = 1;

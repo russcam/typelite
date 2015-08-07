@@ -3,7 +3,7 @@ module Eshop {
   /**
    * Customer Kind
    */
-  export const enum CustomerKind {
+  export enum CustomerKind {
 
     /**
      * Corporate customer
@@ -21,7 +21,7 @@ module Library {
   /**
    * genre definitions
    */
-  export const enum Genre {
+  export enum Genre {
 
     /**
      * science fiction
@@ -34,3 +34,4 @@ module Library {
     Coursebook = 2
   }
 }
+

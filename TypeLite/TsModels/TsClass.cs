@@ -6,14 +6,12 @@ using System.Text;
 using System.Reflection;
 using TypeLite.Extensions;
 
-namespace TypeLite.TsModels
-{
+namespace TypeLite.TsModels {
     /// <summary>
     /// Represents a class in the code model.
     /// </summary>
     [DebuggerDisplay("TsClass - Name: {Name}")]
-    public class TsClass : TsModuleMember
-    {
+    public class TsClass : TsModuleMember {
         /// <summary>
         /// Gets collection of properties of the class.
         /// </summary>
@@ -55,8 +53,7 @@ namespace TypeLite.TsModels
         /// </summary>
         /// <param name="type">The CLR type represented by this instance of the TsClass</param>
         public TsClass(Type type)
-            : base(type)
-        {
+            : base(type) {
 
             this.Properties = this.Type
                 .GetProperties()
@@ -78,41 +75,33 @@ namespace TypeLite.TsModels
                 .Select(fi => new TsProperty(fi))
                 .ToList();
 
-            if (type.IsGenericType)
-            {
+            if (type.IsGenericType) {
                 this.Name = type.Name.Remove(type.Name.IndexOf('`'));
                 this.GenericArguments = type
                     .GetGenericArguments()
                     .Select(TsType.Create)
                     .ToList();
-            }
-            else
-            {
+            } else {
                 this.Name = type.Name;
                 this.GenericArguments = new TsType[0];
             }
 
-            if (this.Type.BaseType != null && this.Type.BaseType != typeof(object) && this.Type.BaseType != typeof(ValueType))
-            {
+            if (this.Type.BaseType != null && this.Type.BaseType != typeof(object) && this.Type.BaseType != typeof(ValueType)) {
                 this.BaseType = new TsType(this.Type.BaseType);
             }
 
             var interfaces = this.Type.GetInterfaces();
             this.Interfaces = interfaces
-                .Where(@interface => @interface.GetCustomAttribute<TsInterfaceAttribute>(false) != null)
-                .Except(interfaces.SelectMany(@interface => @interface.GetInterfaces()))
-                .Select(TsType.Create).ToList();
+                .Except(interfaces.SelectMany(@interface=>@interface.GetInterfaces()))
+                .Select(TsType.Create).ToList();            
 
             var attribute = this.Type.GetCustomAttribute<TsClassAttribute>(false);
-            if (attribute != null)
-            {
-                if (!string.IsNullOrEmpty(attribute.Name))
-                {
+            if (attribute != null) {
+                if (!string.IsNullOrEmpty(attribute.Name)) {
                     this.Name = attribute.Name;
                 }
 
-                if (attribute.Module != null)
-                {
+                if (attribute.Module != null) {
                     this.Module.Name = attribute.Module;
                 }
             }

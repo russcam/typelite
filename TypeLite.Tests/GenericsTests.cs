@@ -143,20 +143,18 @@ namespace TypeLite.Tests {
             public string NonGenericProperty { get; set; }
         }
 
-        [TsInterface]
+
         internal interface IBaseGeneric<TType>
         {
             TType SomeGenericProperty { get; set; }
             TType[] SomeGenericArrayProperty { get; set; }
         }
 
-        [TsInterface]
         private interface IDerivedGenericWithNewTypeArgument<TNewType, TType> : IBaseGeneric<TType>
         {
             TNewType NewGenericProperty { get; set; }
         }
 
-        [TsInterface]
         private interface IDerivedGenericTwoLevelsDeep : IDerivedGenericWithNewTypeArgument<string, DummyNamespace.Test>
         {
             

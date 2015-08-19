@@ -40,6 +40,9 @@ namespace TypeLite.TsModels {
         /// </remarks>
         public TsType BaseType { get; internal set; }
 
+        // TODO document
+        public IList<TsType> Interfaces { get; internal set; }
+
         /// <summary>
         /// Gets or sets bool value indicating whether this class will be ignored by TsGenerator.
         /// </summary>
@@ -86,6 +89,11 @@ namespace TypeLite.TsModels {
             if (this.Type.BaseType != null && this.Type.BaseType != typeof(object) && this.Type.BaseType != typeof(ValueType)) {
                 this.BaseType = new TsType(this.Type.BaseType);
             }
+
+            var interfaces = this.Type.GetInterfaces();
+            this.Interfaces = interfaces
+                .Except(interfaces.SelectMany(@interface=>@interface.GetInterfaces()))
+                .Select(TsType.Create).ToList();            
 
             var attribute = this.Type.GetCustomAttribute<TsClassAttribute>(false);
             if (attribute != null) {

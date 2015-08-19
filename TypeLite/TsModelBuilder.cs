@@ -106,6 +106,11 @@ namespace TypeLite {
 						this.AddEnum(e.PropertyType as TsEnum);
 				}
 
+		        foreach (var @interface in added.Interfaces)
+		        {
+		            this.Add(@interface.Type);
+		        }
+
 				return added;
 			} else {
 				return this.Classes[clrType];

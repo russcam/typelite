@@ -46,6 +46,11 @@ namespace TypeLite {
             if (classModel.BaseType != null && classModel.BaseType != TsType.Any) {
                 classModel.BaseType = this.ResolveType(classModel.BaseType, false);
             }
+
+            for (int i = 0; i < classModel.Interfaces.Count; i++)
+            {
+                classModel.Interfaces[i] = this.ResolveType(classModel.Interfaces[i], false);
+            }
         }
 
         /// <summary>

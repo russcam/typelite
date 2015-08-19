@@ -337,7 +337,12 @@ namespace TypeLite
             if (classModel.Interfaces.Count > 0)
             {
                 var implementations = classModel.Interfaces.Select(GetFullyQualifiedTypeName).ToArray();
-                sb.AppendFormat(" implements {0}", string.Join(" ,", implementations));
+
+                var prefixFormat = classModel.Type.IsInterface ? " extends {0}"
+                    : classModel.BaseType != null ? " ," 
+                    : " extends {0}";
+
+                    sb.AppendFormat(prefixFormat, string.Join(" ,", implementations));                               
             }
 
             sb.AppendLine(" {");

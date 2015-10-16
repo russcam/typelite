@@ -40,6 +40,33 @@ namespace TypeLite.Tests {
         }
 
         [Fact]
+        public void WhenClassIsIgnoredByAttribute_InterfaceForClassIsntGenerated()
+        {
+            var builder = new TsModelBuilder();
+            builder.Add<IgnoreTestBase>();
+            var model = builder.Build();
+
+            var target = new TsGenerator();
+            var script = target.Generate(model);
+
+            Assert.DoesNotContain("IgnoreTestBase", script);
+        }
+
+        [Fact]
+        public void WhenBaseClassIsIgnoredByAttribute_InterfaceForClassIsntGenerated()
+        {
+            var builder = new TsModelBuilder();
+            builder.Add<IgnoreTest>();
+            var model = builder.Build();
+
+            var target = new TsGenerator();
+            var script = target.Generate(model);
+
+            Assert.DoesNotContain("interface IgnoreTestBase", script);
+        }
+
+
+        [Fact]
         public void WhenPropertyIsIgnored_PropertyIsExcludedFromInterface() {
             var builder = new TsModelBuilder();
             builder.Add<Address>();

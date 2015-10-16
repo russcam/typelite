@@ -97,6 +97,11 @@ namespace TypeLite.TsModels {
                     this.Module.Name = attribute.Module;
                 }
             }
+
+            var ignoreAttribute = this.Type.GetCustomAttribute<TsIgnoreAttribute>(false);
+            if (ignoreAttribute != null) {
+                this.IsIgnored = true;
+            }
         }
     }
 }

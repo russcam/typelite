@@ -344,5 +344,18 @@ namespace TypeLite {
 			this.Member.Module = new TsModule(moduleName);
 			return this;
 		}
+
+		/// <summary>
+		/// Ignores this member when generating typescript
+		/// </summary>
+		/// <returns>Instance of the TypeScriptFluentModuleMember that enables fluent configuration.</returns>
+		public TypeScriptFluentModuleMember Ignore()
+		{
+			if (Member is TsClass)
+			{
+				((TsClass)Member).IsIgnored = true;
+			}
+			return this;
+		}
 	}
 }

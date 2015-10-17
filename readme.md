@@ -14,6 +14,9 @@ The library is distributed under MIT license.
 
 ## Changelog
 
+### Version 1.5.0       (7. 8. 2015)
+Added       Implemented support for interface inheritance. 
+
 ### Version 1.4.0       (7. 8. 2015)
 Added       #95, #96 Adds option to generate enums without 'const' modifier. Use TypeScript.AsConstEnums(false) in your TypeLite.tt file.
 Fixed       #94 TsGeneratorOutput isn't treated as flag in AppendEnumDefinition

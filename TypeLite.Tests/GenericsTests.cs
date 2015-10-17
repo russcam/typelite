@@ -92,8 +92,8 @@ namespace TypeLite.Tests {
         [Fact]
         public void DeepGenericInterfaceInheritenceTreeIsGeneratedCorrectly() {
             var typeScript = AddTypeAndGenerateTypeScript<IDerivedGenericTwoLevelsDeep>();
-            Assert.Contains("interface IDerivedGenericTwoLevelsDeep implements TypeLite.Tests.GenericsTests.IDerivedGenericWithNewTypeArgument<string, DummyNamespace.Test> {", typeScript);
-            Assert.Contains("interface IDerivedGenericWithNewTypeArgument<TNewType, TType> implements TypeLite.Tests.GenericsTests.IBaseGeneric<TType> {", typeScript);
+            Assert.Contains("interface IDerivedGenericTwoLevelsDeep extends TypeLite.Tests.GenericsTests.IDerivedGenericWithNewTypeArgument<string, DummyNamespace.Test> {", typeScript);
+            Assert.Contains("interface IDerivedGenericWithNewTypeArgument<TNewType, TType> extends TypeLite.Tests.GenericsTests.IBaseGeneric<TType> {", typeScript);
             Assert.Contains("NewGenericProperty: TNewType;", typeScript);
         }
 

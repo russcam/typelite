@@ -47,8 +47,7 @@ namespace TypeLite {
                 classModel.BaseType = this.ResolveType(classModel.BaseType, false);
             }
 
-            for (int i = 0; i < classModel.Interfaces.Count; i++)
-            {
+            for (int i = 0; i < classModel.Interfaces.Count; i++) {
                 classModel.Interfaces[i] = this.ResolveType(classModel.Interfaces[i], false);
             }
         }
@@ -94,8 +93,7 @@ namespace TypeLite {
                 if (_knownTypes.TryGetValue(toResolve.Type.GetGenericTypeDefinition(), out openType)) {
                     return openType;
                 }
-            }
-            else if (toResolve.Type.IsGenericType) {
+            } else if (toResolve.Type.IsGenericType) {
                 var genericType = TsType.Create(toResolve.Type);
                 _knownTypes[toResolve.Type] = genericType;
                 return genericType;

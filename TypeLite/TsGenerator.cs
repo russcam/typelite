@@ -7,13 +7,11 @@ using TypeLite.Extensions;
 using TypeLite.ReadOnlyDictionary;
 using TypeLite.TsModels;
 
-namespace TypeLite
-{
+namespace TypeLite {
     /// <summary>
     /// Generates TypeScript definitions form the code model.
     /// </summary>
-    public class TsGenerator
-    {
+    public class TsGenerator {
         protected TsTypeFormatterCollection _typeFormatters;
         protected TypeConvertorCollection _typeConvertors;
         protected TsMemberIdentifierFormatter _memberFormatter;
@@ -28,10 +26,8 @@ namespace TypeLite
         /// <summary>
         /// Gets collection of formatters for individual TsTypes
         /// </summary>
-        public IReadOnlyDictionary<Type, TsTypeFormatter> Formaters
-        {
-            get
-            {
+        public IReadOnlyDictionary<Type, TsTypeFormatter> Formaters {
+            get {
                 return new ReadOnlyDictionaryWrapper<Type, TsTypeFormatter>(_typeFormatters._formatters);
             }
         }
@@ -49,22 +45,19 @@ namespace TypeLite
         /// <summary>
         /// Initializes a new instance of the TsGenerator class with the default formatters.
         /// </summary>
-        public TsGenerator()
-        {
+        public TsGenerator() {
             _references = new List<string>();
             _generatedClasses = new HashSet<TsClass>();
             _generatedEnums = new HashSet<TsEnum>();
 
             _typeFormatters = new TsTypeFormatterCollection();
-            _typeFormatters.RegisterTypeFormatter<TsClass>((type, formatter) =>
-            {
+            _typeFormatters.RegisterTypeFormatter<TsClass>((type, formatter) => {
                 var tsClass = ((TsClass)type);
                 if (!tsClass.GenericArguments.Any()) return tsClass.Name;
                 return tsClass.Name + "<" + string.Join(", ", tsClass.GenericArguments.Select(a => a as TsCollection != null ? this.GetFullyQualifiedTypeName(a) + "[]" : this.GetFullyQualifiedTypeName(a))) + ">";
             });
             _typeFormatters.RegisterTypeFormatter<TsSystemType>((type, formatter) => ((TsSystemType)type).Kind.ToTypeScriptString());
-            _typeFormatters.RegisterTypeFormatter<TsCollection>((type, formatter) =>
-            {
+            _typeFormatters.RegisterTypeFormatter<TsCollection>((type, formatter) => {
                 var itemType = ((TsCollection)type).ItemsType;
                 var itemTypeAsClass = itemType as TsClass;
                 if (itemTypeAsClass == null || !itemTypeAsClass.GenericArguments.Any()) return this.GetTypeName(itemType);
@@ -85,23 +78,19 @@ namespace TypeLite
             this.GenerateConstEnums = true;
         }
 
-        public bool DefaultTypeVisibilityFormatter(TsClass tsClass, string typeName)
-        {
+        public bool DefaultTypeVisibilityFormatter(TsClass tsClass, string typeName) {
             return false;
         }
 
-        public string DefaultModuleNameFormatter(TsModule module)
-        {
+        public string DefaultModuleNameFormatter(TsModule module) {
             return module.Name;
         }
 
-        public string DefaultMemberFormatter(TsProperty identifier)
-        {
+        public string DefaultMemberFormatter(TsProperty identifier) {
             return identifier.Name;
         }
 
-        public string DefaultMemberTypeFormatter(TsProperty tsProperty, string memberTypeName)
-        {
+        public string DefaultMemberTypeFormatter(TsProperty tsProperty, string memberTypeName) {
             var asCollection = tsProperty.PropertyType as TsCollection;
             var isCollection = asCollection != null;
 
@@ -116,8 +105,7 @@ namespace TypeLite
         /// <remarks>
         /// If a formatter for the type is already registered, it is overwritten with the new value.
         /// </remarks>
-        public void RegisterTypeFormatter<TFor>(TsTypeFormatter formatter) where TFor : TsType
-        {
+        public void RegisterTypeFormatter<TFor>(TsTypeFormatter formatter) where TFor : TsType {
             _typeFormatters.RegisterTypeFormatter<TFor>(formatter);
         }
 
@@ -125,8 +113,7 @@ namespace TypeLite
         /// Registers the custom formatter for the TsClass type.
         /// </summary>
         /// <param name="formatter">The formatter to register.</param>
-        public void RegisterTypeFormatter(TsTypeFormatter formatter)
-        {
+        public void RegisterTypeFormatter(TsTypeFormatter formatter) {
             _typeFormatters.RegisterTypeFormatter<TsClass>(formatter);
         }
 
@@ -138,8 +125,7 @@ namespace TypeLite
         /// <remarks>
         /// If a converter for the type is already registered, it is overwritten with the new value.
         /// </remarks>
-        public void RegisterTypeConvertor<TFor>(TypeConvertor convertor)
-        {
+        public void RegisterTypeConvertor<TFor>(TypeConvertor convertor) {
             _typeConvertors.RegisterTypeConverter<TFor>(convertor);
         }
 
@@ -147,8 +133,7 @@ namespace TypeLite
         /// Sets the formatter for class member identifiers.
         /// </summary>
         /// <param name="formatter">The formatter to register.</param>
-        public void SetIdentifierFormatter(TsMemberIdentifierFormatter formatter)
-        {
+        public void SetIdentifierFormatter(TsMemberIdentifierFormatter formatter) {
             _memberFormatter = formatter;
         }
 
@@ -156,8 +141,7 @@ namespace TypeLite
         /// Sets the formatter for class member types.
         /// </summary>
         /// <param name="formatter">The formatter to register.</param>
-        public void SetMemberTypeFormatter(TsMemberTypeFormatter formatter)
-        {
+        public void SetMemberTypeFormatter(TsMemberTypeFormatter formatter) {
             _memberTypeFormatter = formatter;
         }
 
@@ -165,8 +149,7 @@ namespace TypeLite
         /// Sets the formatter for class member types.
         /// </summary>
         /// <param name="formatter">The formatter to register.</param>
-        public void SetTypeVisibilityFormatter(TsTypeVisibilityFormatter formatter)
-        {
+        public void SetTypeVisibilityFormatter(TsTypeVisibilityFormatter formatter) {
             _typeVisibilityFormatter = formatter;
         }
 
@@ -174,8 +157,7 @@ namespace TypeLite
         /// Sets the formatter for module names.
         /// </summary>
         /// <param name="formatter">The formatter to register.</param>
-        public void SetModuleNameFormatter(TsModuleNameFormatter formatter)
-        {
+        public void SetModuleNameFormatter(TsModuleNameFormatter formatter) {
             _moduleNameFormatter = formatter;
         }
 
@@ -183,8 +165,7 @@ namespace TypeLite
         /// Sets the document appender.
         /// </summary>
         /// <param name="appender">The ducument appender.</param>
-        public void SetDocAppender(IDocAppender appender)
-        {
+        public void SetDocAppender(IDocAppender appender) {
             _docAppender = appender;
         }
 
@@ -192,8 +173,7 @@ namespace TypeLite
         /// Add a typescript reference
         /// </summary>
         /// <param name="reference">Name of d.ts file used as typescript reference</param>
-        public void AddReference(string reference)
-        {
+        public void AddReference(string reference) {
             _references.Add(reference);
         }
 
@@ -202,8 +182,7 @@ namespace TypeLite
         /// </summary>
         /// <param name="model">The code model with classes to generate definitions for.</param>
         /// <returns>TypeScript definitions for classes in the model.</returns>
-        public string Generate(TsModel model)
-        {
+        public string Generate(TsModel model) {
             return this.Generate(model, TsGeneratorOutput.Properties | TsGeneratorOutput.Enums);
         }
 
@@ -213,29 +192,24 @@ namespace TypeLite
         /// <param name="model">The code model with classes to generate definitions for.</param>
         /// <param name="generatorOutput">The type of definitions to generate</param>
         /// <returns>TypeScript definitions for classes and/or enums in the model..</returns>
-        public string Generate(TsModel model, TsGeneratorOutput generatorOutput)
-        {
+        public string Generate(TsModel model, TsGeneratorOutput generatorOutput) {
             var sb = new ScriptBuilder(this.IndentationString);
 
             if ((generatorOutput & TsGeneratorOutput.Properties) == TsGeneratorOutput.Properties
-                || (generatorOutput & TsGeneratorOutput.Fields) == TsGeneratorOutput.Fields)
-            {
+                || (generatorOutput & TsGeneratorOutput.Fields) == TsGeneratorOutput.Fields) {
 
-                if ((generatorOutput & TsGeneratorOutput.Constants) == TsGeneratorOutput.Constants)
-                {
+                if ((generatorOutput & TsGeneratorOutput.Constants) == TsGeneratorOutput.Constants) {
                     // We can't generate constants together with properties or fields, because we can't set values in a .d.ts file.
                     throw new InvalidOperationException("Cannot generate constants together with properties or fields");
                 }
 
-                foreach (var reference in _references.Concat(model.References))
-                {
+                foreach (var reference in _references.Concat(model.References)) {
                     this.AppendReference(reference, sb);
                 }
                 sb.AppendLine();
             }
 
-            foreach (var module in model.Modules)
-            {
+            foreach (var module in model.Modules) {
                 this.AppendModule(module, sb, generatorOutput);
             }
 
@@ -247,63 +221,50 @@ namespace TypeLite
         /// </summary>
         /// <param name="reference">The reference file to generate reference for.</param>
         /// <param name="sb">The output</param>
-        protected virtual void AppendReference(string reference, ScriptBuilder sb)
-        {
+        protected virtual void AppendReference(string reference, ScriptBuilder sb) {
             sb.AppendFormat("/// <reference path=\"{0}\" />", reference);
             sb.AppendLine();
         }
 
-        protected virtual void AppendModule(TsModule module, ScriptBuilder sb, TsGeneratorOutput generatorOutput)
-        {
+        protected virtual void AppendModule(TsModule module, ScriptBuilder sb, TsGeneratorOutput generatorOutput) {
             var classes = module.Classes.Where(c => !_typeConvertors.IsConvertorRegistered(c.Type) && !c.IsIgnored).ToList();
             var enums = module.Enums.Where(e => !_typeConvertors.IsConvertorRegistered(e.Type) && !e.IsIgnored).ToList();
             if ((generatorOutput == TsGeneratorOutput.Enums && enums.Count == 0) ||
                 (generatorOutput == TsGeneratorOutput.Properties && classes.Count == 0) ||
-                (enums.Count == 0 && classes.Count == 0))
-            {
+                (enums.Count == 0 && classes.Count == 0)) {
                 return;
             }
 
             var moduleName = GetModuleName(module);
             var generateModuleHeader = moduleName != string.Empty;
 
-            if (generateModuleHeader)
-            {
+            if (generateModuleHeader) {
                 if (generatorOutput != TsGeneratorOutput.Enums &&
-                    (generatorOutput & TsGeneratorOutput.Constants) != TsGeneratorOutput.Constants)
-                {
+                    (generatorOutput & TsGeneratorOutput.Constants) != TsGeneratorOutput.Constants) {
                     sb.Append("declare ");
                 }
 
                 sb.AppendLine(string.Format("module {0} {{", moduleName));
             }
 
-            using (sb.IncreaseIndentation())
-            {
-                if ((generatorOutput & TsGeneratorOutput.Enums) == TsGeneratorOutput.Enums)
-                {
-                    foreach (var enumModel in enums)
-                    {
+            using (sb.IncreaseIndentation()) {
+                if ((generatorOutput & TsGeneratorOutput.Enums) == TsGeneratorOutput.Enums) {
+                    foreach (var enumModel in enums) {
                         this.AppendEnumDefinition(enumModel, sb, generatorOutput);
                     }
                 }
 
                 if (((generatorOutput & TsGeneratorOutput.Properties) == TsGeneratorOutput.Properties)
-                    || (generatorOutput & TsGeneratorOutput.Fields) == TsGeneratorOutput.Fields)
-                {
-                    foreach (var classModel in classes)
-                    {
+                    || (generatorOutput & TsGeneratorOutput.Fields) == TsGeneratorOutput.Fields) {
+                    foreach (var classModel in classes) {
 
                         this.AppendClassDefinition(classModel, sb, generatorOutput);
                     }
                 }
 
-                if ((generatorOutput & TsGeneratorOutput.Constants) == TsGeneratorOutput.Constants)
-                {
-                    foreach (var classModel in classes)
-                    {
-                        if (classModel.IsIgnored)
-                        {
+                if ((generatorOutput & TsGeneratorOutput.Constants) == TsGeneratorOutput.Constants) {
+                    foreach (var classModel in classes) {
+                        if (classModel.IsIgnored) {
                             continue;
                         }
 
@@ -311,8 +272,7 @@ namespace TypeLite
                     }
                 }
             }
-            if (generateModuleHeader)
-            {
+            if (generateModuleHeader) {
                 sb.AppendLine("}");
             }
         }
@@ -323,45 +283,37 @@ namespace TypeLite
         /// <param name="classModel">The class to generate definition for.</param>
         /// <param name="sb">The output.</param>
         /// <param name="generatorOutput"></param>
-        protected virtual void AppendClassDefinition(TsClass classModel, ScriptBuilder sb, TsGeneratorOutput generatorOutput)
-        {
+        protected virtual void AppendClassDefinition(TsClass classModel, ScriptBuilder sb, TsGeneratorOutput generatorOutput) {
             string typeName = this.GetTypeName(classModel);
             string visibility = this.GetTypeVisibility(classModel, typeName) ? "export " : "";
             _docAppender.AppendClassDoc(sb, classModel, typeName);
             sb.AppendFormatIndented("{0}interface {1}", visibility, typeName);
-            if (classModel.BaseType != null)
-            {
+            if (classModel.BaseType != null) {
                 sb.AppendFormat(" extends {0}", this.GetFullyQualifiedTypeName(classModel.BaseType));
             }
 
-            if (classModel.Interfaces.Count > 0)
-            {
+            if (classModel.Interfaces.Count > 0) {
                 var implementations = classModel.Interfaces.Select(GetFullyQualifiedTypeName).ToArray();
 
                 var prefixFormat = classModel.Type.IsInterface ? " extends {0}"
-                    : classModel.BaseType != null ? " ," 
+                    : classModel.BaseType != null ? " ,"
                     : " extends {0}";
 
-                    sb.AppendFormat(prefixFormat, string.Join(" ,", implementations));                               
+                sb.AppendFormat(prefixFormat, string.Join(" ,", implementations));
             }
 
             sb.AppendLine(" {");
 
             var members = new List<TsProperty>();
-            if ((generatorOutput & TsGeneratorOutput.Properties) == TsGeneratorOutput.Properties)
-            {
+            if ((generatorOutput & TsGeneratorOutput.Properties) == TsGeneratorOutput.Properties) {
                 members.AddRange(classModel.Properties);
             }
-            if ((generatorOutput & TsGeneratorOutput.Fields) == TsGeneratorOutput.Fields)
-            {
+            if ((generatorOutput & TsGeneratorOutput.Fields) == TsGeneratorOutput.Fields) {
                 members.AddRange(classModel.Fields);
             }
-            using (sb.IncreaseIndentation())
-            {
-                foreach (var property in members)
-                {
-                    if (property.IsIgnored)
-                    {
+            using (sb.IncreaseIndentation()) {
+                foreach (var property in members) {
+                    if (property.IsIgnored) {
                         continue;
                     }
 
@@ -375,8 +327,7 @@ namespace TypeLite
             _generatedClasses.Add(classModel);
         }
 
-        protected virtual void AppendEnumDefinition(TsEnum enumModel, ScriptBuilder sb, TsGeneratorOutput output)
-        {
+        protected virtual void AppendEnumDefinition(TsEnum enumModel, ScriptBuilder sb, TsGeneratorOutput output) {
             string typeName = this.GetTypeName(enumModel);
             string visibility = (output & TsGeneratorOutput.Enums) == TsGeneratorOutput.Enums || (output & TsGeneratorOutput.Constants) == TsGeneratorOutput.Constants ? "export " : "";
 
@@ -385,11 +336,9 @@ namespace TypeLite
             string constSpecifier = this.GenerateConstEnums ? "const " : string.Empty;
             sb.AppendLineIndented(string.Format("{0}{2}enum {1} {{", visibility, typeName, constSpecifier));
 
-            using (sb.IncreaseIndentation())
-            {
+            using (sb.IncreaseIndentation()) {
                 int i = 1;
-                foreach (var v in enumModel.Values)
-                {
+                foreach (var v in enumModel.Values) {
                     _docAppender.AppendEnumValueDoc(sb, v);
                     sb.AppendLineIndented(string.Format(i < enumModel.Values.Count ? "{0} = {1}," : "{0} = {1}", v.Name, v.Value));
                     i++;
@@ -407,22 +356,17 @@ namespace TypeLite
         /// <param name="classModel">The class to generate definition for.</param>
         /// <param name="sb">The output.</param>
         /// <param name="generatorOutput"></param>
-        protected virtual void AppendConstantModule(TsClass classModel, ScriptBuilder sb)
-        {
-            if (!classModel.Constants.Any())
-            {
+        protected virtual void AppendConstantModule(TsClass classModel, ScriptBuilder sb) {
+            if (!classModel.Constants.Any()) {
                 return;
             }
 
             string typeName = this.GetTypeName(classModel);
             sb.AppendLineIndented(string.Format("export module {0} {{", typeName));
 
-            using (sb.IncreaseIndentation())
-            {
-                foreach (var property in classModel.Constants)
-                {
-                    if (property.IsIgnored)
-                    {
+            using (sb.IncreaseIndentation()) {
+                foreach (var property in classModel.Constants) {
+                    if (property.IsIgnored) {
                         continue;
                     }
 
@@ -442,27 +386,21 @@ namespace TypeLite
         /// </summary>
         /// <param name="type">The type to get name of</param>
         /// <returns>Fully qualified name of the type</returns>
-        public string GetFullyQualifiedTypeName(TsType type)
-        {
+        public string GetFullyQualifiedTypeName(TsType type) {
             var moduleName = string.Empty;
 
-            if (type as TsModuleMember != null && !_typeConvertors.IsConvertorRegistered(type.Type))
-            {
+            if (type as TsModuleMember != null && !_typeConvertors.IsConvertorRegistered(type.Type)) {
                 var memberType = (TsModuleMember)type;
                 moduleName = memberType.Module != null ? GetModuleName(memberType.Module) : string.Empty;
-            }
-            else if (type as TsCollection != null)
-            {
+            } else if (type as TsCollection != null) {
                 var collectionType = (TsCollection)type;
                 moduleName = GetCollectionModuleName(collectionType, moduleName);
             }
 
-            if (type.Type.IsGenericParameter)
-            {
+            if (type.Type.IsGenericParameter) {
                 return this.GetTypeName(type);
             }
-            if (!string.IsNullOrEmpty(moduleName))
-            {
+            if (!string.IsNullOrEmpty(moduleName)) {
                 var name = moduleName + "." + this.GetTypeName(type);
                 return name;
             }
@@ -476,15 +414,12 @@ namespace TypeLite
         /// <param name="collectionType">The TsCollection object.</param>
         /// <param name="moduleName">The module name.</param>
         /// <returns></returns>
-        public string GetCollectionModuleName(TsCollection collectionType, string moduleName)
-        {
-            if (collectionType.ItemsType as TsModuleMember != null && !_typeConvertors.IsConvertorRegistered(collectionType.ItemsType.Type))
-            {
+        public string GetCollectionModuleName(TsCollection collectionType, string moduleName) {
+            if (collectionType.ItemsType as TsModuleMember != null && !_typeConvertors.IsConvertorRegistered(collectionType.ItemsType.Type)) {
                 if (!collectionType.ItemsType.Type.IsGenericParameter)
                     moduleName = ((TsModuleMember)collectionType.ItemsType).Module != null ? GetModuleName(((TsModuleMember)collectionType.ItemsType).Module) : string.Empty;
             }
-            if (collectionType.ItemsType as TsCollection != null)
-            {
+            if (collectionType.ItemsType as TsCollection != null) {
                 moduleName = GetCollectionModuleName((TsCollection)collectionType.ItemsType, moduleName);
             }
             return moduleName;
@@ -495,10 +430,8 @@ namespace TypeLite
         /// </summary>
         /// <param name="type">The type to get name of</param>
         /// <returns>name of the type</returns>
-        public string GetTypeName(TsType type)
-        {
-            if (_typeConvertors.IsConvertorRegistered(type.Type))
-            {
+        public string GetTypeName(TsType type) {
+            if (_typeConvertors.IsConvertorRegistered(type.Type)) {
                 return _typeConvertors.ConvertType(type.Type);
             }
 
@@ -510,11 +443,9 @@ namespace TypeLite
         /// </summary>
         /// <param name="property">The property to get name of</param>
         /// <returns>name of the property</returns>
-        public string GetPropertyName(TsProperty property)
-        {
+        public string GetPropertyName(TsProperty property) {
             var name = _memberFormatter(property);
-            if (property.IsOptional)
-            {
+            if (property.IsOptional) {
                 name += "?";
             }
 
@@ -526,8 +457,7 @@ namespace TypeLite
         /// </summary>
         /// <param name="property">The property to get type of</param>
         /// <returns>type of the property</returns>
-        public string GetPropertyType(TsProperty property)
-        {
+        public string GetPropertyType(TsProperty property) {
             var fullyQualifiedTypeName = GetFullyQualifiedTypeName(property.PropertyType);
             return _memberTypeFormatter(property, fullyQualifiedTypeName);
         }
@@ -537,8 +467,7 @@ namespace TypeLite
         /// </summary>
         /// <param name="property">The property to get constant value of</param>
         /// <returns>constant value of the property</returns>
-        public string GetPropertyConstantValue(TsProperty property)
-        {
+        public string GetPropertyConstantValue(TsProperty property) {
             var quote = property.PropertyType.Type == typeof(string) ? "\"" : "";
             return quote + property.ConstantValue.ToString() + quote;
         }
@@ -549,8 +478,7 @@ namespace TypeLite
         /// <param name="tsClass"></param>
         /// <param name="typeName">The type to get the visibility of</param>
         /// <returns>bool indicating if type should be marked weith keyword "Export"</returns>
-        public bool GetTypeVisibility(TsClass tsClass, string typeName)
-        {
+        public bool GetTypeVisibility(TsClass tsClass, string typeName) {
             return _typeVisibilityFormatter(tsClass, typeName);
         }
 
@@ -559,8 +487,7 @@ namespace TypeLite
         /// </summary>
         /// <param name="module">The module to be formatted</param>
         /// <returns>The module name after formatting.</returns>
-        public string GetModuleName(TsModule module)
-        {
+        public string GetModuleName(TsModule module) {
             return _moduleNameFormatter(module);
         }
 

@@ -90,8 +90,7 @@ namespace TypeLite.Tests {
         }
 
         [Fact]
-        public void DeepGenericInterfaceInheritenceTreeIsGeneratedCorrectly()
-        {
+        public void DeepGenericInterfaceInheritenceTreeIsGeneratedCorrectly() {
             var typeScript = AddTypeAndGenerateTypeScript<IDerivedGenericTwoLevelsDeep>();
             Assert.Contains("interface IDerivedGenericTwoLevelsDeep implements TypeLite.Tests.GenericsTests.IDerivedGenericWithNewTypeArgument<string, DummyNamespace.Test> {", typeScript);
             Assert.Contains("interface IDerivedGenericWithNewTypeArgument<TNewType, TType> implements TypeLite.Tests.GenericsTests.IBaseGeneric<TType> {", typeScript);
@@ -144,22 +143,19 @@ namespace TypeLite.Tests {
         }
 
         [TsInterface]
-        internal interface IBaseGeneric<TType>
-        {
+        internal interface IBaseGeneric<TType> {
             TType SomeGenericProperty { get; set; }
             TType[] SomeGenericArrayProperty { get; set; }
         }
 
         [TsInterface]
-        private interface IDerivedGenericWithNewTypeArgument<TNewType, TType> : IBaseGeneric<TType>
-        {
+        private interface IDerivedGenericWithNewTypeArgument<TNewType, TType> : IBaseGeneric<TType> {
             TNewType NewGenericProperty { get; set; }
         }
 
         [TsInterface]
-        private interface IDerivedGenericTwoLevelsDeep : IDerivedGenericWithNewTypeArgument<string, DummyNamespace.Test>
-        {
-            
+        private interface IDerivedGenericTwoLevelsDeep : IDerivedGenericWithNewTypeArgument<string, DummyNamespace.Test> {
+
         }
 
         private class DerivedGenericClassWithArgInDifferentNamespace : BaseGeneric<DummyNamespace.Test> {

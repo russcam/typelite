@@ -14,6 +14,9 @@ The library is distributed under MIT license.
 
 ## Changelog
 
+### Version 1.5.1       (17. 10. 2015)
+Fixed       Problem with the binaries version in 1.5.0
+
 ### Version 1.5.0       (17. 10. 2015)
 Added       Implemented support for interface inheritance. 
 

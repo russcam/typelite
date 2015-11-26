@@ -59,7 +59,7 @@ namespace TypeLite.Net4 {
         }
 
         private string FindXmlDocPath(Assembly assembly) {
-            string asmPath = new Uri(assembly.CodeBase).AbsolutePath;
+            string asmPath = Uri.UnescapeDataString((new UriBuilder(assembly.CodeBase).Path));
             string xmlPath;
 
             // find same place

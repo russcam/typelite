@@ -14,6 +14,9 @@ The library is distributed under MIT license.
 
 ## Changelog
 
+### Version 1.5.2       (29. 11. 2015)
+Fixed       Error generating JsDoc in case of the name of the assembly contains a space
+
 ### Version 1.5.1       (17. 10. 2015)
 Fixed       Problem with the binaries version in 1.5.0
 

@@ -27,6 +27,7 @@ namespace TypeLite.TsModels {
 				case "Char":
 					this.Kind = SystemTypeKind.String; break;
 				case "Byte":
+                case "SByte":
 				case "Int16":
 				case "Int32":
 				case "Int64":

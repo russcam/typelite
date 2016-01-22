@@ -14,6 +14,11 @@ The library is distributed under MIT license.
 
 ## Changelog
 
+### Version 1.6.0       (22. 1. 2016)
+Fixed       #110 interface for classes with a base class
+
+Added       #109 support for System.Sbyte
+
 ### Version 1.5.2       (29. 11. 2015)
 Fixed       Error generating JsDoc in case of the name of the assembly contains a space
 

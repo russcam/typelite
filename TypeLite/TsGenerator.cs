@@ -296,7 +296,7 @@ namespace TypeLite {
                 var implementations = classModel.Interfaces.Select(GetFullyQualifiedTypeName).ToArray();
 
                 var prefixFormat = classModel.Type.IsInterface ? " extends {0}"
-                    : classModel.BaseType != null ? " ,"
+                    : classModel.BaseType != null ? " , {0}"
                     : " extends {0}";
 
                 sb.AppendFormat(prefixFormat, string.Join(" ,", implementations));

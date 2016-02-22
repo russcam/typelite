@@ -38,7 +38,7 @@ namespace TypeLite.TsModels {
         /// <remarks>
         /// If the class derives from the object, the BaseType property is null.
         /// </remarks>
-        public TsType BaseType { get; internal set; }
+        public TsType BaseType { get; set; }
 
         // TODO document
         public IList<TsType> Interfaces { get; internal set; }

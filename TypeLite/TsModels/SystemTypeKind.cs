@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace TypeLite.TsModels {
+namespace TypeLite.TsModels
+{
 	/// <summary>
 	/// Defines kind of the system type.
 	/// </summary>
-	public enum SystemTypeKind {
+	public enum SystemTypeKind
+	{
 		/// <summary>
 		/// Number
 		/// </summary>
@@ -26,6 +28,18 @@ namespace TypeLite.TsModels {
 		/// <summary>
 		/// Date
 		/// </summary>
-		Date = 4
+		Date = 4,
+
+		Double = 5,
+
+		Float = 6,
+
+		Long = 7,
+
+		Integer = 8,
+
+		Byte = 9,
+
+		Short = 10
 	}
 }

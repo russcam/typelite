@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using TypeLite.Extensions;
 
-namespace TypeLite.TsModels {
+namespace TypeLite.TsModels
+{
 	/// <summary>
 	/// Represents a system type in the code model.
 	/// </summary>
-	public class TsSystemType : TsType {
+	public class TsSystemType : TsType
+	{
 		/// <summary>
 		/// Gets kind of the system type.
 		/// </summary>
@@ -19,29 +21,43 @@ namespace TypeLite.TsModels {
 		/// </summary>
 		/// <param name="type">The CLR type represented by this instance of the TsSystemType.</param>
 		public TsSystemType(Type type)
-			: base(type) {
+			: base(type)
+		{
 
-			switch (this.Type.Name) {
+			switch (this.Type.Name)
+			{
 				case "Boolean": this.Kind = SystemTypeKind.Bool; break;
 				case "String":
 				case "Char":
 					this.Kind = SystemTypeKind.String; break;
 				case "Byte":
-                case "SByte":
 				case "Int16":
+					this.Kind = SystemTypeKind.Short;
+					break;
+				case "SByte":
+					this.Kind = SystemTypeKind.Byte;
+					break;
 				case "Int32":
-				case "Int64":
 				case "UInt16":
+					this.Kind = SystemTypeKind.Integer;
+					break;
+				case "Int64":
 				case "UInt32":
-				case "UInt64":
+					this.Kind = SystemTypeKind.Long;
+					break;
 				case "Single":
+					this.Kind = SystemTypeKind.Float;
+					break;
 				case "Double":
 				case "Decimal":
+				case "UInt64":
+					this.Kind = SystemTypeKind.Double;
+					break;
 				case "IntPtr":
 				case "UIntPtr":
-					this.Kind = SystemTypeKind.Number; break;
+					this.Kind = SystemTypeKind.Integer; break;
 				case "DateTime":
-                case "DateTimeOffset":
+				case "DateTimeOffset":
 					this.Kind = SystemTypeKind.Date; break;
 				default:
 					throw new ArgumentException(string.Format("The type '{0}' is not supported system type.", type.FullName));
